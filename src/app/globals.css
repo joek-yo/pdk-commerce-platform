@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/* -----------------------------
+   Reset (important)
+------------------------------*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* -----------------------------
+   Root variables
+------------------------------*/
+:root {
+  --color-background: #F8F5F0; /* Soft champagne cream */
+  --color-foreground: #1C1A18; /* Deep espresso */
+  --color-primary: #3B2A23;    /* Rich chocolate brown */
+  --color-accent: #C6A75E;     /* Elegant muted gold */
+  --color-muted: #EAE4DA;      /* Warm ivory */
+  --color-border: #D8D0C5;     /* Subtle beige */
+}
+
+/* -----------------------------
+   Body styles
+------------------------------*/
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+/* -----------------------------
+   Section wrapper (for content)
+------------------------------*/
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 1rem;
+}
