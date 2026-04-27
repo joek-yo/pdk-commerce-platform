@@ -1,11 +1,13 @@
+// FILE: src/app/cart/page.tsx
+
 "use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import menuData from "@/data/menu.json";
+import branches from "@/data/branches.json";
 
 const CartPage: React.FC = () => {
   const {
@@ -17,6 +19,8 @@ const CartPage: React.FC = () => {
     orderNotes,
     setOrderNotes,
     addToCart,
+    selectedBranch,
+    setSelectedBranch,
   } = useCart();
 
   const router = useRouter();
@@ -27,9 +31,24 @@ const CartPage: React.FC = () => {
     0
   );
 
-  const handleProceed = () => router.push("/review");
+  // 🚨 VALIDATION BEFORE CHECKOUT
+  const handleProceed = () => {
+    if (!selectedBranch) {
+      setToastMessage("⚠️ Please select a branch before proceeding");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
 
-  // --- DYNAMIC BEST SELLERS / SUGGESTIONS (exclude items already in cart) ---
+    if (cart.length === 0) {
+      setToastMessage("⚠️ Your cart is empty");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+
+    router.push("/review");
+  };
+
+  // 🟡 SUGGESTIONS (exclude cart items)
   const suggestions = [
     ...menuData.categories.flatMap((category) =>
       category.items
@@ -48,70 +67,94 @@ const CartPage: React.FC = () => {
           bundle.available &&
           !cart.some((c) => c.id === bundle.id)
       )
-      .map((bundle) => ({ ...bundle }))
+      .map((bundle) => ({ ...bundle })),
   ];
 
-  // ⭐ Add suggestion silently without triggering MiniCartDrawer
   const handleAddSuggestion = (item: any) => {
-    // Updated: pass options object as second argument
     addToCart({ ...item, quantity: 1 }, { silent: true });
     setToastMessage(`${item.name} added to cart!`);
     setTimeout(() => setToastMessage(null), 2000);
   };
 
+  const branch = branches.find((b) => b.id === selectedBranch);
+
   return (
     <div className="min-h-screen bg-gray-50 pb-16 pt-[80px] relative">
+
       {/* HEADER */}
       <div className="px-4 pt-4 pb-6 text-center">
-        <h1 className="text-2xl sm:text-3xl font-bold">Your Cart</h1>
+        <h1 className="text-2xl font-bold">Your Cart</h1>
         <p className="text-sm text-gray-500 mt-1">
           {cart.length} item{cart.length !== 1 && "s"} in your order
         </p>
       </div>
 
       <div className="max-w-3xl mx-auto px-4 space-y-8">
+
+        {/* 🟡 BRANCH SELECTION */}
+        <div className="bg-white border rounded-xl p-5">
+          <h2 className="font-semibold mb-2">Select Branch</h2>
+
+          <select
+            value={selectedBranch}
+            onChange={(e) => setSelectedBranch(e.target.value)}
+            className="w-full border rounded-lg p-3 text-sm"
+          >
+            <option value="">-- Choose Branch --</option>
+            {branches.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.name} - {b.location}
+              </option>
+            ))}
+          </select>
+
+          {branch && (
+            <p className="text-xs text-gray-500 mt-2">
+              📍 {branch.location} | 📞 {branch.whatsapp}
+            </p>
+          )}
+        </div>
+
         {/* CART ITEMS */}
         {cart.length > 0 && (
           <div className="space-y-4">
+
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="bg-white rounded-xl border p-4 flex gap-4 transition hover:shadow-lg hover:-translate-y-1"
+                className="bg-white rounded-xl border p-4 flex gap-4"
               >
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-                  {item.image ? (
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      width={96}
-                      height={96}
-                      className="object-cover w-full h-full"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-gray-400 text-xs">
-                      IMG
-                    </div>
-                  )}
-                </div>
+                <Image
+                  src={item.image || "/images/placeholder.jpg"}
+                  alt={item.name}
+                  width={80}
+                  height={80}
+                  className="rounded-lg object-cover"
+                />
 
                 <div className="flex-1">
-                  <h3 className="font-semibold text-sm sm:text-base">{item.name}</h3>
-                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                  <h3 className="font-semibold">{item.name}</h3>
+                  <p className="text-sm text-gray-500">
                     KES {item.price.toLocaleString()}
                   </p>
 
-                  {/* QUANTITY */}
-                  <div className="flex items-center gap-3 mt-3">
+                  <div className="flex items-center gap-3 mt-2">
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="w-9 h-9 rounded-lg border border-gray-300 flex items-center justify-center text-lg font-semibold transition hover:bg-green-900 hover:text-white hover:border-green-900 active:scale-95"
+                      onClick={() =>
+                        updateQuantity(item.id, item.quantity - 1)
+                      }
+                      className="px-2 border rounded"
                     >
-                      −
+                      -
                     </button>
-                    <span className="font-medium min-w-[24px] text-center">{item.quantity}</span>
+
+                    <span>{item.quantity}</span>
+
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="w-9 h-9 rounded-lg border border-gray-300 flex items-center justify-center text-lg font-semibold transition hover:bg-green-900 hover:text-white hover:border-green-900 active:scale-95"
+                      onClick={() =>
+                        updateQuantity(item.id, item.quantity + 1)
+                      }
+                      className="px-2 border rounded"
                     >
                       +
                     </button>
@@ -119,32 +162,30 @@ const CartPage: React.FC = () => {
 
                   <button
                     onClick={() => removeFromCart(item.id)}
-                    className="text-xs text-red-500 mt-2 transition hover:text-red-700"
+                    className="text-red-500 text-xs mt-2"
                   >
                     Remove
                   </button>
                 </div>
 
-                <div className="text-right">
-                  <p className="font-semibold text-sm sm:text-base">
-                    KES {(item.price * item.quantity).toLocaleString()}
-                  </p>
+                <div className="font-semibold">
+                  KES {(item.price * item.quantity).toLocaleString()}
                 </div>
               </div>
             ))}
 
-            {/* SUBTOTAL */}
-            <div className="bg-white border rounded-xl p-5 space-y-4">
-              <div className="flex justify-between text-lg font-semibold">
-                <span>Subtotal</span>
+            {/* TOTAL */}
+            <div className="bg-white border rounded-xl p-5">
+              <div className="flex justify-between font-semibold text-lg">
+                <span>Total</span>
                 <span>KES {subtotal.toLocaleString()}</span>
               </div>
 
               <button
                 onClick={handleProceed}
-                className="w-full py-3 rounded-xl bg-green-900 text-white font-semibold transition hover:bg-green-700 active:scale-95"
+                className="w-full mt-4 py-3 bg-green-900 text-white rounded-xl font-semibold"
               >
-                Review Cart Order
+                Review Order
               </button>
             </div>
           </div>
@@ -152,112 +193,63 @@ const CartPage: React.FC = () => {
 
         {/* SUGGESTIONS */}
         {suggestions.length > 0 && (
-          <div className="bg-white border rounded-xl p-5 space-y-4">
-            <h2 className="font-semibold text-sm sm:text-base">You may also like</h2>
-            <div className="space-y-3">
-              {suggestions.map((item) => (
-                <div key={item.id} className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    {item.image && (
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        width={48}
-                        height={48}
-                        className="object-cover rounded-lg"
-                      />
-                    )}
-                    <div>
-                      <p className="text-sm font-medium">{item.name}</p>
-                      <p className="text-xs text-gray-500">
-                        KES {item.price.toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleAddSuggestion(item)}
-                    className="px-3 py-1.5 text-sm bg-green-900 text-white rounded-lg transition hover:bg-green-700 active:scale-95"
-                  >
-                    + Add
-                  </button>
+          <div className="bg-white border rounded-xl p-5">
+            <h2 className="font-semibold mb-3">You may also like</h2>
+
+            {suggestions.map((item) => (
+              <div
+                key={item.id}
+                className="flex justify-between items-center py-2"
+              >
+                <div>
+                  <p className="text-sm font-medium">{item.name}</p>
+                  <p className="text-xs text-gray-500">
+                    KES {item.price.toLocaleString()}
+                  </p>
                 </div>
-              ))}
-            </div>
+
+                <button
+                  onClick={() => handleAddSuggestion(item)}
+                  className="px-3 py-1 bg-green-900 text-white rounded-lg text-sm"
+                >
+                  + Add
+                </button>
+              </div>
+            ))}
           </div>
         )}
 
-        {/* CUSTOM ORDER CTA */}
-        <div className="bg-green-50 border border-green-200 rounded-xl p-5 text-center">
-          <h2 className="font-semibold text-sm sm:text-base mb-2">
-            Need Something Not on the Menu?
-          </h2>
-          <p className="text-xs sm:text-sm text-gray-600 mb-4">
-            Request cakes, catering, bulk meals, or any special order.
-          </p>
-          <Link href="/custom-order">
-            <button className="px-6 py-3 bg-green-900 text-white rounded-lg text-sm font-medium transition hover:bg-green-700 active:scale-95">
-              🎂 Request Custom Order
-            </button>
-          </Link>
-        </div>
-
-        {/* CUSTOM ORDER DETAILS */}
+        {/* CUSTOM ORDER */}
         <div className="bg-white border rounded-xl p-5">
-          <h2 className="font-semibold text-sm sm:text-base mb-2">Custom Order Details</h2>
+          <h2 className="font-semibold mb-2">Custom Order</h2>
+
           <textarea
             value={customOrder}
             onChange={(e) => setCustomOrder(e.target.value)}
-            placeholder="Example: 5kg vanilla birthday cake with strawberry filling."
-            className="w-full border rounded-lg p-3 text-sm min-h-[110px] focus:outline-none focus:ring-2 focus:ring-green-800"
+            className="w-full border rounded-lg p-3 min-h-[100px]"
+            placeholder="Describe your special order..."
           />
         </div>
 
-        {/* ORDER NOTES */}
+        {/* NOTES */}
         <div className="bg-white border rounded-xl p-5">
-          <h2 className="font-semibold text-sm sm:text-base mb-2">Order Notes</h2>
+          <h2 className="font-semibold mb-2">Order Notes</h2>
+
           <textarea
             value={orderNotes}
             onChange={(e) => setOrderNotes(e.target.value)}
-            placeholder="Example: No onions, extra spicy."
-            className="w-full border rounded-lg p-3 text-sm min-h-[100px] focus:outline-none focus:ring-2 focus:ring-green-800"
+            className="w-full border rounded-lg p-3 min-h-[90px]"
+            placeholder="Any instructions..."
           />
         </div>
-
-        {/* REVIEW CUSTOM ORDER BUTTON */}
-        {customOrder.trim() && (
-          <div className="bg-white border rounded-xl p-5">
-            <button
-              onClick={handleProceed}
-              className="w-full py-3 rounded-xl bg-green-900 text-white font-semibold transition hover:bg-green-700 active:scale-95"
-            >
-              Review Custom Order
-            </button>
-          </div>
-        )}
       </div>
 
       {/* TOAST */}
       {toastMessage && (
-        <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-900 text-white px-6 py-3 rounded-xl shadow-lg animate-slide-up z-50">
+        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 bg-green-900 text-white px-6 py-3 rounded-xl">
           {toastMessage}
         </div>
       )}
-
-      <style jsx>{`
-        .animate-slide-up {
-          animation: slideUp 0.3s ease-out;
-        }
-        @keyframes slideUp {
-          0% {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
 };

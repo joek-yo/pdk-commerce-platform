@@ -1,11 +1,16 @@
-"use client";
+// FILE: src/app/layout.tsx
 
 import "./globals.css";
+import { CartProvider } from "@/context/CartContext";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MiniCartDrawer from "@/components/features/cart/MiniCartDrawer";
 import CartToast from "@/components/features/cart/CartToast";
-import { CartProvider } from "@/context/CartContext";
+
+export const metadata = {
+  title: "Prime Deals Kenya",
+  description: "Smart Deals. Smart Choices.",
+};
 
 export default function RootLayout({
   children,
@@ -14,24 +19,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-background text-foreground min-h-screen flex flex-col">
-        
-        {/* Global Providers */}
+      <body className="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+
+        {/* Global App Wrapper */}
         <CartProvider>
-          
-          {/* Fixed Navbar */}
+
+          {/* Layout Shell */}
           <Header />
 
-          {/* Premium Slide-In Drawer */}
+          {/* Global UI Overlays */}
           <MiniCartDrawer />
-
-          {/* Mobile Toast */}
           <CartToast />
 
           {/* Page Content */}
           <main className="flex-grow">{children}</main>
 
-          {/* Footer */}
           <Footer />
 
         </CartProvider>

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "westlands",
+    "name": "Westlands Branch",
+    "phone": "+254759090305",
+    "whatsapp": "+254759090305",
+    "location": "Westlands, Nairobi"
+  },
+  {
+    "id": "cbd",
+    "name": "CBD Branch",
+    "phone": "+254759090305",
+    "whatsapp": "+254759090305",
+    "location": "CBD, Nairobi"
+  }
+]

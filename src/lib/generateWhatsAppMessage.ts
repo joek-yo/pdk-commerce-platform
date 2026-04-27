@@ -1,69 +1,110 @@
-// src/lib/generateWhatsAppMessage.ts
+// FILE: src/lib/generateWhatsAppMessage.ts
+
 interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
+id: number;
+name: string;
+price: number;
+quantity: number;
+}
+
+interface Branch {
+id: string;
+name: string;
+phone: string;
+location: string;
 }
 
 interface OrderData {
-  orderNumber: string;
-  cart: CartItem[];
-  customOrder: string;
-  orderNotes: string;
-  orderType: "pickup" | "delivery";
-  deliveryLocation?: string;
-  scheduleTime?: string;
+orderNumber: string;
+customerName: string;
+customerPhone: string;
+branch: Branch;
+cart: CartItem[];
+customOrder: string;
+orderNotes: string;
+orderType: "pickup" | "delivery";
+deliveryLocation?: string;
+scheduleTime?: string;
+deliveryFee?: number;
 }
 
 export function generateWhatsAppMessage(order: OrderData): string {
-  const {
-    orderNumber,
-    cart,
-    customOrder,
-    orderNotes,
-    orderType,
-    deliveryLocation,
-    scheduleTime,
-  } = order;
+const {
+orderNumber,
+customerName,
+customerPhone,
+branch,
+cart,
+customOrder,
+orderNotes,
+orderType,
+deliveryLocation,
+scheduleTime,
+deliveryFee = 0,
+} = order;
 
-  let message = `🍽️ *NEW ORDER*\n\n`;
-  message += `Order ID: ${orderNumber}\n\n`;
+let subtotal = 0;
 
-  message += `Order Type: ${orderType.toUpperCase()}\n`;
+let message =
+`NEW ORDER - PRIME DEALS KENYA
 
-  if (deliveryLocation && orderType === "delivery") {
-    message += `Delivery Location: ${deliveryLocation}\n`;
-  }
+Order ID: ${orderNumber}
 
-  if (scheduleTime) {
-    message += `Schedule: ${scheduleTime}\n`;
-  }
+CUSTOMER DETAILS
+Name: ${customerName}
+Phone: ${customerPhone}
 
-  message += `\n`;
+BRANCH
+${branch.name}
+${branch.location}
+Contact: ${branch.phone}
 
-  if (cart.length > 0) {
-    message += `*Items*\n`;
-    let subtotal = 0;
+ORDER TYPE: ${orderType.toUpperCase()}
+`;
 
-    cart.forEach((item) => {
-      const itemTotal = item.price * item.quantity;
-      subtotal += itemTotal;
-      message += `• ${item.quantity}x ${item.name} — KES ${itemTotal}\n`;
-    });
+if (orderType === "delivery") {
+if (deliveryLocation) {
+message += `Location: ${deliveryLocation}\n`;
+}
+if (scheduleTime) {
+message += `Schedule: ${scheduleTime}\n`;
+}
+}
 
-    message += `\nSubtotal: KES ${subtotal}\n\n`;
-  }
+message += `\nORDER ITEMS:\n`;
 
-  if (customOrder.trim() !== "") {
-    message += `*Custom Order*\n${customOrder}\nPrice: To be confirmed\n\n`;
-  }
+if (cart.length === 0) {
+message += `No items in cart\n`;
+} else {
+cart.forEach((item) => {
+const itemTotal = item.price * item.quantity;
+subtotal += itemTotal;
 
-  if (orderNotes.trim() !== "") {
-    message += `*Notes*\n${orderNotes}\n\n`;
-  }
+```
+  message += `* ${item.quantity}x ${item.name} (KES ${itemTotal})\n`;
+});
+```
 
-  message += `Reply:\n1 Confirm\n2 Modify\n3 Cancel\n`;
+}
 
-  return message;
+let total = subtotal;
+
+if (orderType === "delivery") {
+total += deliveryFee;
+message += `\nDelivery Fee: KES ${deliveryFee}`;
+}
+
+message += `\n\nTOTAL AMOUNT: KES ${total}\n`;
+
+if (customOrder.trim()) {
+message += `\nCUSTOM REQUEST:\n${customOrder}\n`;
+}
+
+if (orderNotes.trim()) {
+message += `\nNOTES:\n${orderNotes}\n`;
+}
+
+message += `\n--------------------------`;
+
+return message;
 }

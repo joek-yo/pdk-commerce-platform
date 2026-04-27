@@ -1,34 +1,47 @@
 // src/lib/getBusinessData.ts
-import menuData from "@/data/menu.json"; // ✅ Fixed path using alias
 
-// 🔹 Returns business info
+import menuData from "@/data/menu.json";
+
+// ================= BUSINESS INFO =================
 export function getBusinessData() {
   return menuData.business;
 }
 
-// 🔹 Returns all categories
+// ================= CATEGORIES =================
 export function getCategories() {
-  return menuData.categories;
+  return menuData.categories || [];
 }
 
-// 🔹 Returns all products across categories
+// ================= PRODUCTS =================
 export function getAllProducts() {
-  return menuData.categories.flatMap(cat => cat.items);
+  return (menuData.categories || []).flatMap((cat) => cat.items || []);
 }
 
-// 🔹 Returns top N best-selling products globally
+// ================= BEST SELLERS =================
 export function getBestSellers(limit = 3) {
   return getAllProducts()
-    .filter(p => p.bestSelling)
+    .filter((p) => p?.bestSelling === true && p?.available !== false)
     .slice(0, limit);
 }
 
-// 🔹 Returns all of Jaby’s favorite products
+// ================= JABY FAVORITES =================
 export function getJabysFavorites() {
-  return getAllProducts().filter(p => p.jabysFavorite);
+  return getAllProducts().filter(
+    (p) => p?.jabysFavorite === true && p?.available !== false
+  );
 }
 
-// 🔹 Returns all bundles
+// ================= AVAILABLE PRODUCTS ONLY =================
+export function getAvailableProducts() {
+  return getAllProducts().filter((p) => p?.available !== false);
+}
+
+// ================= BUNDLES =================
 export function getBundles() {
   return menuData.bundles || [];
+}
+
+// ================= WHATSAPP HELPERS =================
+export function getBusinessWhatsAppNumber() {
+  return menuData.business?.phone?.replace(/[^0-9]/g, "") || "";
 }

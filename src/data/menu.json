@@ -1,81 +1,231 @@
+
 {
   "business": {
-    "name": "House of Jaby",
+    "name": "Prime Deals Kenya",
     "logo": "/images/logo.png",
-    "phone": "+254759090305",
-    "tagline": "Order easily via WhatsApp",
-    "slogan": "Crafted Moments The Jaby Way",
+    "phone": "+254729724433",
+    "tagline": "Smart Deals. Smart Choices.",
+    "slogan": "Premium Deals. Instant Value.",
     "banner": "/images/hero-banner.jpg",
     "drawerBanner": "/images/drawer-hero.jpg",
     "currency": "KES",
     "email": "esthermbaire231@gmail.com"
   },
+
   "hero": {
-    "subtitle": "Crafted Moments The Jaby Way",
+    "subtitle": "Premium Deals. Instant Value.",
     "image": "/images/hero-banner.jpg",
     "ctaText": "Order instantly via WhatsApp",
     "status": "Open Now",
     "location": "Westlands, Nairobi"
   },
+
   "categories": [
     {
       "id": "cakes",
       "name": "Cakes",
+      "image": "/images/category-cakes.jpg",
       "items": [
-        { "id": 101, "name": "1kg Chocolate Cake", "price": 2500, "image": "/images/chocolate-cake.jpg", "description": "Rich chocolate cake for every occasion", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 102, "name": "Red Velvet Cupcakes (6pcs)", "price": 1200, "image": "/images/red-velvet.jpg", "description": "Box of 6 soft and creamy red velvet cupcakes", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 103, "name": "Vanilla Celebration Cake", "price": 2300, "image": "/images/vanilla-cake.jpg", "description": "Classic vanilla sponge with buttercream frosting", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 104, "name": "Black Forest Cake", "price": 2800, "image": "/images/black-forest.jpg", "description": "Chocolate sponge layered with cream and cherries", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 108, "name": "Chocolate Fudge Cake", "price": 3000, "image": "/images/chocolate-fudge.jpg", "description": "Extra rich chocolate cake layered with fudge", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 105, "name": "Strawberry Delight Cake", "price": 2600, "image": "/images/strawberry-cake.jpg", "description": "Fresh strawberry flavored cake with cream topping", "available": true, "jabysFavorite": false, "bestSelling": true },
-        { "id": 106, "name": "Carrot Cake", "price": 2400, "image": "/images/carrot-cake.jpg", "description": "Moist carrot cake topped with cream cheese frosting", "available": false, "jabysFavorite": false, "bestSelling": true },
-        { "id": 107, "name": "Lemon Drizzle Cake", "price": 2200, "image": "/images/lemon-cake.jpg", "description": "Zesty lemon cake with sweet glaze drizzle", "available": true, "jabysFavorite": false, "bestSelling": false },
-        { "id": 109, "name": "Custom Birthday Cake", "price": 3500, "image": "/images/birthday-cake.jpg", "description": "Personalized birthday cake with custom design", "available": true, "jabysFavorite": false, "bestSelling": false },
-        { "id": 110, "name": "Mini Cupcake Assortment (12pcs)", "price": 1800, "image": "/images/mini-cupcakes.jpg", "description": "Assorted mini cupcakes in different flavors", "available": true, "jabysFavorite": false, "bestSelling": false }
+        {
+          "id": 101,
+          "name": "1kg Chocolate Cake",
+          "price": 2500,
+          "image": "/images/chocolate-cake.jpg",
+          "description": "Rich chocolate cake for every occasion",
+          "available": true,
+          "jabysFavorite": true,
+          "bestSelling": true
+        },
+        {
+          "id": 103,
+          "name": "Vanilla Celebration Cake",
+          "price": 2300,
+          "image": "/images/vanilla-cake.jpg",
+          "description": "Classic vanilla sponge with buttercream frosting",
+          "available": true,
+          "jabysFavorite": true,
+          "bestSelling": true
+        },
+        {
+          "id": 104,
+          "name": "Black Forest Cake",
+          "price": 2800,
+          "image": "/images/black-forest.jpg",
+          "description": "Chocolate sponge layered with cream and cherries",
+          "available": true,
+          "jabysFavorite": true,
+          "bestSelling": true
+        },
+        {
+          "id": 108,
+          "name": "Chocolate Fudge Cake",
+          "price": 3000,
+          "image": "/images/chocolate-fudge.jpg",
+          "description": "Extra rich chocolate cake layered with fudge",
+          "available": true,
+          "jabysFavorite": true,
+          "bestSelling": true
+        },
+        {
+          "id": 105,
+          "name": "Strawberry Delight Cake",
+          "price": 2600,
+          "image": "/images/strawberry-cake.jpg",
+          "description": "Fresh strawberry flavored cake",
+          "available": true,
+          "jabysFavorite": false,
+          "bestSelling": true
+        },
+        {
+          "id": 109,
+          "name": "Custom Birthday Cake",
+          "price": 3500,
+          "image": "/images/birthday-cake.jpg",
+          "description": "Personalized birthday cake",
+          "available": true,
+          "jabysFavorite": false,
+          "bestSelling": true
+        }
       ]
     },
+
     {
       "id": "drinks",
       "name": "Drinks",
+      "image": "/images/category-drinks.jpg",
       "items": [
-        { "id": 201, "name": "Fresh Orange Juice", "price": 400, "image": "/images/orange-juice.jpg", "description": "Freshly squeezed orange juice", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 202, "name": "Mango Smoothie", "price": 500, "image": "/images/mango-smoothie.jpg", "description": "Creamy mango smoothie with ice", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 203, "name": "Passion Fruit Juice", "price": 450, "image": "/images/passion-juice.jpg", "description": "Sweet and tangy passion fruit juice", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 204, "name": "Pineapple Mint Juice", "price": 450, "image": "/images/pineapple-juice.jpg", "description": "Refreshing pineapple juice with mint flavor", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 207, "name": "Vanilla Milkshake", "price": 600, "image": "/images/vanilla-milkshake.jpg", "description": "Classic vanilla milkshake with smooth texture", "available": false, "jabysFavorite": true, "bestSelling": false },
-        { "id": 205, "name": "Strawberry Smoothie", "price": 550, "image": "/images/strawberry-smoothie.jpg", "description": "Creamy strawberry smoothie with fresh fruits", "available": true, "jabysFavorite": false, "bestSelling": true },
-        { "id": 206, "name": "Chocolate Milkshake", "price": 600, "image": "/images/chocolate-milkshake.jpg", "description": "Thick chocolate milkshake topped with cream", "available": true, "jabysFavorite": false, "bestSelling": true },
-        { "id": 208, "name": "Iced Coffee", "price": 500, "image": "/images/iced-coffee.jpg", "description": "Cold brewed coffee served over ice", "available": true, "jabysFavorite": false, "bestSelling": false },
-        { "id": 209, "name": "Hot Cappuccino", "price": 450, "image": "/images/cappuccino.jpg", "description": "Freshly brewed cappuccino with milk foam", "available": true, "jabysFavorite": false, "bestSelling": false },
-        { "id": 210, "name": "Bottled Water (500ml)", "price": 100, "image": "/images/water.jpg", "description": "500ml bottled drinking water", "available": true, "jabysFavorite": false, "bestSelling": false }
+        {
+          "id": 201,
+          "name": "Fresh Orange Juice",
+          "price": 400,
+          "image": "/images/orange-juice.jpg",
+          "description": "Freshly squeezed orange juice",
+          "available": true,
+          "jabysFavorite": true,
+          "bestSelling": true
+        },
+        {
+          "id": 202,
+          "name": "Mango Smoothie",
+          "price": 500,
+          "image": "/images/mango-smoothie.jpg",
+          "description": "Creamy mango smoothie",
+          "available": true,
+          "jabysFavorite": true,
+          "bestSelling": true
+        },
+        {
+          "id": 205,
+          "name": "Strawberry Smoothie",
+          "price": 550,
+          "image": "/images/strawberry-smoothie.jpg",
+          "description": "Creamy strawberry smoothie",
+          "available": true,
+          "jabysFavorite": false,
+          "bestSelling": true
+        },
+        {
+          "id": 206,
+          "name": "Chocolate Milkshake",
+          "price": 600,
+          "image": "/images/chocolate-milkshake.jpg",
+          "description": "Thick chocolate milkshake",
+          "available": true,
+          "jabysFavorite": false,
+          "bestSelling": true
+        },
+        {
+          "id": 204,
+          "name": "Pineapple Mint Juice",
+          "price": 450,
+          "image": "/images/pineapple-juice.jpg",
+          "description": "Refreshing pineapple juice",
+          "available": true,
+          "jabysFavorite": true,
+          "bestSelling": true
+        }
       ]
     },
+
     {
       "id": "pastries",
       "name": "Pastries",
+      "image": "/images/category-pastries.jpg",
       "items": [
-        { "id": 301, "name": "Cheese Danish", "price": 300, "image": "/images/cheese-danish.jpg", "description": "Flaky pastry with cream cheese filling", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 302, "name": "Chocolate Croissant", "price": 350, "image": "/images/chocolate-croissant.jpg", "description": "Buttery croissant filled with chocolate", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 303, "name": "Apple Turnover", "price": 300, "image": "/images/apple-turnover.jpg", "description": "Sweet apple-filled puff pastry", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 305, "name": "Almond Croissant", "price": 400, "image": "/images/almond-croissant.jpg", "description": "Flaky croissant topped with almond slices", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 307, "name": "Chocolate Eclair", "price": 350, "image": "/images/chocolate-eclair.jpg", "description": "Cream-filled pastry topped with chocolate", "available": true, "jabysFavorite": true, "bestSelling": false },
-        { "id": 304, "name": "Cinnamon Roll", "price": 250, "image": "/images/cinnamon-roll.jpg", "description": "Soft roll with cinnamon sugar swirl", "available": true, "jabysFavorite": false, "bestSelling": true },
-        { "id": 306, "name": "Fruit Tart", "price": 500, "image": "/images/fruit-tart.jpg", "description": "Pastry filled with custard and fresh fruits", "available": true, "jabysFavorite": false, "bestSelling": true },
-        { "id": 308, "name": "Pecan Pie Slice", "price": 400, "image": "/images/pecan-pie.jpg", "description": "Mini slice of pecan pie with caramel", "available": true, "jabysFavorite": false, "bestSelling": false },
-        { "id": 309, "name": "Blueberry Muffin", "price": 250, "image": "/images/blueberry-muffin.jpg", "description": "Moist muffin with fresh blueberries", "available": true, "jabysFavorite": false, "bestSelling": false },
-        { "id": 310, "name": "Lemon Tart", "price": 450, "image": "/images/lemon-tart.jpg", "description": "Tangy lemon tart with crisp pastry shell", "available": true, "jabysFavorite": false, "bestSelling": false }
+        {
+          "id": 302,
+          "name": "Chocolate Croissant",
+          "price": 350,
+          "image": "/images/chocolate-croissant.jpg",
+          "description": "Buttery croissant filled with chocolate",
+          "available": true,
+          "jabysFavorite": true,
+          "bestSelling": true
+        },
+        {
+          "id": 301,
+          "name": "Cheese Danish",
+          "price": 300,
+          "image": "/images/cheese-danish.jpg",
+          "description": "Flaky pastry with cream cheese",
+          "available": true,
+          "jabysFavorite": true,
+          "bestSelling": true
+        },
+        {
+          "id": 303,
+          "name": "Apple Turnover",
+          "price": 300,
+          "image": "/images/apple-turnover.jpg",
+          "description": "Sweet apple puff pastry",
+          "available": true,
+          "jabysFavorite": true,
+          "bestSelling": true
+        },
+        {
+          "id": 304,
+          "name": "Cinnamon Roll",
+          "price": 250,
+          "image": "/images/cinnamon-roll.jpg",
+          "description": "Soft cinnamon swirl roll",
+          "available": true,
+          "jabysFavorite": false,
+          "bestSelling": true
+        },
+        {
+          "id": 306,
+          "name": "Fruit Tart",
+          "price": 500,
+          "image": "/images/fruit-tart.jpg",
+          "description": "Custard + fresh fruits tart",
+          "available": true,
+          "jabysFavorite": false,
+          "bestSelling": true
+        }
       ]
     }
   ],
+
   "bundles": [
-    { "id": 501, "name": "Birthday Combo", "price": 4500, "image": "/images/birthday-bundle.jpg", "description": "1kg cake + 6 cupcakes + 1 juice", "available": true, "jabysFavorite": true, "bestSelling": false },
-    { "id": 502, "name": "Family Treat Pack", "price": 3500, "image": "/images/family-bundle.jpg", "description": "Chocolate cake + 4 drinks + fries", "available": true, "jabysFavorite": false, "bestSelling": true },
-    { "id": 503, "name": "Weekend Chill Bundle", "price": 4200, "image": "/images/weekend-chill.jpg", "description": "Cake + 2 drinks + pastries", "available": true, "jabysFavorite": false, "bestSelling": false },
-    { "id": 504, "name": "Morning Boost Pack", "price": 2800, "image": "/images/morning-boost.jpg", "description": "Fresh juice + pastry combo", "available": true, "jabysFavorite": false, "bestSelling": false },
-    { "id": 505, "name": "Couple's Delight Bundle", "price": 5000, "image": "/images/couples-delight.jpg", "description": "Chocolate cake + cupcakes + drinks for two", "available": true, "jabysFavorite": false, "bestSelling": false },
-    { "id": 506, "name": "Family Movie Night", "price": 4600, "image": "/images/family-movie.jpg", "description": "Cake + popcorn + 4 drinks", "available": true, "jabysFavorite": false, "bestSelling": false },
-    { "id": 507, "name": "Tea Time Special", "price": 3000, "image": "/images/tea-time.jpg", "description": "Pastry + tea or coffee combo", "available": true, "jabysFavorite": false, "bestSelling": false },
-    { "id": 508, "name": "Kids Birthday Pack", "price": 3800, "image": "/images/kids-birthday.jpg", "description": "Mini cake + cupcakes + juice", "available": true, "jabysFavorite": false, "bestSelling": false }
+    {
+      "id": 501,
+      "name": "Birthday Combo",
+      "price": 4500,
+      "image": "/images/birthday-bundle.jpg",
+      "description": "Cake + cupcakes + juice",
+      "available": true,
+      "bestSelling": true
+    },
+    {
+      "id": 502,
+      "name": "Family Treat Pack",
+      "price": 3500,
+      "image": "/images/family-bundle.jpg",
+      "description": "Cake + drinks + fries",
+      "available": true,
+      "bestSelling": true
+    }
   ],
+
   "upsell": []
 }
