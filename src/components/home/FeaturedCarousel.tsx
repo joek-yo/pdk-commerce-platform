@@ -1,4 +1,4 @@
-// src/components/home/JabysFavorites.tsx
+// src/components/home/FeaturedCarousel.tsx
 
 "use client";
 
@@ -7,15 +7,16 @@ import { motion } from "framer-motion";
 import ProductCard from "@/components/home/ProductCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-interface FeaturedProductsProps {
-  products: any[]; // Using any[] temporarily to avoid TS strictness during the refactor
+// Renamed interface to be universal
+interface FeaturedCarouselProps {
+  products: any[]; 
 }
 
-const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) => {
+// Renamed component to FeaturedCarousel
+const FeaturedCarousel: React.FC<FeaturedCarouselProps> = ({ products }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  // REMOVE the extra .filter((p) => p.featured) here. 
-  // The filtering is already done in page.tsx!
+  // We use the passed products directly
   const displayItems = products;
 
   if (displayItems.length === 0) return null;
@@ -47,6 +48,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) => {
       {/* NAVIGATION ARROWS */}
       <button
         onClick={scrollLeft}
+        aria-label="Scroll Left"
         className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur shadow-md border border-gray-100 rounded-full p-2 sm:p-3 hover:bg-white transition"
       >
         <FaChevronLeft size={16} />
@@ -54,6 +56,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) => {
 
       <button
         onClick={scrollRight}
+        aria-label="Scroll Right"
         className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur shadow-md border border-gray-100 rounded-full p-2 sm:p-3 hover:bg-white transition"
       >
         <FaChevronRight size={16} />
@@ -80,4 +83,4 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) => {
   );
 };
 
-export default FeaturedProducts;
+export default FeaturedCarousel;

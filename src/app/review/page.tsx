@@ -1,169 +1,178 @@
+// src/app/review/page.tsx
+
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import Image from "next/image";
+import { openWhatsApp } from "@/lib/whatsapp";
+import { FaWhatsapp, FaChevronLeft, FaShoppingCart, FaMapMarkerAlt, FaUser, FaCheckCircle } from "react-icons/fa";
 
 export default function ReviewPage() {
-  const { cart } = useCart();
-  const [orderType, setOrderType] = useState<"pickup" | "delivery">("pickup");
-  
-  const [customer, setCustomer] = useState({
-    name: "",
-    phone: "",
-    location: "",
-    schedule: "",
-  });
+  const { 
+    cart, 
+    customOrder, 
+    orderNotes, 
+    orderType: globalOrderType, 
+    deliveryLocation: globalLocation,
+    scheduleTime: globalSchedule 
+  } = useCart();
 
-  const subtotal = cart.reduce(
-    (total, item) => total + (item.price || 0) * (item.quantity || 0),
-    0
-  );
+  const [customer, setCustomer] = useState({ name: "", phone: "" });
 
-  if (cart.length === 0) {
+  useEffect(() => {
+    const savedInfo = sessionStorage.getItem("customer_info");
+    if (savedInfo) setCustomer(JSON.parse(savedInfo));
+  }, []);
+
+  const subtotal = cart.reduce((t, i) => t + (i.price || 0) * (i.quantity || 0), 0);
+  const hasItems = cart.length > 0;
+  const hasCustomRequest = !!(customOrder && customOrder.trim());
+
+  if (!hasItems && !hasCustomRequest) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-        <div className="text-6xl mb-4">🛒</div>
-        <h1 className="text-2xl font-bold mb-2">Your cart is empty</h1>
-        <p className="text-gray-500 mb-6">Add some delicious items to get started!</p>
-        <Link href="/menu" className="bg-[#FDB813] px-8 py-3 rounded-xl font-bold shadow-md hover:bg-[#e5a711] transition">
-          Browse Menu
-        </Link>
+      <div className="min-h-screen bg-[#F1F5F9] flex flex-col items-center justify-center p-6 text-center">
+         <FaShoppingCart className="text-slate-300 text-6xl mb-4" />
+         <h2 className="text-2xl font-black text-slate-800">Your cart is empty</h2>
+         <Link href="/" className="mt-4 text-[#FDB813] font-black uppercase text-sm tracking-widest">Return to Shop</Link>
       </div>
     );
   }
 
-  const inputStyle = "w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#FDB813] outline-none transition bg-white";
+  const handleCheckout = () => {
+    if (!customer.name || !customer.phone) return alert("Please provide details.");
+    openWhatsApp({
+      cart,
+      customerName: customer.name,
+      customerPhone: customer.phone,
+      orderType: globalOrderType,
+      deliveryLocation: globalOrderType === "delivery" ? globalLocation : "Store Pickup",
+      orderNotes: `Notes: ${orderNotes} | Schedule: ${globalSchedule}`,
+      customRequest: customOrder
+    });
+  };
+
+  // --- THE "POP" STYLING ---
+  const sectionClasses = "bg-white border border-slate-200 p-8 rounded-[2.5rem] mb-10 shadow-xl shadow-slate-200/40";
+  const labelClasses = "flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3 ml-2";
+  
+  // 🔥 HIGH VISIBILITY INPUTS: 
+  // Pure white background, thicker border, and a shadow to make it lift off the page.
+  const inputStyle = "w-full bg-white border-2 border-slate-200 p-5 rounded-2xl text-slate-900 font-bold text-lg placeholder:text-slate-300 shadow-sm focus:border-[#FDB813] focus:shadow-[0_0_15px_rgba(253,184,19,0.1)] focus:ring-0 outline-none transition-all duration-300";
 
   return (
-    <div className="max-w-2xl mx-auto p-4 md:p-6 min-h-screen pb-32 bg-gray-50">
-      <h1 className="text-3xl font-bold mb-8 text-gray-900">Review Your Order</h1>
-
-      {/* 1. ORDER SUMMARY (BEGIN WITH THIS) */}
-      <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
-        <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-          <span className="bg-[#FDB813] text-xs px-2 py-1 rounded">1</span>
-          Order Summary
-        </h2>
+    <div className="min-h-screen bg-[#F1F5F9] text-slate-900 pt-24 pb-60 px-4 font-sans">
+      <div className="max-w-2xl mx-auto">
         
-        <div className="space-y-4">
-          {cart.map((item) => (
-            <div key={item.id} className="flex justify-between items-center pb-4 border-b border-gray-50 last:border-0">
-              <div className="flex items-center gap-4">
-                <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-gray-100 border">
-                  {item.image && (
-                    <Image 
-                      src={item.image} 
-                      alt={item.name} 
-                      fill 
-                      className="object-cover" 
-                    />
-                  )}
+        <Link href="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 mb-8 transition-colors font-black text-xs uppercase tracking-widest">
+          <FaChevronLeft size={10} /> Back to Catalog
+        </Link>
+
+        <header className="mb-10">
+          <h1 className="text-5xl font-black tracking-tighter text-slate-900">
+            Final <span className="text-[#FDB813]">Review</span>
+          </h1>
+          <p className="text-slate-500 font-bold mt-2 text-sm uppercase tracking-wide">Almost there! Verify your details.</p>
+        </header>
+
+        {/* 1. ORDER SUMMARY CARD */}
+        <section className={sectionClasses}>
+          <h2 className={labelClasses}><FaShoppingCart size={12}/> Your Selection</h2>
+          <div className="space-y-6">
+            {cart.map((item) => (
+              <div key={item.id} className="flex justify-between items-center group">
+                <div className="flex items-center gap-5">
+                  <div className="relative w-20 h-20 rounded-3xl overflow-hidden bg-slate-100 border border-slate-200">
+                    <Image src={item.image || "/images/placeholder.jpg"} alt={item.name} fill className="object-cover" />
+                  </div>
+                  <div>
+                    <h3 className="font-extrabold text-slate-900 text-lg leading-tight tracking-tight">{item.name}</h3>
+                    <p className="text-xs font-black text-[#FDB813] mt-1 uppercase tracking-widest">
+                      {item.quantity} Unit{item.quantity > 1 ? 's' : ''}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-gray-800">{item.name}</h3>
-                  <p className="text-sm text-gray-500">Qty: {item.quantity} × KES {item.price.toLocaleString()}</p>
-                </div>
+                <p className="font-black text-slate-900 text-lg">KES {(item.price * item.quantity).toLocaleString()}</p>
               </div>
-              <p className="font-bold text-gray-900">
-                KES {(item.price * item.quantity).toLocaleString()}
-              </p>
+            ))}
+
+            {hasCustomRequest && (
+              <div className="p-6 rounded-[2rem] bg-slate-900 text-white shadow-lg">
+                <div className="flex items-center gap-2 mb-3">
+                  <FaCheckCircle className="text-[#FDB813]" size={14}/>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#FDB813]">Custom Sourcing</h4>
+                </div>
+                <p className="text-base italic font-bold leading-relaxed">"{customOrder}"</p>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-10 pt-8 border-t-2 border-slate-100 flex justify-between items-end">
+            <div>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] block mb-1">Total Amount</span>
+              <span className="text-4xl font-black text-slate-900 tracking-tighter">KES {subtotal.toLocaleString()}</span>
             </div>
-          ))}
-        </div>
-
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <div className="flex justify-between items-center text-xl font-black text-gray-900">
-            <span>Total Amount</span>
-            <span>KES {subtotal.toLocaleString()}</span>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 2. CUSTOMER DETAILS */}
-      <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6 space-y-5">
-        <h2 className="text-lg font-bold mb-2 flex items-center gap-2">
-          <span className="bg-[#FDB813] text-xs px-2 py-1 rounded">2</span>
-          Customer Details
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-1 ml-1">Your Name</label>
-            <input 
-              type="text" 
-              placeholder="e.g. John Doe" 
-              className={inputStyle}
-              value={customer.name}
-              onChange={(e) => setCustomer({...customer, name: e.target.value})}
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-1 ml-1">Phone Number</label>
-            <input 
-              type="tel" 
-              placeholder="0712 345 678" 
-              className={inputStyle}
-              value={customer.phone}
-              onChange={(e) => setCustomer({...customer, phone: e.target.value})}
-            />
-          </div>
-        </div>
+        {/* 2. CUSTOMER DETAILS CARD */}
+        <section className={sectionClasses}>
+          <h2 className={labelClasses}><FaUser size={12}/> Delivery Info</h2>
+          <div className="grid grid-cols-1 gap-8 mb-8">
+            
+            {/* NAME BOX */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Full Name</label>
+              <input 
+                className={inputStyle} 
+                value={customer.name} 
+                placeholder="e.g. Joseph Kihiu" 
+                onChange={(e) => setCustomer({...customer, name: e.target.value})} 
+              />
+            </div>
 
-        <div>
-          <label className="block text-xs font-bold uppercase text-gray-500 mb-2 ml-1">Order Type</label>
-          <div className="flex gap-3">
+            {/* PHONE BOX */}
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Phone Number</label>
+              <input 
+                className={inputStyle} 
+                value={customer.phone} 
+                placeholder="07XX XXX XXX" 
+                onChange={(e) => setCustomer({...customer, phone: e.target.value})} 
+              />
+            </div>
+
+          </div>
+
+          {/* METHOD BOX - High Contrast */}
+          <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 flex justify-between items-center shadow-lg">
+             <span className="text-slate-400 font-black uppercase text-[10px] tracking-[0.2em] flex items-center gap-2">
+               <FaMapMarkerAlt/> Preferred Method
+             </span>
+             <span className="font-black text-[#FDB813] uppercase text-[10px] px-5 py-2 bg-white/10 rounded-xl border border-white/10">
+               {globalOrderType}
+             </span>
+          </div>
+        </section>
+
+        {/* STICKY CTA */}
+        <div className="fixed bottom-0 left-0 right-0 p-8 pt-24 bg-gradient-to-t from-[#F1F5F9] via-[#F1F5F9] to-transparent z-50 pointer-events-none">
+          <div className="max-w-2xl mx-auto pointer-events-auto">
             <button 
-              onClick={() => setOrderType("pickup")}
-              className={`flex-1 py-3 rounded-xl font-bold border-2 transition flex items-center justify-center gap-2 ${orderType === "pickup" ? "border-[#FDB813] bg-[#FDB813]/5 text-black" : "border-gray-100 text-gray-400"}`}
+              onClick={handleCheckout}
+              disabled={!customer.name || !customer.phone}
+              className="w-full bg-[#FDB813] text-black py-6 rounded-[2rem] font-black text-2xl hover:bg-[#E5A711] transition-all disabled:opacity-40 shadow-[0_25px_60px_rgba(253,184,19,0.5)] flex items-center justify-center gap-4 group"
             >
-              🛍️ Pickup
+              <FaWhatsapp size={32} />
+              <span>Confirm Order</span>
             </button>
-            <button 
-              onClick={() => setOrderType("delivery")}
-              className={`flex-1 py-3 rounded-xl font-bold border-2 transition flex items-center justify-center gap-2 ${orderType === "delivery" ? "border-[#FDB813] bg-[#FDB813]/5 text-black" : "border-gray-100 text-gray-400"}`}
-            >
-              🚚 Delivery
-            </button>
+            <p className="text-center text-[10px] text-slate-400 mt-5 font-black uppercase tracking-[0.3em]">
+              Prime Deals Kenya • Secure Checkout
+            </p>
           </div>
         </div>
 
-        {orderType === "delivery" && (
-          <div className="space-y-1 animate-in fade-in slide-in-from-top-2 duration-300">
-            <label className="block text-xs font-bold uppercase text-gray-500 mb-1 ml-1">Delivery Address / Google Maps Link</label>
-            <textarea 
-              placeholder="House No, Apartment Name, or Link" 
-              className={inputStyle}
-              rows={2}
-              value={customer.location}
-              onChange={(e) => setCustomer({...customer, location: e.target.value})}
-            />
-          </div>
-        )}
-
-        <div>
-          <label className="block text-xs font-bold uppercase text-gray-500 mb-1 ml-1">Schedule (Optional)</label>
-          <input 
-            type="text" 
-            placeholder="e.g. Leave at the gate / Deliver at 5pm" 
-            className={inputStyle}
-            value={customer.schedule}
-            onChange={(e) => setCustomer({...customer, schedule: e.target.value})}
-          />
-        </div>
-      </section>
-
-      {/* STICKY CTA */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t shadow-lg z-10">
-        <div className="max-w-2xl mx-auto">
-          <button 
-            disabled={!customer.name || !customer.phone}
-            className="w-full bg-[#FDB813] text-black py-4 rounded-2xl font-black text-lg hover:bg-[#e5a711] disabled:bg-gray-200 disabled:text-gray-400 transition-all active:scale-[0.98]"
-          >
-            Place Order • KES {subtotal.toLocaleString()}
-          </button>
-        </div>
       </div>
     </div>
   );

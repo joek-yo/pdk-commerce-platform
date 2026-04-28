@@ -4,6 +4,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { FaArrowRight, FaFingerprint } from "react-icons/fa";
 
 import ProductCard from "@/components/home/ProductCard";
 import { useCart } from "@/context/CartContext";
@@ -13,7 +14,6 @@ import {
 } from "@/lib/getBusinessData";
 
 const MenuPage: React.FC = () => {
-  // ================= SAFE DATA =================
   const categories = getCategories();
   const bundles = getBundles();
 
@@ -22,7 +22,6 @@ const MenuPage: React.FC = () => {
     { id: "bundles-category", name: "Bundles", items: bundles },
   ];
 
-  // ================= SAFE INITIAL STATE =================
   const [selectedCategory, setSelectedCategory] = useState(
     menuCategories[0]?.name ?? "Bundles"
   );
@@ -34,102 +33,92 @@ const MenuPage: React.FC = () => {
     menuCategories[0];
 
   const items = activeCategory?.items ?? [];
-
   const placeholderImage = "/images/placeholder.jpg";
 
-  // ================= SAFE SORT =================
   const sortedProducts = [...items].sort((a, b) => {
     if (a?.bestSelling && !b?.bestSelling) return -1;
     if (!a?.bestSelling && b?.bestSelling) return 1;
-    if (a?.jabysFavorite && !b?.jabysFavorite) return -1;
-    if (!a?.jabysFavorite && b?.jabysFavorite) return 1;
     return 0;
   });
 
-  const primaryBtn =
-    "inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold bg-[#FDB813] text-[#0D0D0D] hover:bg-[#C2922F] transition shadow-md";
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-20">
 
       {/* HEADER */}
-      <div className="mb-6 sm:mb-10 text-center">
-        <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3">
-          Freshly Crafted for You
+      <div className="mb-12 text-center">
+        <span className="text-[10px] font-black text-[#FDB813] uppercase tracking-[0.5em] mb-4 block text-center">
+          Curated Selection
+        </span>
+        <h1 className="text-4xl sm:text-6xl font-black text-slate-900 tracking-tighter mb-4">
+          Premium <span className="text-[#FDB813]">Collection</span>
         </h1>
-        <p className="text-gray-500 text-sm sm:text-base">
-          Browse, select and order instantly
+        <p className="text-slate-400 text-sm sm:text-lg font-bold tracking-tight max-w-md mx-auto leading-tight">
+          Discover excellence in every detail. Sourced for quality, delivered for you.
         </p>
       </div>
 
-      {/* CATEGORY TABS */}
-      <div className="sticky top-16 z-30 bg-white py-3 mb-6">
-
-        <div className="flex justify-center overflow-x-auto no-scrollbar">
-          <div className="flex bg-gray-100 rounded-full shadow-sm divide-x divide-gray-300 w-full max-w-sm sm:max-w-md md:max-w-xl">
-
-            {menuCategories.map((cat, index) => (
+      {/* MOBILE-FIRST CATEGORY TABS */}
+      <div className="sticky top-[70px] z-30 bg-[#F1F5F9]/80 backdrop-blur-md py-6 mb-12 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex justify-start sm:justify-center overflow-x-auto no-scrollbar scroll-smooth">
+          <div className="flex bg-white p-1.5 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 gap-1 min-w-max mx-auto">
+            {menuCategories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.name)}
-                className={`flex-1 text-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition
+                className={`whitespace-nowrap px-6 sm:px-8 py-3 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all duration-300
                   ${selectedCategory === cat.name
-                    ? "bg-green-900 text-white"
-                    : "text-gray-700 hover:bg-gray-200"
+                    ? "bg-slate-900 text-white shadow-lg shadow-slate-900/20"
+                    : "text-slate-400 hover:text-slate-900 hover:bg-slate-50"
                   }`}
               >
                 {cat.name}
               </button>
             ))}
-
           </div>
         </div>
       </div>
 
-      {/* CTA */}
-      <div className="max-w-3xl mx-auto mb-8 sm:mb-12">
-        <div className="border rounded-2xl p-5 sm:p-8 text-center bg-green-50 border-green-200">
-
-          <h2 className="text-lg sm:text-2xl font-bold mb-2">
-            Need Something Custom?
-          </h2>
-
-          <p className="text-gray-600 mb-5 text-sm sm:text-base">
-            Request special meals, cakes, or bulk orders tailored to you.
-          </p>
-
-          <Link href="/custom-order" className={primaryBtn}>
-            🧾 Request Custom Order
-          </Link>
-
+      {/* CTA CARD */}
+      <div className="max-w-5xl mx-auto mb-16">
+        <div className="relative overflow-hidden bg-white border border-slate-100 rounded-[2.5rem] p-8 sm:p-12 text-center shadow-[0_30px_100px_rgba(0,0,0,0.04)]">
+          <div className="relative z-10">
+            <h2 className="text-2xl sm:text-3xl font-black mb-3 text-slate-900 tracking-tighter">
+              Looking for something specific?
+            </h2>
+            <p className="text-slate-500 font-bold mb-8 text-sm sm:text-base max-w-lg mx-auto">
+              Our bespoke sourcing service helps you find unique electronics, accessories, or bulk orders tailored to your specs.
+            </p>
+            <Link href="/custom-order">
+              <button className="group px-10 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-black transition-all flex items-center gap-3 mx-auto shadow-xl shadow-slate-900/20">
+                Bespoke Request <FaArrowRight size={10} className="text-[#FDB813] group-hover:translate-x-1 transition-transform" />
+              </button>
+            </Link>
+          </div>
+          <div className="absolute top-0 right-0 p-8 opacity-5 text-slate-900 hidden sm:block">
+            <FaFingerprint size={80} />
+          </div>
         </div>
       </div>
 
-      {/* PRODUCTS */}
-      <div className="
-        grid
-        grid-cols-2
-        sm:grid-cols-2
-        md:grid-cols-3
-        lg:grid-cols-4
-        gap-3 sm:gap-5 md:gap-6
-      ">
+      {/* PRODUCTS GRID */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8">
         {sortedProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            {...product}
-            image={product.image || placeholderImage}
-            isBundle={selectedCategory === "Bundles"}
-            onAddToCart={() =>
-              addToCart({
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                quantity: 1,
-                image: product.image || placeholderImage,
-              })
-            }
-          />
+          <div key={product.id} className="transition-all duration-500 hover:-translate-y-1">
+            <ProductCard
+              {...product}
+              image={product.image || placeholderImage}
+              isBundle={selectedCategory === "Bundles"}
+              onAddToCart={() =>
+                addToCart({
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  quantity: 1,
+                  image: product.image || placeholderImage,
+                })
+              }
+            />
+          </div>
         ))}
       </div>
 

@@ -39,6 +39,12 @@ export function getUIConfig() {
       ctaDescription: ui.menuPage?.ctaDescription ?? "",
       ctaButton: ui.menuPage?.ctaButton ?? "",
     },
+    // Adding a placeholder for custom order text to make it SaaS-ready
+    customOrder: {
+      title: ui.customOrder?.title ?? "Need Something Custom?",
+      description: ui.customOrder?.description ?? "Request bulk orders or specialized items made just for you.",
+      buttonText: ui.customOrder?.buttonText ?? "Request Custom Order",
+    }
   };
 }
 
@@ -76,14 +82,14 @@ export function getBundles() {
   }));
 }
 
-// ================= FEATURED / FAVORITES =================
+// ================= UNIVERSAL FEATURED PRODUCTS =================
 export function getFeaturedProducts() {
   return getAllProducts().filter(
-    (p) => (p?.jabysFavorite || p?.featured || p?.isFavorite) && p?.available !== false
+    (p) => (p?.featured || p?.isFavorite || p?.jabysFavorite) && p?.available !== false
   );
 }
 
-// Alias for older components still looking for "JabysFavorites"
+// DEPRECATED ALIAS: Keep this for now to prevent breaking changes while refactoring
 export const getJabysFavorites = getFeaturedProducts;
 
 // ================= BEST SELLERS =================

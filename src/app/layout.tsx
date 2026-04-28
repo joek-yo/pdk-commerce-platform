@@ -1,7 +1,7 @@
-// FILE: src/app/layout.tsx
+// src/app/layout.tsx
 
 import "./globals.css";
-import { CartProvider } from "@/context/CartContext";
+import { CartProvider } from "@/context/CartContext"; 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MiniCartDrawer from "@/components/features/cart/MiniCartDrawer";
@@ -19,25 +19,30 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
-
-        {/* Global App Wrapper */}
+      {/* Changed bg from #0D0D0D to #F1F5F9 and text to slate-900 */}
+      <body className="bg-[#F1F5F9] text-slate-900 min-h-screen flex flex-col antialiased font-sans">
+        
         <CartProvider>
-
-          {/* Layout Shell */}
+          {/* Header will sit on top of the new light background */}
           <Header />
 
-          {/* Global UI Overlays */}
           <MiniCartDrawer />
           <CartToast />
 
-          {/* Page Content */}
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow relative">
+            {/* Modified the top glow: 
+               On a light background, we use a very faint Gold to White gradient 
+               so it feels like "sunlight" at the top of the page.
+            */}
+            <div className="absolute top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-white to-transparent pointer-events-none -z-10" />
+            
+            <div className="relative z-10">
+              {children}
+            </div>
+          </main>
 
           <Footer />
-
         </CartProvider>
-
       </body>
     </html>
   );

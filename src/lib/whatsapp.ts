@@ -22,9 +22,7 @@ export interface OrderDetails {
 
 /**
  * WHATSAPP MESSAGE BUILDER (PURE FORMATTER)
- * - NO BUSINESS LOGIC
- * - NO PRICING LOGIC
- * - ONLY PRESENTATION
+ * - Refactored for Prime Deals Kenya (Universal Commerce)
  */
 export function generateWhatsAppMessage(order: OrderDetails) {
   const {
@@ -41,7 +39,7 @@ export function generateWhatsAppMessage(order: OrderDetails) {
   const business = getBusinessData();
   const orderId = generateOrderId();
 
-  // ✅ SINGLE SOURCE OF TRUTH (pricing engine with location support)
+  // ✅ SINGLE SOURCE OF TRUTH (pricing engine)
   const { subtotal, delivery, total } = calculateTotal(
     cart,
     orderType,
@@ -51,103 +49,106 @@ export function generateWhatsAppMessage(order: OrderDetails) {
   const itemsText = cart
     .map((item) => {
       const itemTotal = item.price * item.quantity;
-
-      return `• ${item.quantity}x ${item.name}
-  ${icons.money} KES ${itemTotal.toLocaleString()}`;
+      return `• ${item.quantity}x ${item.name}\n  ${icons.money || "💰"} KES ${itemTotal.toLocaleString()}`;
     })
     .join("\n");
 
   let message = `
-${icons.order} *NEW ORDER - ${business.name}*
-${icons.sparkle} ${business.tagline || "Smart Deals. Smart Choices."}
+${icons.order || "📦"} *NEW ORDER - ${business.name}*
+${icons.sparkle || "✨"} ${business.tagline || "Smart Deals. Smart Choices."}
 
 ━━━━━━━━━━━━━━━━━━
-${icons.package} *ORDER ID:* ${orderId}
+${icons.package || "🆔"} *ORDER ID:* ${orderId}
 
-${icons.customer} *CUSTOMER DETAILS*
-• Name: ${customerName || "N/A"}
+${icons.customer || "👤"} *CUSTOMER DETAILS*
+• Name: ${customerName || "Guest"}
 • Phone: ${customerPhone || "N/A"}
 
 ━━━━━━━━━━━━━━━━━━
-${icons.item} *ORDER ITEMS*
+${icons.item || "🛒"} *ORDER ITEMS*
 ${itemsText}
 
 ━━━━━━━━━━━━━━━━━━
 💰 *SUBTOTAL: KES ${subtotal.toLocaleString()}*`;
 
-  // 🚚 only show delivery fee when applicable
+  // 🚚 Delivery Fee
   if (orderType === "delivery") {
-    message += `
-🚚 *DELIVERY FEE: KES ${delivery.toLocaleString()}`;
+    message += `\n🚚 *DELIVERY FEE: KES ${delivery.toLocaleString()}*`;
   }
 
   message += `
 ━━━━━━━━━━━━━━━━━━
 💰 *TOTAL AMOUNT: KES ${total.toLocaleString()}*
 ━━━━━━━━━━━━━━━━━━
-${icons.delivery} *ORDER TYPE:* ${(orderType || "pickup").toUpperCase()}`;
+${icons.delivery || "📍"} *ORDER TYPE:* ${(orderType || "pickup").toUpperCase()}`;
 
-  // 📍 delivery info
-  if (orderType === "delivery") {
-    message += `
-📍 *DELIVERY LOCATION:* ${deliveryLocation || "N/A"}`;
+  // 📍 Location info
+  if (orderType === "delivery" && deliveryLocation) {
+    message += `\n📍 *DELIVERY TO:* ${deliveryLocation}`;
   }
 
-  // ⏰ schedule
+  // ⏰ Schedule
   if (scheduleTime) {
-    message += `
-⏰ *SCHEDULE:* ${scheduleTime}`;
+    message += `\n⏰ *SCHEDULED FOR:* ${scheduleTime}`;
   }
 
-  // 🧾 custom order
+  // 🧾 Custom Requests
   if (customOrder?.trim()) {
-    message += `
-
-${icons.custom} *CUSTOM REQUEST*
-${customOrder}`;
+    message += `\n\n${icons.custom || "✨"} *CUSTOM REQUEST*\n${customOrder}`;
   }
 
-  // 📝 notes
+  // 📝 General Notes
   if (orderNotes?.trim()) {
-    message += `
-
-${icons.note} *NOTES*
-${orderNotes}`;
+    message += `\n\n${icons.note || "📝"} *NOTES*\n${orderNotes}`;
   }
 
   message += `
 
 ━━━━━━━━━━━━━━━━━━
-${icons.status} *ORDER STATUS:* PENDING CONFIRMATION
+${icons.status || "⏳"} *STATUS:* PENDING CONFIRMATION
 
-${icons.action} *NEXT ACTION*
-1️⃣ Confirm Order
-2️⃣ Modify Order
-3️⃣ Cancel Order
+${icons.action || "⚡"} *NEXT STEPS*
+1️⃣ Wait for our representative to call
+2️⃣ Confirm items & delivery time
+3️⃣ Payment on delivery/M-Pesa
 
 ━━━━━━━━━━━━━━━━━━
-${icons.success} Thank you for choosing *${business.name}*`;
+${icons.success || "✅"} Thank you for shopping with *${business.name}*!`;
 
   return message;
 }
 
 /**
  * SIDE EFFECT ONLY (OPEN WHATSAPP)
+ * - Improved phone number sanitization for Kenyan users
  */
 export function openWhatsApp(order: OrderDetails) {
   if (typeof window === "undefined") return;
 
-  const phone = getBusinessData().phone?.replace(/[^0-9]/g, "");
+  const business = getBusinessData();
+  let phone = business.whatsapp || business.phone || "";
+  
+  // Remove all non-numeric characters
+  phone = phone.replace(/[^0-9]/g, "");
 
   if (!phone) {
-    console.error("Business phone missing in configuration");
+    alert("Error: Business contact number is not configured.");
     return;
   }
 
-  const message = generateWhatsAppMessage(order);
+  // ✅ Ensure Kenyan numbers are in International Format (254...)
+  if (phone.startsWith("0")) {
+    phone = "254" + phone.substring(1);
+  } else if (phone.startsWith("7") || phone.startsWith("1")) {
+    // Handles cases like "729..." instead of "0729..."
+    phone = "254" + phone;
+  }
 
-  window.open(
-    `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
-    "_blank"
-  );
+  const message = generateWhatsAppMessage(order);
+  const encodedMessage = encodeURIComponent(message);
+
+  // Using api.whatsapp.com for better cross-device compatibility
+  const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`;
+
+  window.open(whatsappUrl, "_blank");
 }

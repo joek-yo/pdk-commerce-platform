@@ -19,8 +19,8 @@
       "path": "/"
     },
     {
-      "id": "menu",
-      "label": "Menu",
+      "id": "products",
+      "label": "Products",
       "path": "/menu"
     },
     {
@@ -32,97 +32,72 @@
 
   "ui": {
     "hero": {
-      "title": "Freshly Crafted for You",
-      "subtitle": "Browse, select and order instantly",
-      "ctaPrimary": "View Menu",
-      "ctaSecondary": "Order via WhatsApp"
+      "title": "Premium Quality, Best Deals",
+      "subtitle": "Discover amazing products and order instantly",
+      "ctaPrimary": "Shop Products",
+      "ctaSecondary": "Chat with Us"
     },
 
     "menuPage": {
-      "title": "Freshly Crafted for You",
-      "subtitle": "Browse, select and order instantly",
-      "ctaTitle": "Need Something Custom?",
-      "ctaDescription": "Request special meals, cakes, or bulk orders tailored to you.",
-      "ctaButton": "🧾 Request Custom Order"
+      "title": "Our Catalog",
+      "subtitle": "Browse through our handpicked selections",
+      "ctaTitle": "Looking for Something Specific?",
+      "ctaDescription": "We source custom items and bulk orders tailored to your needs.",
+      "ctaButton": "📦 Request Custom Sourcing"
+    },
+
+    "customOrder": {
+      "title": "Need a Custom Deal?",
+      "description": "Request specific products, bulk hardware, or specialized items made just for you.",
+      "buttonText": "🛒 Request Custom Order"
     }
   },
 
   "categories": [
     {
-      "id": "cakes",
-      "name": "Cakes",
-      "image": "/images/category-cakes.jpg",
+      "id": "tech",
+      "name": "Electronics & Tech",
+      "image": "/images/category-tech.jpg",
       "items": [
         {
           "id": 101,
-          "name": "1kg Chocolate Cake",
-          "price": 2500,
-          "discount": 10,
-          "image": "/images/chocolate-cake.jpg",
-          "description": "Rich chocolate cake for every occasion",
+          "name": "High-Performance Workstation",
+          "price": 85000,
+          "discount": 5,
+          "image": "/images/workstation.jpg",
+          "description": "Powerful setup for developers and designers",
           "available": true,
-          "jabysFavorite": true,
-          "bestSelling": true
+          "featured": true,
+          "isBestSeller": true
         },
         {
           "id": 103,
-          "name": "Vanilla Celebration Cake",
-          "price": 2300,
-          "image": "/images/vanilla-cake.jpg",
-          "description": "Classic vanilla sponge with buttercream frosting",
+          "name": "Wireless Noise-Cancelling Headphones",
+          "price": 12000,
+          "image": "/images/headphones.jpg",
+          "description": "Premium audio experience for focus and travel",
           "available": true,
-          "jabysFavorite": true,
-          "bestSelling": true
-        },
-        {
-          "id": 104,
-          "name": "Black Forest Cake",
-          "price": 2800,
-          "discount": 15,
-          "image": "/images/black-forest.jpg",
-          "description": "Chocolate sponge layered with cream and cherries",
-          "available": true,
-          "jabysFavorite": true,
-          "bestSelling": true
-        },
-        {
-          "id": 108,
-          "name": "Chocolate Fudge Cake",
-          "price": 3000,
-          "image": "/images/chocolate-fudge.jpg",
-          "description": "Extra rich chocolate cake layered with fudge",
-          "available": true,
-          "jabysFavorite": true,
-          "bestSelling": true
+          "featured": true,
+          "isBestSeller": true
         }
       ]
     },
 
     {
-      "id": "drinks",
-      "name": "Drinks",
-      "image": "/images/category-drinks.jpg",
+      "id": "accessories",
+      "name": "Accessories",
+      "image": "/images/category-accessories.jpg",
       "items": [
         {
           "id": 201,
-          "name": "Fresh Orange Juice",
-          "price": 400,
-          "discount": 5,
-          "image": "/images/orange-juice.jpg",
-          "description": "Freshly squeezed orange juice",
+          "name": "Smart Watch Series Pro",
+          "price": 15000,
+          "discount": 10,
+          "image": "/images/smartwatch.jpg",
+          "description": "Track your fitness and stay connected on the go",
           "available": true,
-          "jabysFavorite": true,
-          "bestSelling": true
-        },
-        {
-          "id": 202,
-          "name": "Mango Smoothie",
-          "price": 500,
-          "image": "/images/mango-smoothie.jpg",
-          "description": "Creamy mango smoothie",
-          "available": true,
-          "jabysFavorite": true,
-          "bestSelling": true
+          "featured": true,
+          "isBestSeller": true
         }
       ]
     }
@@ -131,27 +106,21 @@
   "bundles": [
     {
       "id": 301,
-      "name": "Morning Boost Combo",
-      "price": 1200,
-      "image": "/images/morning-boost.jpg",
-      "description": "Coffee + pastry combo for a perfect morning",
-      "available": true
+      "name": "Developer Starter Pack",
+      "price": 95000,
+      "image": "/images/dev-bundle.jpg",
+      "description": "Monitor + Keyboard + Desk Mat essentials",
+      "available": true,
+      "featured": true
     },
     {
       "id": 302,
-      "name": "Family Treat Bundle",
-      "price": 3500,
-      "image": "/images/family-bundle.jpg",
-      "description": "Perfect sharing bundle for family and friends",
-      "available": true
-    },
-    {
-      "id": 303,
-      "name": "Weekend Chill Pack",
-      "price": 1800,
-      "image": "/images/weekend-chill.jpg",
-      "description": "Snacks + drinks combo for relaxing weekends",
-      "available": true
+      "name": "Office Setup Bundle",
+      "price": 150000,
+      "image": "/images/office-bundle.jpg",
+      "description": "Complete furniture and tech setup for your home office",
+      "available": true,
+      "featured": true
     }
   ]
 }
