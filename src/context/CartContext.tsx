@@ -1,8 +1,6 @@
-// FILE: src/context/CartContext.tsx
-
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
 
 // ------------------------- TYPES -------------------------
 
@@ -49,6 +47,10 @@ interface CartContextType {
   setSelectedBranch: (branch: string) => void;
 
   clearCart: () => void;
+
+  // 🔥 NEW (USEFUL ACROSS APP)
+  cartTotal: number;
+  cartCount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -56,7 +58,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 // ------------------------- PROVIDER -------------------------
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  // CART STATE
+  // CART
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -72,41 +74,51 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [scheduleTime, setScheduleTime] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("");
 
-  // ---------------- LOAD FROM STORAGE ----------------
+  // ---------------- LOAD SAFE ----------------
+
   useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    const savedOrder = localStorage.getItem("orderData");
+    try {
+      const savedCart = localStorage.getItem("cart");
+      const savedOrder = localStorage.getItem("orderData");
 
-    if (savedCart) setCart(JSON.parse(savedCart));
+      if (savedCart) {
+        const parsed = JSON.parse(savedCart);
+        if (Array.isArray(parsed)) setCart(parsed);
+      }
 
-    if (savedOrder) {
-      const data = JSON.parse(savedOrder);
+      if (savedOrder) {
+        const data = JSON.parse(savedOrder);
 
-      setCustomOrder(data.customOrder || "");
-      setOrderNotes(data.orderNotes || "");
-      setOrderType(data.orderType || "pickup");
-      setDeliveryLocation(data.deliveryLocation || "");
-      setScheduleTime(data.scheduleTime || "");
-      setSelectedBranch(data.selectedBranch || "");
+        setCustomOrder(data.customOrder || "");
+        setOrderNotes(data.orderNotes || "");
+        setOrderType(data.orderType || "pickup");
+        setDeliveryLocation(data.deliveryLocation || "");
+        setScheduleTime(data.scheduleTime || "");
+        setSelectedBranch(data.selectedBranch || "");
+      }
+    } catch (err) {
+      console.error("Cart load error:", err);
     }
   }, []);
 
-  // ---------------- SAVE TO STORAGE ----------------
+  // ---------------- PERSIST ----------------
+
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
   useEffect(() => {
-    const data = {
-      customOrder,
-      orderNotes,
-      orderType,
-      deliveryLocation,
-      scheduleTime,
-      selectedBranch,
-    };
-
-    localStorage.setItem("orderData", JSON.stringify(data));
+    localStorage.setItem(
+      "orderData",
+      JSON.stringify({
+        customOrder,
+        orderNotes,
+        orderType,
+        deliveryLocation,
+        scheduleTime,
+        selectedBranch,
+      })
+    );
   }, [
     customOrder,
     orderNotes,
@@ -115,6 +127,16 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     scheduleTime,
     selectedBranch,
   ]);
+
+  // ---------------- DERIVED STATE (🔥 NEW) ----------------
+
+  const cartTotal = useMemo(() => {
+    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  }, [cart]);
+
+  const cartCount = useMemo(() => {
+    return cart.reduce((sum, item) => sum + item.quantity, 0);
+  }, [cart]);
 
   // ---------------- CART ACTIONS ----------------
 
@@ -138,10 +160,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     if (!options?.silent) {
-      setToastMessage(`Added: ${item.name}`);
+      setToastMessage(`Added ${item.name}`);
       setShowToast(true);
-
-      setTimeout(() => setShowToast(false), 2500);
+      setTimeout(() => setShowToast(false), 2000);
     }
   };
 
@@ -150,20 +171,24 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const updateQuantity = (id: number, quantity: number) => {
-    if (quantity < 1) return;
-
     setCart((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
+      prev
+        .map((item) =>
+          item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
+        )
+        .filter((item) => item.quantity > 0)
     );
   };
+
+  // ---------------- DRAWER ----------------
 
   const toggleDrawer = (state?: boolean) => {
     setIsDrawerOpen((prev) =>
       typeof state === "boolean" ? state : !prev
     );
   };
+
+  // ---------------- CLEAR CART (UPGRADED) ----------------
 
   const clearCart = () => {
     setCart([]);
@@ -173,6 +198,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setDeliveryLocation("");
     setScheduleTime("");
     setSelectedBranch("");
+
+    setShowToast(false);
+    setToastMessage("");
 
     localStorage.removeItem("cart");
     localStorage.removeItem("orderData");
@@ -204,11 +232,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         setDeliveryLocation,
         scheduleTime,
         setScheduleTime,
-
         selectedBranch,
         setSelectedBranch,
 
         clearCart,
+
+        // 🔥 NEW
+        cartTotal,
+        cartCount,
       }}
     >
       {children}

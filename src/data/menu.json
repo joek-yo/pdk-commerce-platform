@@ -1,23 +1,50 @@
-
 {
   "business": {
     "name": "Prime Deals Kenya",
-    "logo": "/images/logo.png",
-    "phone": "+254729724433",
     "tagline": "Smart Deals. Smart Choices.",
-    "slogan": "Premium Deals. Instant Value.",
+    "phone": "0729724433",
+    "email": "info@primedeals.co.ke",
+    "location": "Nairobi",
+    "status": "Open",
+    "whatsapp": "0729724433",
+    "logo": "/images/logo.png",
     "banner": "/images/hero-banner.jpg",
-    "drawerBanner": "/images/drawer-hero.jpg",
-    "currency": "KES",
-    "email": "esthermbaire231@gmail.com"
+    "drawerBanner": "/images/drawer-hero.jpg"
   },
 
-  "hero": {
-    "subtitle": "Premium Deals. Instant Value.",
-    "image": "/images/hero-banner.jpg",
-    "ctaText": "Order instantly via WhatsApp",
-    "status": "Open Now",
-    "location": "Westlands, Nairobi"
+  "navigation": [
+    {
+      "id": "home",
+      "label": "Home",
+      "path": "/"
+    },
+    {
+      "id": "menu",
+      "label": "Menu",
+      "path": "/menu"
+    },
+    {
+      "id": "contact",
+      "label": "Contact",
+      "path": "/contact"
+    }
+  ],
+
+  "ui": {
+    "hero": {
+      "title": "Freshly Crafted for You",
+      "subtitle": "Browse, select and order instantly",
+      "ctaPrimary": "View Menu",
+      "ctaSecondary": "Order via WhatsApp"
+    },
+
+    "menuPage": {
+      "title": "Freshly Crafted for You",
+      "subtitle": "Browse, select and order instantly",
+      "ctaTitle": "Need Something Custom?",
+      "ctaDescription": "Request special meals, cakes, or bulk orders tailored to you.",
+      "ctaButton": "🧾 Request Custom Order"
+    }
   },
 
   "categories": [
@@ -30,6 +57,7 @@
           "id": 101,
           "name": "1kg Chocolate Cake",
           "price": 2500,
+          "discount": 10,
           "image": "/images/chocolate-cake.jpg",
           "description": "Rich chocolate cake for every occasion",
           "available": true,
@@ -50,6 +78,7 @@
           "id": 104,
           "name": "Black Forest Cake",
           "price": 2800,
+          "discount": 15,
           "image": "/images/black-forest.jpg",
           "description": "Chocolate sponge layered with cream and cherries",
           "available": true,
@@ -65,26 +94,6 @@
           "available": true,
           "jabysFavorite": true,
           "bestSelling": true
-        },
-        {
-          "id": 105,
-          "name": "Strawberry Delight Cake",
-          "price": 2600,
-          "image": "/images/strawberry-cake.jpg",
-          "description": "Fresh strawberry flavored cake",
-          "available": true,
-          "jabysFavorite": false,
-          "bestSelling": true
-        },
-        {
-          "id": 109,
-          "name": "Custom Birthday Cake",
-          "price": 3500,
-          "image": "/images/birthday-cake.jpg",
-          "description": "Personalized birthday cake",
-          "available": true,
-          "jabysFavorite": false,
-          "bestSelling": true
         }
       ]
     },
@@ -98,6 +107,7 @@
           "id": 201,
           "name": "Fresh Orange Juice",
           "price": 400,
+          "discount": 5,
           "image": "/images/orange-juice.jpg",
           "description": "Freshly squeezed orange juice",
           "available": true,
@@ -113,94 +123,6 @@
           "available": true,
           "jabysFavorite": true,
           "bestSelling": true
-        },
-        {
-          "id": 205,
-          "name": "Strawberry Smoothie",
-          "price": 550,
-          "image": "/images/strawberry-smoothie.jpg",
-          "description": "Creamy strawberry smoothie",
-          "available": true,
-          "jabysFavorite": false,
-          "bestSelling": true
-        },
-        {
-          "id": 206,
-          "name": "Chocolate Milkshake",
-          "price": 600,
-          "image": "/images/chocolate-milkshake.jpg",
-          "description": "Thick chocolate milkshake",
-          "available": true,
-          "jabysFavorite": false,
-          "bestSelling": true
-        },
-        {
-          "id": 204,
-          "name": "Pineapple Mint Juice",
-          "price": 450,
-          "image": "/images/pineapple-juice.jpg",
-          "description": "Refreshing pineapple juice",
-          "available": true,
-          "jabysFavorite": true,
-          "bestSelling": true
-        }
-      ]
-    },
-
-    {
-      "id": "pastries",
-      "name": "Pastries",
-      "image": "/images/category-pastries.jpg",
-      "items": [
-        {
-          "id": 302,
-          "name": "Chocolate Croissant",
-          "price": 350,
-          "image": "/images/chocolate-croissant.jpg",
-          "description": "Buttery croissant filled with chocolate",
-          "available": true,
-          "jabysFavorite": true,
-          "bestSelling": true
-        },
-        {
-          "id": 301,
-          "name": "Cheese Danish",
-          "price": 300,
-          "image": "/images/cheese-danish.jpg",
-          "description": "Flaky pastry with cream cheese",
-          "available": true,
-          "jabysFavorite": true,
-          "bestSelling": true
-        },
-        {
-          "id": 303,
-          "name": "Apple Turnover",
-          "price": 300,
-          "image": "/images/apple-turnover.jpg",
-          "description": "Sweet apple puff pastry",
-          "available": true,
-          "jabysFavorite": true,
-          "bestSelling": true
-        },
-        {
-          "id": 304,
-          "name": "Cinnamon Roll",
-          "price": 250,
-          "image": "/images/cinnamon-roll.jpg",
-          "description": "Soft cinnamon swirl roll",
-          "available": true,
-          "jabysFavorite": false,
-          "bestSelling": true
-        },
-        {
-          "id": 306,
-          "name": "Fruit Tart",
-          "price": 500,
-          "image": "/images/fruit-tart.jpg",
-          "description": "Custard + fresh fruits tart",
-          "available": true,
-          "jabysFavorite": false,
-          "bestSelling": true
         }
       ]
     }
@@ -208,24 +130,28 @@
 
   "bundles": [
     {
-      "id": 501,
-      "name": "Birthday Combo",
-      "price": 4500,
-      "image": "/images/birthday-bundle.jpg",
-      "description": "Cake + cupcakes + juice",
-      "available": true,
-      "bestSelling": true
+      "id": 301,
+      "name": "Morning Boost Combo",
+      "price": 1200,
+      "image": "/images/morning-boost.jpg",
+      "description": "Coffee + pastry combo for a perfect morning",
+      "available": true
     },
     {
-      "id": 502,
-      "name": "Family Treat Pack",
+      "id": 302,
+      "name": "Family Treat Bundle",
       "price": 3500,
       "image": "/images/family-bundle.jpg",
-      "description": "Cake + drinks + fries",
-      "available": true,
-      "bestSelling": true
+      "description": "Perfect sharing bundle for family and friends",
+      "available": true
+    },
+    {
+      "id": 303,
+      "name": "Weekend Chill Pack",
+      "price": 1800,
+      "image": "/images/weekend-chill.jpg",
+      "description": "Snacks + drinks combo for relaxing weekends",
+      "available": true
     }
-  ],
-
-  "upsell": []
+  ]
 }

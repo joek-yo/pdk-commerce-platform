@@ -22,6 +22,9 @@ export interface OrderDetails {
 
 /**
  * WHATSAPP MESSAGE BUILDER (PURE FORMATTER)
+ * - NO BUSINESS LOGIC
+ * - NO PRICING LOGIC
+ * - ONLY PRESENTATION
  */
 export function generateWhatsAppMessage(order: OrderDetails) {
   const {
@@ -38,16 +41,20 @@ export function generateWhatsAppMessage(order: OrderDetails) {
   const business = getBusinessData();
   const orderId = generateOrderId();
 
-  // ✅ SINGLE SOURCE OF TRUTH (pricing.ts)
-  const { subtotal, delivery, total } = calculateTotal(cart, orderType);
+  // ✅ SINGLE SOURCE OF TRUTH (pricing engine with location support)
+  const { subtotal, delivery, total } = calculateTotal(
+    cart,
+    orderType,
+    deliveryLocation
+  );
 
   const itemsText = cart
-    .map(
-      (item) =>
-        `• ${item.quantity}x ${item.name}\n  ${
-          icons.money
-        } KES ${(item.price * item.quantity).toLocaleString()}`
-    )
+    .map((item) => {
+      const itemTotal = item.price * item.quantity;
+
+      return `• ${item.quantity}x ${item.name}
+  ${icons.money} KES ${itemTotal.toLocaleString()}`;
+    })
     .join("\n");
 
   let message = `
@@ -68,6 +75,7 @@ ${itemsText}
 ━━━━━━━━━━━━━━━━━━
 💰 *SUBTOTAL: KES ${subtotal.toLocaleString()}*`;
 
+  // 🚚 only show delivery fee when applicable
   if (orderType === "delivery") {
     message += `
 🚚 *DELIVERY FEE: KES ${delivery.toLocaleString()}`;
@@ -77,18 +85,21 @@ ${itemsText}
 ━━━━━━━━━━━━━━━━━━
 💰 *TOTAL AMOUNT: KES ${total.toLocaleString()}*
 ━━━━━━━━━━━━━━━━━━
-${icons.delivery} *ORDER TYPE:* ${orderType.toUpperCase()}`;
+${icons.delivery} *ORDER TYPE:* ${(orderType || "pickup").toUpperCase()}`;
 
+  // 📍 delivery info
   if (orderType === "delivery") {
     message += `
 📍 *DELIVERY LOCATION:* ${deliveryLocation || "N/A"}`;
   }
 
+  // ⏰ schedule
   if (scheduleTime) {
     message += `
 ⏰ *SCHEDULE:* ${scheduleTime}`;
   }
 
+  // 🧾 custom order
   if (customOrder?.trim()) {
     message += `
 
@@ -96,6 +107,7 @@ ${icons.custom} *CUSTOM REQUEST*
 ${customOrder}`;
   }
 
+  // 📝 notes
   if (orderNotes?.trim()) {
     message += `
 
@@ -120,7 +132,7 @@ ${icons.success} Thank you for choosing *${business.name}*`;
 }
 
 /**
- * SIDE EFFECT ONLY (NO LOGIC INSIDE)
+ * SIDE EFFECT ONLY (OPEN WHATSAPP)
  */
 export function openWhatsApp(order: OrderDetails) {
   if (typeof window === "undefined") return;

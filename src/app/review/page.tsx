@@ -1,214 +1,170 @@
-// FILE: src/app/review/page.tsx
-
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useCart } from "@/context/CartContext";
-import { openWhatsApp } from "@/lib/whatsapp";
-import { calculateTotal } from "@/lib/pricing"; // ✅ SINGLE SOURCE OF TRUTH
+import Link from "next/link";
+import Image from "next/image";
 
-const ReviewPage: React.FC = () => {
-  const {
-    cart,
-    customOrder,
-    orderNotes,
-    orderType,
-    setOrderType,
-    deliveryLocation,
-    setDeliveryLocation,
-    scheduleTime,
-    setScheduleTime,
-    clearCart,
-  } = useCart();
+export default function ReviewPage() {
+  const { cart } = useCart();
+  const [orderType, setOrderType] = useState<"pickup" | "delivery">("pickup");
+  
+  const [customer, setCustomer] = useState({
+    name: "",
+    phone: "",
+    location: "",
+    schedule: "",
+  });
 
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-
-  // ================= PRICING (ONLY SOURCE OF TRUTH) =================
-  const { subtotal, delivery, total } = useMemo(
-    () => calculateTotal(cart, orderType),
-    [cart, orderType]
+  const subtotal = cart.reduce(
+    (total, item) => total + (item.price || 0) * (item.quantity || 0),
+    0
   );
 
-  // ================= LOAD SESSION DATA =================
-  useEffect(() => {
-    const stored = sessionStorage.getItem("customOrderData");
+  if (cart.length === 0) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+        <div className="text-6xl mb-4">🛒</div>
+        <h1 className="text-2xl font-bold mb-2">Your cart is empty</h1>
+        <p className="text-gray-500 mb-6">Add some delicious items to get started!</p>
+        <Link href="/menu" className="bg-[#FDB813] px-8 py-3 rounded-xl font-bold shadow-md hover:bg-[#e5a711] transition">
+          Browse Menu
+        </Link>
+      </div>
+    );
+  }
 
-    if (stored) {
-      try {
-        const data = JSON.parse(stored);
-
-        setName(data.name || "");
-        setPhone(data.phone || "");
-        setOrderType(data.orderType || "pickup");
-        setDeliveryLocation(data.location || "");
-        setScheduleTime(data.scheduleTime || "");
-      } catch (err) {
-        console.error("Invalid session data:", err);
-      }
-    }
-  }, [setOrderType, setDeliveryLocation, setScheduleTime]);
-
-  // ================= SEND ORDER =================
-  const handleSendOrder = () => {
-    if (!name.trim()) {
-      alert("Please enter your name.");
-      return;
-    }
-
-    if (!phone.trim()) {
-      alert("Please enter your phone number.");
-      return;
-    }
-
-    if (orderType === "delivery" && !deliveryLocation.trim()) {
-      alert("Please provide a delivery location.");
-      return;
-    }
-
-    openWhatsApp({
-      cart,
-      customOrder,
-      orderNotes,
-      orderType,
-      deliveryLocation,
-      scheduleTime,
-      customerName: name.trim(),
-      customerPhone: phone.trim(),
-    });
-
-    setTimeout(() => {
-      clearCart();
-      sessionStorage.removeItem("customOrderData");
-    }, 800);
-  };
+  const inputStyle = "w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#FDB813] outline-none transition bg-white";
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-32 pt-[100px] sm:pt-[80px]">
+    <div className="max-w-2xl mx-auto p-4 md:p-6 min-h-screen pb-32 bg-gray-50">
+      <h1 className="text-3xl font-bold mb-8 text-gray-900">Review Your Order</h1>
 
-      {/* HEADER */}
-      <div className="px-4 pt-2 pb-6 text-center">
-        <h1 className="text-2xl font-bold">Review Your Order</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Confirm everything before sending to WhatsApp
-        </p>
-      </div>
-
-      <div className="max-w-xl mx-auto px-4 space-y-6 pb-32">
-
-        {/* CUSTOM ORDER */}
-        {customOrder && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-5">
-            <h2 className="font-semibold mb-2">Custom Order</h2>
-            <p className="text-sm text-gray-700">{customOrder}</p>
-          </div>
-        )}
-
-        {/* CART */}
-        {cart.length > 0 && (
-          <div className="bg-white rounded-xl border p-5 space-y-3">
-            <h2 className="font-semibold">Cart Items</h2>
-
-            {cart.map((item) => (
-              <div key={item.id} className="flex justify-between text-sm">
-                <span>{item.quantity} × {item.name}</span>
-                <span>KES {(item.price * item.quantity).toLocaleString()}</span>
+      {/* 1. ORDER SUMMARY (BEGIN WITH THIS) */}
+      <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
+        <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+          <span className="bg-[#FDB813] text-xs px-2 py-1 rounded">1</span>
+          Order Summary
+        </h2>
+        
+        <div className="space-y-4">
+          {cart.map((item) => (
+            <div key={item.id} className="flex justify-between items-center pb-4 border-b border-gray-50 last:border-0">
+              <div className="flex items-center gap-4">
+                <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-gray-100 border">
+                  {item.image && (
+                    <Image 
+                      src={item.image} 
+                      alt={item.name} 
+                      fill 
+                      className="object-cover" 
+                    />
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-800">{item.name}</h3>
+                  <p className="text-sm text-gray-500">Qty: {item.quantity} × KES {item.price.toLocaleString()}</p>
+                </div>
               </div>
-            ))}
-          </div>
-        )}
-
-        {/* ORDER TYPE */}
-        <div className="bg-white border rounded-xl p-5 space-y-4">
-          <h2 className="font-semibold">Order Type</h2>
-
-          <div className="flex gap-3">
-            <button
-              onClick={() => setOrderType("pickup")}
-              className={`flex-1 py-3 rounded-lg border ${
-                orderType === "pickup" ? "bg-green-900 text-white" : ""
-              }`}
-            >
-              Pickup
-            </button>
-
-            <button
-              onClick={() => setOrderType("delivery")}
-              className={`flex-1 py-3 rounded-lg border ${
-                orderType === "delivery" ? "bg-green-900 text-white" : ""
-              }`}
-            >
-              Delivery
-            </button>
-          </div>
-
-          {orderType === "delivery" && (
-            <input
-              value={deliveryLocation}
-              onChange={(e) => setDeliveryLocation(e.target.value)}
-              placeholder="Delivery location"
-              className="w-full border p-3 rounded-lg"
-            />
-          )}
-
-          <input
-            value={scheduleTime}
-            onChange={(e) => setScheduleTime(e.target.value)}
-            placeholder="Schedule (optional)"
-            className="w-full border p-3 rounded-lg"
-          />
+              <p className="font-bold text-gray-900">
+                KES {(item.price * item.quantity).toLocaleString()}
+              </p>
+            </div>
+          ))}
         </div>
 
-        {/* TOTAL (FROM pricing.ts ONLY) */}
-        <div className="bg-white border rounded-xl p-5 space-y-2">
-
-          <div className="flex justify-between">
-            <span>Subtotal</span>
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <div className="flex justify-between items-center text-xl font-black text-gray-900">
+            <span>Total Amount</span>
             <span>KES {subtotal.toLocaleString()}</span>
           </div>
+        </div>
+      </section>
 
-          <div className="flex justify-between">
-            <span>Delivery Fee</span>
-            <span>KES {delivery.toLocaleString()}</span>
+      {/* 2. CUSTOMER DETAILS */}
+      <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6 space-y-5">
+        <h2 className="text-lg font-bold mb-2 flex items-center gap-2">
+          <span className="bg-[#FDB813] text-xs px-2 py-1 rounded">2</span>
+          Customer Details
+        </h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-bold uppercase text-gray-500 mb-1 ml-1">Your Name</label>
+            <input 
+              type="text" 
+              placeholder="e.g. John Doe" 
+              className={inputStyle}
+              value={customer.name}
+              onChange={(e) => setCustomer({...customer, name: e.target.value})}
+            />
           </div>
-
-          <div className="flex justify-between font-bold text-lg border-t pt-2">
-            <span>Total</span>
-            <span>KES {total.toLocaleString()}</span>
+          <div>
+            <label className="block text-xs font-bold uppercase text-gray-500 mb-1 ml-1">Phone Number</label>
+            <input 
+              type="tel" 
+              placeholder="0712 345 678" 
+              className={inputStyle}
+              value={customer.phone}
+              onChange={(e) => setCustomer({...customer, phone: e.target.value})}
+            />
           </div>
-
         </div>
 
-        {/* CUSTOMER */}
-        <div className="bg-white border rounded-xl p-5 space-y-4">
-          <h2 className="font-semibold">Customer Details</h2>
-
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Name"
-            className="w-full border p-3 rounded-lg"
-          />
-
-          <input
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Phone"
-            className="w-full border p-3 rounded-lg"
-          />
+        <div>
+          <label className="block text-xs font-bold uppercase text-gray-500 mb-2 ml-1">Order Type</label>
+          <div className="flex gap-3">
+            <button 
+              onClick={() => setOrderType("pickup")}
+              className={`flex-1 py-3 rounded-xl font-bold border-2 transition flex items-center justify-center gap-2 ${orderType === "pickup" ? "border-[#FDB813] bg-[#FDB813]/5 text-black" : "border-gray-100 text-gray-400"}`}
+            >
+              🛍️ Pickup
+            </button>
+            <button 
+              onClick={() => setOrderType("delivery")}
+              className={`flex-1 py-3 rounded-xl font-bold border-2 transition flex items-center justify-center gap-2 ${orderType === "delivery" ? "border-[#FDB813] bg-[#FDB813]/5 text-black" : "border-gray-100 text-gray-400"}`}
+            >
+              🚚 Delivery
+            </button>
+          </div>
         </div>
 
+        {orderType === "delivery" && (
+          <div className="space-y-1 animate-in fade-in slide-in-from-top-2 duration-300">
+            <label className="block text-xs font-bold uppercase text-gray-500 mb-1 ml-1">Delivery Address / Google Maps Link</label>
+            <textarea 
+              placeholder="House No, Apartment Name, or Link" 
+              className={inputStyle}
+              rows={2}
+              value={customer.location}
+              onChange={(e) => setCustomer({...customer, location: e.target.value})}
+            />
+          </div>
+        )}
+
+        <div>
+          <label className="block text-xs font-bold uppercase text-gray-500 mb-1 ml-1">Schedule (Optional)</label>
+          <input 
+            type="text" 
+            placeholder="e.g. Leave at the gate / Deliver at 5pm" 
+            className={inputStyle}
+            value={customer.schedule}
+            onChange={(e) => setCustomer({...customer, schedule: e.target.value})}
+          />
+        </div>
+      </section>
+
+      {/* STICKY CTA */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t shadow-lg z-10">
+        <div className="max-w-2xl mx-auto">
+          <button 
+            disabled={!customer.name || !customer.phone}
+            className="w-full bg-[#FDB813] text-black py-4 rounded-2xl font-black text-lg hover:bg-[#e5a711] disabled:bg-gray-200 disabled:text-gray-400 transition-all active:scale-[0.98]"
+          >
+            Place Order • KES {subtotal.toLocaleString()}
+          </button>
+        </div>
       </div>
-
-      <button
-        onClick={handleSendOrder}
-        className="fixed bottom-5 right-5 p-4 rounded-full bg-green-900 text-white shadow-lg"
-      >
-        📩 WhatsApp
-      </button>
-
     </div>
   );
-};
-
-export default ReviewPage;
+}

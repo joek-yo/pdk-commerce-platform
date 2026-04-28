@@ -1,84 +1,83 @@
+// src/components/home/JabysFavorites.tsx
+
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import ProductCard from "@/components/home/ProductCard";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-interface JabysFavoritesProps {
-  products: {
-    id: number;
-    name: string;
-    price?: number;
-    image?: string;
-    description: string;
-    available?: boolean;
-    jabysFavorite?: boolean;
-    bestSelling?: boolean;
-    isBundle?: boolean;
-  }[];
+interface FeaturedProductsProps {
+  products: any[]; // Using any[] temporarily to avoid TS strictness during the refactor
 }
 
-const JabysFavorites: React.FC<JabysFavoritesProps> = ({ products }) => {
+const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
-  const [isInteracting, setIsInteracting] = useState(false);
 
-  const favorites = products.filter(p => p.jabysFavorite);
+  // REMOVE the extra .filter((p) => p.featured) here. 
+  // The filtering is already done in page.tsx!
+  const displayItems = products;
 
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
+  if (displayItems.length === 0) return null;
 
-    let scrollPos = 0;
-    const speed = 0.5;
-    let animationFrame: number;
+  const scrollAmount = 280;
 
-    const animate = () => {
-      if (!isInteracting) {
-        scrollPos += speed;
-        if (scrollPos >= carousel.scrollWidth - carousel.clientWidth) scrollPos = 0;
-        carousel.scrollLeft = scrollPos;
-      }
-      animationFrame = requestAnimationFrame(animate);
-    };
+  const scrollLeft = () => {
+    carouselRef.current?.scrollBy({
+      left: -scrollAmount,
+      behavior: "smooth",
+    });
+  };
 
-    animationFrame = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(animationFrame);
-  }, [isInteracting]);
-
-  if (favorites.length === 0) return null;
-
-  // Handle both mouse hover and touch events
-  const handleStartInteraction = () => setIsInteracting(true);
-  const handleEndInteraction = () => setIsInteracting(false);
+  const scrollRight = () => {
+    carouselRef.current?.scrollBy({
+      left: scrollAmount,
+      behavior: "smooth",
+    });
+  };
 
   return (
-    <section className="mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-center">
-        ⭐ Jaby’s Favorites
+    <section className="mt-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+
+      {/* TITLE (UNIVERSAL) */}
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900">
+        ⭐ Featured Picks
       </h2>
 
+      {/* NAVIGATION ARROWS */}
+      <button
+        onClick={scrollLeft}
+        className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur shadow-md border border-gray-100 rounded-full p-2 sm:p-3 hover:bg-white transition"
+      >
+        <FaChevronLeft size={16} />
+      </button>
+
+      <button
+        onClick={scrollRight}
+        className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur shadow-md border border-gray-100 rounded-full p-2 sm:p-3 hover:bg-white transition"
+      >
+        <FaChevronRight size={16} />
+      </button>
+
+      {/* CAROUSEL */}
       <div
         ref={carouselRef}
-        className="flex space-x-6 overflow-x-auto scrollbar-hide py-4 touch-pan-x"
-        onMouseEnter={handleStartInteraction}
-        onMouseLeave={handleEndInteraction}
-        onTouchStart={handleStartInteraction}
-        onTouchEnd={handleEndInteraction}
+        className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
       >
-        {favorites.map((product) => (
+        {displayItems.map((product) => (
           <motion.div
             key={product.id}
-            className="flex-none w-64 sm:w-56 md:w-64 lg:w-72"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
+            className="flex-none w-[48%] sm:w-56 md:w-64 lg:w-72"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.2 }}
           >
             <ProductCard {...product} />
           </motion.div>
         ))}
       </div>
+
     </section>
   );
 };
 
-export default JabysFavorites;
+export default FeaturedProducts;

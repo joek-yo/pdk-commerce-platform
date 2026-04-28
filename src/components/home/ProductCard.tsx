@@ -1,6 +1,8 @@
+// src/components/home/ProductCard.tsx
+
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 
@@ -8,47 +10,61 @@ interface ProductProps {
   id: number;
   name: string;
   price?: number;
+  oldPrice?: number;
   image?: string;
+  hoverImage?: string;
   description: string;
   available?: boolean;
-  jabysFavorite?: boolean;
-  bestSelling?: boolean;
+
+  // UNIVERSAL FLAGS (NOT HOSPITALITY SPECIFIC)
+  featured?: boolean;
+  trending?: boolean;
+
+  discountPercent?: number;
 }
 
 interface ProductCardProps extends ProductProps {
   isBundle?: boolean;
-  onAddToCart?: () => void; // <-- added this
+  onAddToCart?: () => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
   id,
   name,
   price = 0,
+  oldPrice,
   image,
+  hoverImage,
   description,
   available = true,
-  jabysFavorite = false,
-  bestSelling = false,
+  featured = false,
+  trending = false,
   isBundle = false,
-  onAddToCart, // <-- added here
+  discountPercent,
+  onAddToCart,
 }) => {
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
+  const [isHovered, setIsHovered] = useState(false);
 
-  // Check if the product is already in the cart
   const cartItem = cart.find((item) => item.id === id);
   const quantity = cartItem ? cartItem.quantity : 0;
 
-  // Use onAddToCart from props if passed, otherwise fallback to default
+  const qtyBtn =
+    "w-8 h-8 flex items-center justify-center rounded-lg font-bold transition bg-gray-200 hover:bg-gray-300 disabled:opacity-40";
+
   const handleAddToCart = () => {
     if (!available) return;
 
-    if (onAddToCart) {
-      onAddToCart();
-      return;
-    }
+    if (onAddToCart) return onAddToCart();
 
     if (!cartItem) {
-      addToCart({ id, name, price, quantity: 1, image: image || "/images/placeholder.jpg" });
+      addToCart({
+        id,
+        name,
+        price,
+        quantity: 1,
+        image: image || "/images/placeholder.jpg",
+      });
     } else {
       updateQuantity(id, quantity + 1);
     }
@@ -56,6 +72,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   const handleDecrease = () => {
     if (!cartItem) return;
+
     if (quantity <= 1) {
       removeFromCart(id);
     } else {
@@ -64,70 +81,134 @@ const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md flex flex-col relative hover:scale-105 transition-transform duration-200">
-      {/* BADGES */}
-      {(bestSelling || jabysFavorite || isBundle) && (
-        <div className="absolute top-2 left-2 flex flex-col space-y-1 z-10">
-          {bestSelling && <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">🔥 Best Seller</span>}
-          {jabysFavorite && <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">⭐ Jaby's Favorite</span>}
-          {isBundle && <span className="bg-gray-700 text-white text-xs px-2 py-1 rounded">🎁 Bundle</span>}
+    <div
+      className="
+        bg-white
+        border border-gray-200
+        rounded-2xl
+        shadow-sm
+        hover:shadow-xl
+        transition-all duration-300
+        flex flex-col relative
+        overflow-hidden
+      "
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+
+      {/* ---------------- DISCOUNT ---------------- */}
+      {discountPercent && (
+        <div className="absolute top-2 right-2 z-10 bg-red-500 text-white text-[11px] px-2 py-1 rounded-full font-bold">
+          -{discountPercent}%
         </div>
       )}
 
-      {/* PRODUCT IMAGE */}
-      <div className="relative h-48 w-full rounded-t-xl overflow-hidden">
-        <Image
-          src={image || "/images/placeholder.jpg"}
-          alt={name}
-          fill
-          className="object-cover"
-          loading="lazy"
-        />
+      {/* ---------------- UNIVERSAL BADGES ---------------- */}
+      <div className="absolute top-2 left-2 flex flex-col space-y-1 z-10">
+
+        {featured && (
+          <span className="bg-blue-500 text-white text-[10px] px-2 py-1 rounded">
+            ⭐ Featured
+          </span>
+        )}
+
+        {trending && (
+          <span className="bg-orange-500 text-white text-[10px] px-2 py-1 rounded">
+            🔥 Trending
+          </span>
+        )}
+
+        {isBundle && (
+          <span className="bg-gray-800 text-white text-[10px] px-2 py-1 rounded">
+            📦 Bundle
+          </span>
+        )}
+
       </div>
 
-      {/* DETAILS */}
-      <div className="p-4 flex flex-col justify-between flex-1">
+      {/* ---------------- IMAGE ---------------- */}
+      <div className="relative h-36 sm:h-44 md:h-52 w-full overflow-hidden">
+
+        <Image
+          src={
+            isHovered && hoverImage
+              ? hoverImage
+              : image || "/images/placeholder.jpg"
+          }
+          alt={name}
+          fill
+          className="object-cover transition-all duration-500"
+        />
+
+      </div>
+
+      {/* ---------------- CONTENT ---------------- */}
+      <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between">
+
         <div>
-          <h3 className="text-lg font-semibold text-gray-800">{name}</h3>
-          <p className="text-gray-500 mt-1 text-sm">{description}</p>
+          <h3 className="text-sm sm:text-lg font-semibold text-gray-800 line-clamp-1">
+            {name}
+          </h3>
+
+          <p className="text-gray-500 mt-1 text-xs sm:text-sm line-clamp-2">
+            {description}
+          </p>
         </div>
 
-        <div className="mt-4 flex flex-col space-y-2">
-          <span className="text-gray-900 font-bold">{`KES ${price.toLocaleString()}`}</span>
+        {/* ---------------- PRICE ---------------- */}
+        <div className="mt-3">
 
-          {/* QUANTITY CONTROLS */}
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={handleDecrease}
-              className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-              disabled={!available || quantity === 0}
-            >
-              -
-            </button>
-            <span>{quantity}</span>
-            <button
-              onClick={handleAddToCart}
-              className={`px-2 py-1 rounded transition ${
-                !available ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-green-900 text-white hover:bg-green-700"
-              }`}
-              disabled={!available}
-            >
-              +
-            </button>
+          <div className="flex items-center gap-2">
+
+            <span className="text-gray-900 font-bold text-sm sm:text-lg">
+              KES {price.toLocaleString()}
+            </span>
+
+            {oldPrice && (
+              <span className="text-gray-400 line-through text-xs sm:text-sm">
+                KES {oldPrice.toLocaleString()}
+              </span>
+            )}
+
           </div>
 
-          {/* ADD TO CART BUTTON */}
+          {/* ---------------- QUANTITY ---------------- */}
+          {cartItem && (
+            <div className="flex items-center justify-center gap-2 mt-2">
+
+              <button onClick={handleDecrease} className={qtyBtn}>
+                −
+              </button>
+
+              <span className="font-semibold text-sm min-w-[20px] text-center">
+                {quantity}
+              </span>
+
+              <button onClick={handleAddToCart} className={qtyBtn}>
+                +
+              </button>
+
+            </div>
+          )}
+
+          {/* ---------------- ADD TO CART ---------------- */}
           {!cartItem && (
             <button
               onClick={handleAddToCart}
               disabled={!available}
-              className={`mt-2 px-4 py-2 font-semibold rounded-lg shadow-md transition-all duration-200
-                ${!available ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-green-900 text-white hover:bg-green-700"}`}
+              className="
+                mt-2 text-sm font-semibold text-[#0D0D0D]
+                underline underline-offset-4
+                hover:text-[#C2922F]
+                transition
+              "
             >
-              {!available ? "Out of Stock" : "Add to Cart"}
+              {available ? "Add to Cart →" : "Unavailable"}
             </button>
           )}
+
         </div>
+
       </div>
     </div>
   );

@@ -1,69 +1,73 @@
+// src/app/page.tsx
+
 "use client";
 
 import React from "react";
 import Link from "next/link";
 
-// ✅ Using alias "@/..." for all imports
 import Hero from "@/components/home/Hero";
 import FeaturedBundles from "@/components/home/FeaturedBundles";
 import JabysFavorites from "@/components/home/JabysFavorites";
 import ProductCard from "@/components/home/ProductCard";
-import menuData from "@/data/menu.json";
+
+import {
+  getCategories,
+  getBundles,
+  getAllProducts,
+} from "@/lib/getBusinessData";
 
 const Pages: React.FC = () => {
-  const { categories, bundles } = menuData;
+  // ================= DATA =================
+  const bundlesData = getBundles();
+  const allItems = getAllProducts();
 
-  // -----------------------------
-  // Combine all items once to avoid multiple flatMaps
-  // -----------------------------
-  const allItems = categories.flatMap((c) => c.items);
-
-  // -----------------------------
-  // Jaby's Favorites
-  // -----------------------------
-  const jabyFavorites = allItems.filter((i) => i.jabysFavorite);
-
-  // -----------------------------
-  // Best Sellers (Top 3 globally)
-  // -----------------------------
-  const bestSellers = allItems.filter((i) => i.bestSelling).slice(0, 3);
-
-  // -----------------------------
-  // Featured Bundles
-  // -----------------------------
-  const featuredBundles = bundles.filter(
-    (b) => b.jabysFavorite || b.bestSelling
+  // ================= DERIVED DATA =================
+  
+  // 1. Favorites: Look for anything flagged as a favorite/featured in ALL items
+  const featuredProducts = allItems.filter(
+    (i) => i?.jabysFavorite === true || i?.featured === true || i?.isFavorite === true
   );
 
+  // 2. Best Sellers
+  const bestSellers = allItems
+    .filter((i) => i?.bestSelling === true || i?.isBestSeller === true)
+    .slice(0, 6);
+
+  // 3. Bundles: Check the dedicated bundles array PLUS any item tagged as a bundle in the menu
+  const featuredBundles = [
+    ...bundlesData,
+    ...allItems.filter((i) => i?.category?.toLowerCase() === "bundle" || i?.isBundle === true)
+  ].filter((b) => b?.featured !== false); // Keep them visible unless explicitly hidden
+
   return (
-    <main>
-      {/* ---------------- Hero Section ---------------- */}
+    <main className="bg-gray-50 pb-20">
       <Hero />
 
-      {/* ---------------- Custom Order Button ---------------- */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        <div className="border rounded-xl p-6 text-center bg-green-50 border-green-200">
-          <h2 className="font-semibold text-lg mb-2">
+      {/* CUSTOM ORDER CTA */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8 sm:mt-12">
+        <div className="bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 text-center shadow-sm">
+          <h2 className="text-xl sm:text-2xl font-bold mb-2 text-gray-900">
             Need Something Not on the Menu?
           </h2>
-          <p className="text-sm text-gray-600 mb-4">
-            You can request cakes, catering, bulk meals, or any special order.
+          <p className="text-gray-600 text-sm sm:text-base mb-6">
+            Request cakes, catering, bulk meals, or custom food orders made just for you.
           </p>
           <Link href="/custom-order">
-            <button className="px-6 py-3 bg-green-900 text-white rounded-lg font-semibold hover:bg-green-700 transition">
-              🎂 Request Full Custom Order
+            <button className="px-8 py-3 bg-[#0D0D0D] text-white rounded-xl font-bold hover:bg-gray-800 transition shadow-lg w-full sm:w-auto">
+              🎂 Request Custom Order
             </button>
           </Link>
         </div>
       </div>
 
-      {/* ---------------- Page Content ---------------- */}
-      <div className="pt-16 space-y-24">
-        {/* ---------------- Best Sellers ---------------- */}
+      <div className="pt-10 sm:pt-16 space-y-16 sm:space-y-24">
+        {/* BEST SELLERS */}
         {bestSellers.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold mb-6 text-center">🔥 Best Sellers</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <section className="max-w-7xl mx-auto px-4 sm:px-6">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-center text-gray-900">
+              🔥 Best Sellers
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8">
               {bestSellers.map((product) => (
                 <ProductCard key={product.id} {...product} />
               ))}
@@ -71,12 +75,14 @@ const Pages: React.FC = () => {
           </section>
         )}
 
-        {/* ---------------- Jaby's Favorites ---------------- */}
-        {jabyFavorites.length > 0 && <JabysFavorites products={jabyFavorites} />}
+        {/* FAVORITES / FEATURED ITEMS */}
+        {featuredProducts.length > 0 && (
+          <JabysFavorites products={featuredProducts} />
+        )}
 
-        {/* ---------------- Featured Bundles ---------------- */}
+        {/* BUNDLES */}
         {featuredBundles.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <section className="max-w-7xl mx-auto px-4 sm:px-6">
             <FeaturedBundles bundles={featuredBundles} />
           </section>
         )}
