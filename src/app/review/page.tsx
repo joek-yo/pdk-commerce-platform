@@ -7,7 +7,7 @@ import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import Image from "next/image";
 import { openWhatsApp } from "@/lib/whatsapp";
-import { FaWhatsapp, FaChevronLeft, FaShoppingCart, FaMapMarkerAlt, FaUser, FaCheckCircle } from "react-icons/fa";
+import { FaWhatsapp, FaChevronLeft, FaShoppingCart, FaMapMarkerAlt, FaUser, FaCheckCircle, FaPhone } from "react-icons/fa";
 
 export default function ReviewPage() {
   const { 
@@ -16,7 +16,9 @@ export default function ReviewPage() {
     orderNotes, 
     orderType: globalOrderType, 
     deliveryLocation: globalLocation,
-    scheduleTime: globalSchedule 
+    scheduleTime: globalSchedule,
+    setOrderType,
+    setDeliveryLocation
   } = useCart();
 
   const [customer, setCustomer] = useState({ name: "", phone: "" });
@@ -42,24 +44,22 @@ export default function ReviewPage() {
 
   const handleCheckout = () => {
     if (!customer.name || !customer.phone) return alert("Please provide details.");
+    if (globalOrderType === "delivery" && !globalLocation) return alert("Please provide a delivery address.");
+
     openWhatsApp({
       cart,
       customerName: customer.name,
       customerPhone: customer.phone,
       orderType: globalOrderType,
       deliveryLocation: globalOrderType === "delivery" ? globalLocation : "Store Pickup",
-      orderNotes: `Notes: ${orderNotes} | Schedule: ${globalSchedule}`,
+      orderNotes: `Notes: ${orderNotes} | Timing: ${globalSchedule}`,
       customRequest: customOrder
     });
   };
 
-  // --- THE "POP" STYLING ---
   const sectionClasses = "bg-white border border-slate-200 p-8 rounded-[2.5rem] mb-10 shadow-xl shadow-slate-200/40";
   const labelClasses = "flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3 ml-2";
-  
-  // 🔥 HIGH VISIBILITY INPUTS: 
-  // Pure white background, thicker border, and a shadow to make it lift off the page.
-  const inputStyle = "w-full bg-white border-2 border-slate-200 p-5 rounded-2xl text-slate-900 font-bold text-lg placeholder:text-slate-300 shadow-sm focus:border-[#FDB813] focus:shadow-[0_0_15px_rgba(253,184,19,0.1)] focus:ring-0 outline-none transition-all duration-300";
+  const inputStyle = "w-full bg-slate-50 border-2 border-slate-100 p-5 rounded-2xl text-slate-900 font-bold text-lg placeholder:text-slate-300 shadow-sm focus:bg-white focus:border-[#FDB813] outline-none transition-all duration-300";
 
   return (
     <div className="min-h-screen bg-[#F1F5F9] text-slate-900 pt-24 pb-60 px-4 font-sans">
@@ -73,7 +73,7 @@ export default function ReviewPage() {
           <h1 className="text-5xl font-black tracking-tighter text-slate-900">
             Final <span className="text-[#FDB813]">Review</span>
           </h1>
-          <p className="text-slate-500 font-bold mt-2 text-sm uppercase tracking-wide">Almost there! Verify your details.</p>
+          <p className="text-slate-500 font-bold mt-2 text-sm uppercase tracking-wide">Verify your details before we chat.</p>
         </header>
 
         {/* 1. ORDER SUMMARY CARD */}
@@ -101,7 +101,7 @@ export default function ReviewPage() {
               <div className="p-6 rounded-[2rem] bg-slate-900 text-white shadow-lg">
                 <div className="flex items-center gap-2 mb-3">
                   <FaCheckCircle className="text-[#FDB813]" size={14}/>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#FDB813]">Custom Sourcing</h4>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#FDB813]">Custom Sourcing Request</h4>
                 </div>
                 <p className="text-base italic font-bold leading-relaxed">"{customOrder}"</p>
               </div>
@@ -116,44 +116,60 @@ export default function ReviewPage() {
           </div>
         </section>
 
-        {/* 2. CUSTOMER DETAILS CARD */}
+        {/* 2. CUSTOMER & DELIVERY INFO */}
         <section className={sectionClasses}>
-          <h2 className={labelClasses}><FaUser size={12}/> Delivery Info</h2>
-          <div className="grid grid-cols-1 gap-8 mb-8">
-            
-            {/* NAME BOX */}
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Full Name</label>
+          <h2 className={labelClasses}><FaUser size={12}/> Delivery Information</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="space-y-1">
+              <label className={labelClasses}><FaUser size={10}/> Full Name</label>
               <input 
                 className={inputStyle} 
-                value={customer.name} 
-                placeholder="e.g. Joseph Kihiu" 
-                onChange={(e) => setCustomer({...customer, name: e.target.value})} 
+                value={customer.name}
+                placeholder="e.g. Joseph Kihiu"
+                onChange={(e) => setCustomer({...customer, name: e.target.value})}
               />
             </div>
-
-            {/* PHONE BOX */}
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Phone Number</label>
+            <div className="space-y-1">
+              <label className={labelClasses}><FaPhone size={10}/> Phone Number</label>
               <input 
                 className={inputStyle} 
-                value={customer.phone} 
-                placeholder="07XX XXX XXX" 
-                onChange={(e) => setCustomer({...customer, phone: e.target.value})} 
+                value={customer.phone}
+                placeholder="07XX XXX XXX"
+                onChange={(e) => setCustomer({...customer, phone: e.target.value})}
               />
             </div>
-
           </div>
 
-          {/* METHOD BOX - High Contrast */}
-          <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 flex justify-between items-center shadow-lg">
-             <span className="text-slate-400 font-black uppercase text-[10px] tracking-[0.2em] flex items-center gap-2">
-               <FaMapMarkerAlt/> Preferred Method
-             </span>
-             <span className="font-black text-[#FDB813] uppercase text-[10px] px-5 py-2 bg-white/10 rounded-xl border border-white/10">
-               {globalOrderType}
-             </span>
+          {/* UNIFORM DELIVERY PREFERENCE TOGGLE */}
+          <div className="space-y-4">
+            <label className={labelClasses}><FaMapMarkerAlt size={10}/> Delivery Preference</label>
+            <div className="grid grid-cols-2 gap-4">
+              <button 
+                onClick={() => setOrderType("pickup")}
+                className={`py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all border-2 ${globalOrderType === "pickup" ? "bg-slate-900 text-white border-slate-900 shadow-xl" : "bg-white border-slate-200 text-slate-400 hover:border-slate-300"}`}
+              >
+                Store Pickup
+              </button>
+              <button 
+                onClick={() => setOrderType("delivery")}
+                className={`py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all border-2 ${globalOrderType === "delivery" ? "bg-slate-900 text-white border-slate-900 shadow-xl" : "bg-white border-slate-200 text-slate-400 hover:border-slate-300"}`}
+              >
+                Door Delivery
+              </button>
+            </div>
           </div>
+
+          {globalOrderType === "delivery" && (
+            <div className="mt-6 space-y-1 animate-in fade-in slide-in-from-top-4 duration-500">
+              <label className={labelClasses}><FaMapMarkerAlt size={10}/> Delivery Address</label>
+              <input 
+                className={inputStyle} 
+                value={globalLocation}
+                placeholder="Area, Apartment or Road"
+                onChange={(e) => setDeliveryLocation(e.target.value)}
+              />
+            </div>
+          )}
         </section>
 
         {/* STICKY CTA */}
@@ -161,14 +177,14 @@ export default function ReviewPage() {
           <div className="max-w-2xl mx-auto pointer-events-auto">
             <button 
               onClick={handleCheckout}
-              disabled={!customer.name || !customer.phone}
+              disabled={!customer.name || !customer.phone || (globalOrderType === "delivery" && !globalLocation)}
               className="w-full bg-[#FDB813] text-black py-6 rounded-[2rem] font-black text-2xl hover:bg-[#E5A711] transition-all disabled:opacity-40 shadow-[0_25px_60px_rgba(253,184,19,0.5)] flex items-center justify-center gap-4 group"
             >
               <FaWhatsapp size={32} />
-              <span>Confirm Order</span>
+              <span>Confirm & Send</span>
             </button>
             <p className="text-center text-[10px] text-slate-400 mt-5 font-black uppercase tracking-[0.3em]">
-              Prime Deals Kenya • Secure Checkout
+              Prime Deals Kenya • Secure Checkout via WhatsApp
             </p>
           </div>
         </div>

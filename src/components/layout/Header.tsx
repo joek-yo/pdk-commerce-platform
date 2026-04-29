@@ -31,13 +31,10 @@ const Header: React.FC = () => {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // --- FIX: WhatsApp Link Formatter ---
-  const getWhatsAppLink = (phone: string) => {
-    const cleaned = phone.replace(/\D/g, "");
-    // Ensure it uses the Kenya country code (254)
-    const formatted = cleaned.startsWith("0") ? "254" + cleaned.substring(1) : cleaned;
-    const finalNumber = formatted.startsWith("254") ? formatted : "254" + formatted;
-    return `https://wa.me/${finalNumber}`;
+  const getWhatsAppLink = (waNumber: string | undefined) => {
+    if (!waNumber) return "#";
+    const cleaned = waNumber.replace(/\D/g, "");
+    return `https://wa.me/${cleaned}`;
   };
 
   useEffect(() => {
@@ -60,18 +57,18 @@ const Header: React.FC = () => {
           
           {/* ================= MOBILE VIEW ================= */}
           <div className="md:hidden">
-            <div className="flex justify-between items-center py-3">
-              <div className="flex items-center space-x-2">
+            <div className="flex justify-between items-center py-3 border-b border-white/5">
+              <div className="flex items-center space-x-3 overflow-hidden">
                 {business?.logo && (
                   <Image
                     src={business.logo}
-                    alt={business.name}
-                    width={38}
-                    height={38}
-                    className="rounded"
+                    alt={business.name || "Logo"}
+                    width={34}
+                    height={34}
+                    className="rounded-md flex-shrink-0"
                   />
                 )}
-                <span className="text-lg font-bold truncate max-w-[150px]">
+                <span className="text-base font-black whitespace-nowrap tracking-tight">
                   {business?.name}
                 </span>
               </div>
@@ -79,18 +76,18 @@ const Header: React.FC = () => {
               <Button
                 variant="primary"
                 onClick={() => toggleDrawer(true)}
-                className="relative flex items-center justify-center px-3 py-2"
+                className="relative flex items-center justify-center px-3 py-2 flex-shrink-0 ml-2"
               >
                 <FaShoppingCart className="text-lg text-black" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#0D0D0D]">
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full border-2 border-[#0D0D0D]">
                     {totalItems}
                   </span>
                 )}
               </Button>
             </div>
 
-            <div className="flex justify-between items-center pb-3">
+            <div className="flex justify-between items-center py-3">
               <button onClick={() => setMobileMenuOpen(true)} className="text-white p-2">
                 <FaBars size={22} />
               </button>
@@ -99,12 +96,12 @@ const Header: React.FC = () => {
                 {business?.phone && (
                   <>
                     <a href={`tel:${business.phone}`}>
-                      <Button variant="primary" className="px-3 py-2 text-xs flex items-center gap-1.5" leftIcon={<FaPhoneAlt size={12}/>}>
+                      <Button variant="primary" className="px-4 py-2.5 text-[10px] font-black uppercase tracking-widest flex items-center gap-2" leftIcon={<FaPhoneAlt size={10}/>}>
                         Call
                       </Button>
                     </a>
-                    <a href={getWhatsAppLink(business.phone)} target="_blank" rel="noopener noreferrer">
-                      <Button variant="whatsapp" className="px-3 py-2 text-xs flex items-center gap-1.5" leftIcon={<FaWhatsapp size={14}/>}>
+                    <a href={getWhatsAppLink(business.whatsapp)} target="_blank" rel="noopener noreferrer">
+                      <Button variant="whatsapp" className="px-4 py-2.5 text-[10px] font-black uppercase tracking-widest flex items-center gap-2" leftIcon={<FaWhatsapp size={12}/>}>
                         WhatsApp
                       </Button>
                     </a>
@@ -120,13 +117,13 @@ const Header: React.FC = () => {
               {business?.logo && (
                 <Image
                   src={business.logo}
-                  alt={business.name}
+                  alt={business.name || "Logo"}
                   width={48}
                   height={48}
                   className="rounded group-hover:opacity-80 transition"
                 />
               )}
-              <span className="text-2xl font-bold">{business?.name}</span>
+              <span className="text-2xl font-bold tracking-tighter">{business?.name}</span>
             </Link>
 
             <nav className="flex items-center space-x-8 font-medium">
@@ -134,7 +131,7 @@ const Header: React.FC = () => {
                 <Link
                   key={item.id}
                   href={item.path}
-                  className="hover:text-[#FDB813] transition flex items-center gap-2 text-sm uppercase tracking-wider"
+                  className="hover:text-[#FDB813] transition flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em]"
                 >
                   {getNavIcon(item.id, item.label)}
                   {item.label}
@@ -145,7 +142,7 @@ const Header: React.FC = () => {
             <Button
               variant="primary"
               onClick={() => toggleDrawer(true)}
-              className="px-5 py-2 flex items-center gap-2 font-bold"
+              className="px-6 py-2.5 flex items-center gap-2 font-black uppercase text-xs tracking-widest"
               leftIcon={<FaShoppingCart />}
             >
               Cart ({totalItems})
@@ -158,7 +155,7 @@ const Header: React.FC = () => {
           {mobileMenuOpen && (
             <>
               <motion.div
-                className="fixed inset-0 bg-black/80 z-[60] backdrop-blur-sm"
+                className="fixed inset-0 bg-black/90 z-[60] backdrop-blur-md"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -166,40 +163,40 @@ const Header: React.FC = () => {
               />
 
               <motion.div
-                className="fixed top-0 left-0 h-full w-[85%] max-w-xs bg-[#0D0D0D] text-white z-[70] shadow-2xl"
+                className="fixed top-0 left-0 h-full w-[85%] max-w-xs bg-[#0D0D0D] text-white z-[70] shadow-2xl border-r border-white/5"
                 initial={{ x: "-100%" }}
                 animate={{ x: 0 }}
                 exit={{ x: "-100%" }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                transition={{ type: "spring", damping: 30, stiffness: 300 }}
               >
-                <div className="relative h-48">
+                <div className="relative h-56">
                   <Image
                     src={business?.drawerBanner || business?.banner || "/images/placeholder.jpg"}
                     alt="banner"
                     fill
-                    className="object-cover opacity-60"
+                    className="object-cover opacity-40"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] via-[#0D0D0D]/40 to-transparent" />
                   
                   <button
                     onClick={() => setMobileMenuOpen(false)}
-                    className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full backdrop-blur-md transition"
+                    className="absolute top-5 right-5 bg-white/10 hover:bg-white/20 text-white p-2.5 rounded-full backdrop-blur-xl transition"
                   >
-                    <FaTimes />
+                    <FaTimes size={18} />
                   </button>
 
-                  <div className="absolute bottom-5 left-5 right-5">
-                    <h2 className="text-xl font-bold text-[#FDB813] truncate">
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <h2 className="text-2xl font-black text-[#FDB813] tracking-tighter uppercase mb-1">
                       {business?.name}
                     </h2>
-                    <p className="text-xs text-gray-400 line-clamp-1">
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                       {business?.tagline}
                     </p>
                   </div>
                 </div>
 
-                <div className="p-5 flex flex-col h-[calc(100%-12rem)]">
-                  <div className="space-y-1 flex-grow">
+                <div className="p-6 flex flex-col h-[calc(100%-14rem)]">
+                  <div className="space-y-2 flex-grow overflow-y-auto no-scrollbar">
                     {navigation.map((item) => (
                       <DrawerLink
                         key={item.id}
@@ -211,31 +208,30 @@ const Header: React.FC = () => {
                     ))}
                   </div>
 
-                  <div className="pt-5 border-t border-gray-800 space-y-4 pb-8">
-                    <div className="space-y-2">
-                       <div className="flex justify-between text-xs text-gray-400">
-                        <span>Status</span>
-                        <span className="text-green-500 font-bold uppercase tracking-tighter">
+                  <div className="pt-6 border-t border-white/5 space-y-5 pb-10">
+                    <div className="space-y-3">
+                       <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+                        <span>Store Status</span>
+                        <span className="text-green-500">
                           ● {business?.status || "Online"}
                         </span>
                       </div>
-                      <div className="flex justify-between text-xs text-gray-400">
-                        <span>Location</span>
-                        <span className="text-white text-right line-clamp-1">{business?.location}</span>
+                      <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+                        <span>Hq</span>
+                        <span className="text-white">{business?.location}</span>
                       </div>
                     </div>
 
                     {business?.phone && (
                       <div className="grid grid-cols-1 gap-3">
                         <a href={`tel:${business.phone}`}>
-                          <Button variant="primary" className="w-full py-3 flex items-center justify-center gap-2 font-bold uppercase text-xs" leftIcon={<FaPhoneAlt />}>
-                            Call Support
+                          <Button variant="primary" className="w-full py-4 flex items-center justify-center gap-3 font-black uppercase text-[10px] tracking-[0.2em]" leftIcon={<FaPhoneAlt />}>
+                            Direct Call
                           </Button>
                         </a>
-                        {/* WhatsApp Drawer Link Fix */}
-                        <a href={getWhatsAppLink(business.phone)} target="_blank" rel="noopener noreferrer">
-                          <Button variant="whatsapp" className="w-full py-3 flex items-center justify-center gap-2 font-bold uppercase text-xs" leftIcon={<FaWhatsapp />}>
-                            WhatsApp Order
+                        <a href={getWhatsAppLink(business.whatsapp)} target="_blank" rel="noopener noreferrer">
+                          <Button variant="whatsapp" className="w-full py-4 flex items-center justify-center gap-3 font-black uppercase text-[10px] tracking-[0.2em]" leftIcon={<FaWhatsapp />}>
+                            WhatsApp Chat
                           </Button>
                         </a>
                       </div>
@@ -247,8 +243,9 @@ const Header: React.FC = () => {
           )}
         </AnimatePresence>
       </header>
-      {/* Increased spacer to fix the "Freshly Crafted" overlap on mobile */}
-      <div className="h-24 md:h-32" />
+      
+      {/* FIXED: Gap killed by matching exact header height */}
+      <div className="h-[125px] md:h-[80px]" />
     </>
   );
 };
@@ -257,10 +254,10 @@ const DrawerLink = ({ href, icon, label, onClick }: any) => (
   <Link
     href={href}
     onClick={onClick}
-    className="flex items-center space-x-4 p-4 rounded-xl hover:bg-white/5 active:bg-white/10 transition"
+    className="flex items-center space-x-4 p-4 rounded-2xl hover:bg-white/5 active:bg-white/10 transition-colors group"
   >
-    <span className="text-[#FDB813] text-xl">{icon}</span>
-    <span className="font-medium tracking-wide">{label}</span>
+    <span className="text-[#FDB813] text-xl group-hover:scale-110 transition-transform">{icon}</span>
+    <span className="font-black text-xs uppercase tracking-[0.2em]">{label}</span>
   </Link>
 );
 

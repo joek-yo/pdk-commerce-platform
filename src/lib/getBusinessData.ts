@@ -29,20 +29,21 @@ export function getUIConfig() {
     hero: {
       title: ui.hero?.title ?? "Welcome",
       subtitle: ui.hero?.subtitle ?? "",
-      ctaPrimary: ui.hero?.ctaPrimary ?? "",
-      ctaSecondary: ui.hero?.ctaSecondary ?? "",
+      ctaPrimary: ui.hero?.ctaPrimary ?? "Shop Now",
+      ctaSecondary: ui.hero?.ctaSecondary ?? "Contact Us",
     },
     menuPage: {
-      title: ui.menuPage?.title ?? "",
+      tagline: ui.menuPage?.tagline ?? "Selection", // NEW: For high-end labels
+      title: ui.menuPage?.title ?? "Our Collection",
       subtitle: ui.menuPage?.subtitle ?? "",
       ctaTitle: ui.menuPage?.ctaTitle ?? "",
       ctaDescription: ui.menuPage?.ctaDescription ?? "",
-      ctaButton: ui.menuPage?.ctaButton ?? "",
+      ctaButton: ui.menuPage?.ctaButton ?? "Request Custom",
     },
-    // Adding a placeholder for custom order text to make it SaaS-ready
     customOrder: {
+      badge: ui.customOrder?.badge ?? "Bespoke", // NEW: For studio-style badges
       title: ui.customOrder?.title ?? "Need Something Custom?",
-      description: ui.customOrder?.description ?? "Request bulk orders or specialized items made just for you.",
+      description: ui.customOrder?.description ?? "Request specialized items made just for you.",
       buttonText: ui.customOrder?.buttonText ?? "Request Custom Order",
     }
   };
@@ -89,9 +90,6 @@ export function getFeaturedProducts() {
   );
 }
 
-// DEPRECATED ALIAS: Keep this for now to prevent breaking changes while refactoring
-export const getJabysFavorites = getFeaturedProducts;
-
 // ================= BEST SELLERS =================
 export function getBestSellers(limit = 6) {
   return getAllProducts()
@@ -101,6 +99,7 @@ export function getBestSellers(limit = 6) {
 
 // ================= WHATSAPP =================
 export function getBusinessWhatsAppNumber() {
-  const phone = data.business?.phone ?? "";
-  return phone.replace(/[^0-9]/g, "");
+  // Pull directly from the dedicated whatsapp field, fallback to phone
+  const wa = data.business?.whatsapp || data.business?.phone || "";
+  return wa.replace(/[^0-9]/g, "");
 }

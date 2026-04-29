@@ -2,125 +2,231 @@
   "business": {
     "name": "Prime Deals Kenya",
     "tagline": "Smart Deals. Smart Choices.",
-    "phone": "0729724433",
+    "phone": "+254729724433",
     "email": "info@primedeals.co.ke",
-    "location": "Nairobi",
+    "location": "Nairobi, Kenya",
     "status": "Open",
-    "whatsapp": "0729724433",
+    "whatsapp": "254729724433",
     "logo": "/images/logo.png",
     "banner": "/images/hero-banner.jpg",
     "drawerBanner": "/images/drawer-hero.jpg"
   },
-
   "navigation": [
-    {
-      "id": "home",
-      "label": "Home",
-      "path": "/"
-    },
-    {
-      "id": "products",
-      "label": "Products",
-      "path": "/menu"
-    },
-    {
-      "id": "contact",
-      "label": "Contact",
-      "path": "/contact"
-    }
+    { "id": "home", "label": "Home", "path": "/" },
+    { "id": "products", "label": "Shop All", "path": "/menu" },
+    { "id": "contact", "label": "Contact", "path": "/contact" }
   ],
-
   "ui": {
     "hero": {
-      "title": "Premium Quality, Best Deals",
-      "subtitle": "Discover amazing products and order instantly",
-      "ctaPrimary": "Shop Products",
-      "ctaSecondary": "Chat with Us"
+      "heading": "Premium Tech, Local Prices",
+      "description": "The best of Nairobi's electronics, all in one place.",
+      "ctaPrimary": "Explore Deals",
+      "ctaSecondary": "WhatsApp Us"
     },
-
-    "menuPage": {
-      "title": "Our Catalog",
-      "subtitle": "Browse through our handpicked selections",
-      "ctaTitle": "Looking for Something Specific?",
-      "ctaDescription": "We source custom items and bulk orders tailored to your needs.",
-      "ctaButton": "📦 Request Custom Sourcing"
-    },
-
     "customOrder": {
-      "title": "Need a Custom Deal?",
-      "description": "Request specific products, bulk hardware, or specialized items made just for you.",
-      "buttonText": "🛒 Request Custom Order"
+      "badge": "Bespoke Sourcing",
+      "title": "Need Something Specific?",
+      "description": "Can't find a particular gadget or looking to source in bulk? We handle the logistics and delivery for custom tech requests.",
+      "buttonText": "Request Custom Item"
     }
   },
-
   "categories": [
     {
-      "id": "tech",
-      "name": "Electronics & Tech",
-      "image": "/images/category-tech.jpg",
+      "id": "wearables",
+      "name": "Wearable Tech",
       "items": [
         {
           "id": 101,
-          "name": "High-Performance Workstation",
-          "price": 85000,
-          "discount": 5,
-          "image": "/images/workstation.jpg",
-          "description": "Powerful setup for developers and designers",
+          "name": "Ultra Series 9 Smartwatch",
+          "price": 4500,
+          "discount": 15,
+          "image": "/images/smartwatch-ultra.jpg",
+          "description": "AMOLED Display, Bluetooth calling, and health tracking.",
           "available": true,
           "featured": true,
           "isBestSeller": true
         },
         {
-          "id": 103,
-          "name": "Wireless Noise-Cancelling Headphones",
-          "price": 12000,
-          "image": "/images/headphones.jpg",
-          "description": "Premium audio experience for focus and travel",
+          "id": 102,
+          "name": "Pro Buds Wireless Earbuds",
+          "price": 2800,
+          "discount": 10,
+          "image": "/images/earbuds-pro.jpg",
+          "description": "Active Noise Cancellation with 24-hour battery life.",
           "available": true,
-          "featured": true,
-          "isBestSeller": true
+          "trending": true
+        },
+        {
+          "id": 103,
+          "name": "Magnetic Charging Dock",
+          "price": 1200,
+          "image": "/images/charger.jpg",
+          "description": "Fast wireless charging for watches and phones.",
+          "available": true
         }
       ]
     },
-
     {
-      "id": "accessories",
-      "name": "Accessories",
-      "image": "/images/category-accessories.jpg",
+      "id": "creator",
+      "name": "Creator Studio",
       "items": [
         {
           "id": 201,
-          "name": "Smart Watch Series Pro",
-          "price": 15000,
-          "discount": 10,
-          "image": "/images/smartwatch.jpg",
-          "description": "Track your fitness and stay connected on the go",
+          "name": "Professional 12\" Ring Light",
+          "price": 3500,
+          "discount": 20,
+          "image": "/images/ringlight.jpg",
+          "description": "Adjustable tripod with 3 color modes for TikTok and YouTube.",
           "available": true,
-          "featured": true,
+          "featured": true
+        },
+        {
+          "id": 202,
+          "name": "RGB LED Strip Lights (5M)",
+          "price": 1200,
+          "image": "/images/led-strips.jpg",
+          "description": "Bluetooth controlled room ambiance with music sync.",
+          "available": true,
+          "trending": true
+        },
+        {
+          "id": 203,
+          "name": "Bluetooth Lavalier Mic",
+          "price": 2500,
+          "discount": 5,
+          "image": "/images/mic.jpg",
+          "description": "Clear wireless audio for content creators and vloggers.",
+          "available": true,
+          "featured": true
+        }
+      ]
+    },
+    {
+      "id": "computing",
+      "name": "Computing Essentials",
+      "items": [
+        {
+          "id": 401,
+          "name": "Backlit Mechanical Keyboard",
+          "price": 5500,
+          "discount": 10,
+          "image": "/images/keyboard.jpg",
+          "description": "Clicky mechanical switches with customizable RGB lighting.",
+          "available": true,
+          "isBestSeller": true
+        },
+        {
+          "id": 402,
+          "name": "Ergonomic Wireless Mouse",
+          "price": 1800,
+          "image": "/images/mouse.jpg",
+          "description": "Silent clicks and 1600 DPI for smooth navigation.",
+          "available": true
+        },
+        {
+          "id": 403,
+          "name": "USB-C 7-in-1 Hub",
+          "price": 3200,
+          "image": "/images/hub.jpg",
+          "description": "HDMI, USB 3.0, and SD card slots for your laptop.",
+          "available": true,
+          "trending": true
+        }
+      ]
+    },
+    {
+      "id": "home-security",
+      "name": "Smart Home & Security",
+      "items": [
+        {
+          "id": 601,
+          "name": "Wifi Smart Camera 360°",
+          "price": 4800,
+          "discount": 12,
+          "image": "/images/camera.jpg",
+          "description": "Night vision and motion detection with phone alerts.",
+          "available": true,
+          "featured": true
+        },
+        {
+          "id": 602,
+          "name": "Smart Fingerprint Padlock",
+          "price": 2400,
+          "image": "/images/lock.jpg",
+          "description": "Keyless entry for bags and gym lockers.",
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "lifestyle",
+      "name": "Lifestyle & Utility",
+      "items": [
+        {
+          "id": 301,
+          "name": "6-Blade Portable Blender",
+          "price": 2200,
+          "discount": 5,
+          "image": "/images/blender.jpg",
+          "description": "USB rechargeable, perfect for smoothies on the go.",
+          "available": true,
+          "isBestSeller": true
+        },
+        {
+          "id": 701,
+          "name": "Digital Tyre Inflator",
+          "price": 3800,
+          "image": "/images/inflator.jpg",
+          "description": "Portable air pump for cars, bikes, and balls.",
+          "available": true,
+          "trending": true
+        },
+        {
+          "id": 702,
+          "name": "50,000mAh Fast Powerbank",
+          "price": 5500,
+          "discount": 8,
+          "image": "/images/powerbank.jpg",
+          "description": "High capacity with dual fast-charging ports.",
+          "available": true,
           "isBestSeller": true
         }
       ]
     }
   ],
-
   "bundles": [
     {
-      "id": 301,
-      "name": "Developer Starter Pack",
-      "price": 95000,
-      "image": "/images/dev-bundle.jpg",
-      "description": "Monitor + Keyboard + Desk Mat essentials",
+      "id": 501,
+      "name": "The Ultimate Creator Kit",
+      "price": 5500,
+      "oldPrice": 7200,
+      "image": "/images/creator-bundle.jpg",
+      "description": "Ring Light + Mic + LED Strips. The complete setup.",
       "available": true,
-      "featured": true
+      "featured": true,
+      "isBundle": true
     },
     {
-      "id": 302,
-      "name": "Office Setup Bundle",
-      "price": 150000,
-      "image": "/images/office-bundle.jpg",
-      "description": "Complete furniture and tech setup for your home office",
+      "id": 502,
+      "name": "Remote Work Pack",
+      "price": 9500,
+      "oldPrice": 11500,
+      "image": "/images/work-bundle.jpg",
+      "description": "Keyboard + Mouse + USB Hub combo for home office.",
       "available": true,
-      "featured": true
+      "featured": true,
+      "isBundle": true
+    },
+    {
+      "id": 503,
+      "name": "Smart Security Duo",
+      "price": 6500,
+      "oldPrice": 7200,
+      "image": "/images/security-bundle.jpg",
+      "description": "Wifi Camera + Fingerprint Lock for peace of mind.",
+      "available": true,
+      "featured": false,
+      "isBundle": true
     }
   ]
 }

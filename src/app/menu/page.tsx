@@ -11,11 +11,13 @@ import { useCart } from "@/context/CartContext";
 import {
   getCategories,
   getBundles,
+  getUIConfig,
 } from "@/lib/getBusinessData";
 
 const MenuPage: React.FC = () => {
   const categories = getCategories();
   const bundles = getBundles();
+  const ui = getUIConfig(); // Now pulling dynamic UI text
 
   const menuCategories = [
     ...categories,
@@ -44,16 +46,16 @@ const MenuPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-20">
 
-      {/* HEADER */}
+      {/* HEADER - DYNAMIC */}
       <div className="mb-12 text-center">
         <span className="text-[10px] font-black text-[#FDB813] uppercase tracking-[0.5em] mb-4 block text-center">
-          Curated Selection
+          {ui.menuPage.tagline}
         </span>
         <h1 className="text-4xl sm:text-6xl font-black text-slate-900 tracking-tighter mb-4">
-          Premium <span className="text-[#FDB813]">Collection</span>
+          {ui.menuPage.title}
         </h1>
         <p className="text-slate-400 text-sm sm:text-lg font-bold tracking-tight max-w-md mx-auto leading-tight">
-          Discover excellence in every detail. Sourced for quality, delivered for you.
+          {ui.menuPage.subtitle}
         </p>
       </div>
 
@@ -78,19 +80,19 @@ const MenuPage: React.FC = () => {
         </div>
       </div>
 
-      {/* CTA CARD */}
+      {/* CTA CARD - DYNAMIC */}
       <div className="max-w-5xl mx-auto mb-16">
         <div className="relative overflow-hidden bg-white border border-slate-100 rounded-[2.5rem] p-8 sm:p-12 text-center shadow-[0_30px_100px_rgba(0,0,0,0.04)]">
           <div className="relative z-10">
             <h2 className="text-2xl sm:text-3xl font-black mb-3 text-slate-900 tracking-tighter">
-              Looking for something specific?
+              {ui.menuPage.ctaTitle}
             </h2>
             <p className="text-slate-500 font-bold mb-8 text-sm sm:text-base max-w-lg mx-auto">
-              Our bespoke sourcing service helps you find unique electronics, accessories, or bulk orders tailored to your specs.
+              {ui.menuPage.ctaDescription}
             </p>
             <Link href="/custom-order">
               <button className="group px-10 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-black transition-all flex items-center gap-3 mx-auto shadow-xl shadow-slate-900/20">
-                Bespoke Request <FaArrowRight size={10} className="text-[#FDB813] group-hover:translate-x-1 transition-transform" />
+                {ui.menuPage.ctaButton} <FaArrowRight size={10} className="text-[#FDB813] group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
           </div>

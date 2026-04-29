@@ -11,15 +11,13 @@ interface ProductProps {
   name: string;
   price?: number;
   oldPrice?: number;
+  discount?: number; // Added to match your JSON
   image?: string;
   hoverImage?: string;
   description: string;
   available?: boolean;
-
-  // UNIVERSAL FLAGS (NOT HOSPITALITY SPECIFIC)
   featured?: boolean;
   trending?: boolean;
-
   discountPercent?: number;
 }
 
@@ -33,6 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   name,
   price = 0,
   oldPrice,
+  discount, // From JSON
   image,
   hoverImage,
   description,
@@ -40,21 +39,28 @@ const ProductCard: React.FC<ProductCardProps> = ({
   featured = false,
   trending = false,
   isBundle = false,
-  discountPercent,
+  discountPercent, // From Props
   onAddToCart,
 }) => {
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
   const [isHovered, setIsHovered] = useState(false);
 
+  // 1. Determine the percentage to display (prioritize discountPercent prop, then discount from JSON)
+  const finalDiscount = discountPercent || discount;
+
+  // 2. Determine the strikethrough price (prioritize oldPrice, then calculate from discount)
+  const strikePrice = oldPrice 
+    ? oldPrice 
+    : (finalDiscount ? Math.round(price / (1 - finalDiscount / 100)) : null);
+
   const cartItem = cart.find((item) => item.id === id);
   const quantity = cartItem ? cartItem.quantity : 0;
 
   const qtyBtn =
-    "w-8 h-8 flex items-center justify-center rounded-lg font-bold transition bg-gray-200 hover:bg-gray-300 disabled:opacity-40";
+    "w-8 h-8 flex items-center justify-center rounded-lg font-bold transition bg-slate-100 hover:bg-slate-200 text-slate-900 disabled:opacity-40";
 
   const handleAddToCart = () => {
     if (!available) return;
-
     if (onAddToCart) return onAddToCart();
 
     if (!cartItem) {
@@ -72,7 +78,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   const handleDecrease = () => {
     if (!cartItem) return;
-
     if (quantity <= 1) {
       removeFromCart(id);
     } else {
@@ -82,133 +87,92 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div
-      className="
-        bg-white
-        border border-gray-200
-        rounded-2xl
-        shadow-sm
-        hover:shadow-xl
-        transition-all duration-300
-        flex flex-col relative
-        overflow-hidden
-      "
+      className="bg-white border border-slate-100 rounded-[1.5rem] shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500 flex flex-col relative overflow-hidden group h-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-
-      {/* ---------------- DISCOUNT ---------------- */}
-      {discountPercent && (
-        <div className="absolute top-2 right-2 z-10 bg-red-500 text-white text-[11px] px-2 py-1 rounded-full font-bold">
-          -{discountPercent}%
+      {/* ---------------- DISCOUNT TAG (Sleek Red) ---------------- */}
+      {finalDiscount && finalDiscount > 0 && (
+        <div className="absolute top-3 right-3 z-10 bg-red-600 text-white text-[9px] px-2 py-1 rounded-full font-black uppercase tracking-tighter shadow-lg animate-pulse">
+          -{finalDiscount}%
         </div>
       )}
 
-      {/* ---------------- UNIVERSAL BADGES ---------------- */}
-      <div className="absolute top-2 left-2 flex flex-col space-y-1 z-10">
-
+      {/* ---------------- STUDIO BADGES ---------------- */}
+      <div className="absolute top-3 left-3 flex flex-col space-y-1.5 z-10">
         {featured && (
-          <span className="bg-blue-500 text-white text-[10px] px-2 py-1 rounded">
-            ⭐ Featured
+          <span className="bg-slate-900 text-white text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded shadow-md">
+            Featured
           </span>
         )}
-
         {trending && (
-          <span className="bg-orange-500 text-white text-[10px] px-2 py-1 rounded">
-            🔥 Trending
+          <span className="bg-[#FDB813] text-slate-900 text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded shadow-md">
+            Trending
           </span>
         )}
-
         {isBundle && (
-          <span className="bg-gray-800 text-white text-[10px] px-2 py-1 rounded">
-            📦 Bundle
+          <span className="bg-white border border-slate-200 text-slate-500 text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded shadow-sm">
+            Bundle
           </span>
         )}
-
       </div>
 
-      {/* ---------------- IMAGE ---------------- */}
-      <div className="relative h-36 sm:h-44 md:h-52 w-full overflow-hidden">
-
+      {/* ---------------- IMAGE SECTION ---------------- */}
+      <div className="relative h-44 sm:h-56 w-full overflow-hidden bg-slate-50">
         <Image
-          src={
-            isHovered && hoverImage
-              ? hoverImage
-              : image || "/images/placeholder.jpg"
-          }
+          src={isHovered && hoverImage ? hoverImage : image || "/images/placeholder.jpg"}
           alt={name}
           fill
-          className="object-cover transition-all duration-500"
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
-
       </div>
 
       {/* ---------------- CONTENT ---------------- */}
-      <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between">
-
-        <div>
-          <h3 className="text-sm sm:text-lg font-semibold text-gray-800 line-clamp-1">
+      <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between bg-white">
+        <div className="mb-4">
+          <h3 className="text-sm sm:text-base font-black text-slate-900 line-clamp-1 tracking-tight">
             {name}
           </h3>
-
-          <p className="text-gray-500 mt-1 text-xs sm:text-sm line-clamp-2">
+          <p className="text-slate-400 mt-1 text-xs font-bold leading-snug line-clamp-2">
             {description}
           </p>
         </div>
 
-        {/* ---------------- PRICE ---------------- */}
-        <div className="mt-3">
-
-          <div className="flex items-center gap-2">
-
-            <span className="text-gray-900 font-bold text-sm sm:text-lg">
+        {/* ---------------- PRICE & ACTIONS ---------------- */}
+        <div className="mt-auto">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-slate-900 font-black text-base sm:text-lg tracking-tighter">
               KES {price.toLocaleString()}
             </span>
-
-            {oldPrice && (
-              <span className="text-gray-400 line-through text-xs sm:text-sm">
-                KES {oldPrice.toLocaleString()}
+            {strikePrice && (
+              <span className="text-slate-300 line-through text-[10px] sm:text-xs font-bold">
+                KES {strikePrice.toLocaleString()}
               </span>
             )}
-
           </div>
 
-          {/* ---------------- QUANTITY ---------------- */}
-          {cartItem && (
-            <div className="flex items-center justify-center gap-2 mt-2">
-
-              <button onClick={handleDecrease} className={qtyBtn}>
-                −
-              </button>
-
-              <span className="font-semibold text-sm min-w-[20px] text-center">
-                {quantity}
-              </span>
-
-              <button onClick={handleAddToCart} className={qtyBtn}>
-                +
-              </button>
-
+          {cartItem ? (
+            <div className="flex items-center justify-between p-1 bg-slate-50 rounded-xl border border-slate-100">
+              <button onClick={handleDecrease} className={qtyBtn}>−</button>
+              <span className="font-black text-xs text-slate-900">{quantity}</span>
+              <button onClick={handleAddToCart} className={qtyBtn}>+</button>
             </div>
-          )}
-
-          {/* ---------------- ADD TO CART ---------------- */}
-          {!cartItem && (
+          ) : (
             <button
               onClick={handleAddToCart}
               disabled={!available}
-              className="
-                mt-2 text-sm font-semibold text-[#0D0D0D]
-                underline underline-offset-4
-                hover:text-[#C2922F]
-                transition
-              "
+              className={`
+                w-full py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
+                ${available 
+                  ? "bg-slate-900 text-white hover:bg-black shadow-lg shadow-slate-200 hover:shadow-slate-300 active:scale-95" 
+                  : "bg-slate-100 text-slate-400 cursor-not-allowed"
+                }
+              `}
             >
-              {available ? "Add to Cart →" : "Unavailable"}
+              {available ? "Add to Cart" : "Out of Stock"}
             </button>
           )}
-
         </div>
-
       </div>
     </div>
   );

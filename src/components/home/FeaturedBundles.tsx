@@ -16,111 +16,91 @@ const FeaturedBundles: React.FC<FeaturedBundlesProps> = ({ bundles }) => {
 
   if (!bundles || bundles.length === 0) return null;
 
-  const scrollAmount = 300;
+  const scrollAmount = 320; 
 
   const scrollLeft = () => {
-    carouselRef.current?.scrollBy({
-      left: -scrollAmount,
-      behavior: "smooth",
-    });
+    carouselRef.current?.scrollBy({ left: -scrollAmount, behavior: "smooth" });
   };
 
   const scrollRight = () => {
-    carouselRef.current?.scrollBy({
-      left: scrollAmount,
-      behavior: "smooth",
-    });
+    carouselRef.current?.scrollBy({ left: scrollAmount, behavior: "smooth" });
   };
 
   return (
-    <section className="mt-16 relative">
+    <section className="relative group">
+      {/* TITLE REMOVED: 
+          Managed by the parent page (Value Packs) for better SaaS consistency.
+      */}
 
-      {/* TITLE */}
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-center">
-        🎁 Featured Bundles
-      </h2>
-
-      {/* LEFT ARROW */}
+      {/* LEFT NAVIGATION ARROW - Restored for Mobile & Desktop */}
       <button
         onClick={scrollLeft}
         className="
-          absolute left-1 top-1/2 -translate-y-1/2
-          z-10
-          bg-white/90
-          backdrop-blur
-          shadow-md
-          border border-gray-200
-          rounded-full
-          p-2 sm:p-3
-          hover:bg-white
-          transition
+          absolute -left-2 sm:left-4 top-1/2 -translate-y-1/2 
+          z-30 
+          bg-white/95 backdrop-blur-xl 
+          shadow-2xl shadow-slate-200/50 
+          border border-slate-100 
+          rounded-full 
+          p-3.5 sm:p-5 
+          hover:bg-white hover:scale-110 
+          active:scale-90 
+          transition-all 
+          opacity-100 sm:opacity-0 sm:group-hover:opacity-100
         "
+        aria-label="Previous"
       >
-        <FaChevronLeft size={16} />
+        <FaChevronLeft size={12} className="text-slate-900" />
       </button>
 
-      {/* RIGHT ARROW */}
+      {/* RIGHT NAVIGATION ARROW - Restored for Mobile & Desktop */}
       <button
         onClick={scrollRight}
         className="
-          absolute right-1 top-1/2 -translate-y-1/2
-          z-10
-          bg-white/90
-          backdrop-blur
-          shadow-md
-          border border-gray-200
-          rounded-full
-          p-2 sm:p-3
-          hover:bg-white
-          transition
+          absolute -right-2 sm:right-4 top-1/2 -translate-y-1/2 
+          z-30 
+          bg-white/95 backdrop-blur-xl 
+          shadow-2xl shadow-slate-200/50 
+          border border-slate-100 
+          rounded-full 
+          p-3.5 sm:p-5 
+          hover:bg-white hover:scale-110 
+          active:scale-90 
+          transition-all 
+          opacity-100 sm:opacity-0 sm:group-hover:opacity-100
         "
+        aria-label="Next"
       >
-        <FaChevronRight size={16} />
+        <FaChevronRight size={12} className="text-slate-900" />
       </button>
 
-      {/* CAROUSEL */}
+      {/* CAROUSEL CONTAINER */}
       <div
         ref={carouselRef}
         className="
-          flex
-          gap-4
-          overflow-x-auto
-          scrollbar-hide
-          scroll-smooth
-          pb-4
-          px-1
+          flex 
+          gap-5 sm:gap-10 
+          overflow-x-auto 
+          no-scrollbar 
+          scroll-smooth 
+          pb-10 
+          px-2
         "
       >
-
         {bundles.map((bundle) => (
           <motion.div
             key={bundle.id}
-            className="
-              flex-none
-              w-[85%]
-              sm:w-[48%]
-              md:w-[40%]
-              lg:w-[32%]
-            "
-            whileHover={{ scale: 1.03 }}
-            transition={{ duration: 0.2 }}
+            className="flex-none w-[85vw] sm:w-[45vw] md:w-[35vw] lg:w-[28vw]"
+            whileHover={{ y: -5 }}
+            transition={{ duration: 0.3 }}
           >
             <ProductCard
-              id={bundle.id}
-              name={bundle.name}
-              price={bundle.price}
-              image={bundle.image || "/images/placeholder.jpg"}
-              description={bundle.description}
-              available={bundle.available}
+              {...bundle}
               isBundle
-              featured={bundle.featured || false}
-              trending={bundle.trending || false}
             />
           </motion.div>
         ))}
-
       </div>
-
     </section>
   );
 };
