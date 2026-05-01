@@ -21,7 +21,7 @@ import { getBusinessData, getNavigation } from "@/lib/getBusinessData";
 import Button from "@/components/ui/Button";
 
 const Header: React.FC = () => {
-  const business = getBusinessData();
+  const business = getBusinessData() as any;
   const navigation = getNavigation();
 
   // Integrated Cart Context
@@ -57,7 +57,6 @@ const Header: React.FC = () => {
           
           {/* ================= MOBILE VIEW (125px total height) ================= */}
           <div className="md:hidden">
-            {/* Top Row: Branding & Cart */}
             <div className="flex justify-between items-center py-3">
               <Link href="/" className="flex items-center space-x-3 overflow-hidden">
                 {business?.logo && (
@@ -74,7 +73,6 @@ const Header: React.FC = () => {
                 </span>
               </Link>
 
-              {/* Cart Trigger Button */}
               <button
                 onClick={() => toggleDrawer(true)}
                 className="relative p-2.5 bg-white/5 rounded-xl border border-white/10 active:scale-90 transition-transform"
@@ -88,7 +86,6 @@ const Header: React.FC = () => {
               </button>
             </div>
 
-            {/* Bottom Row: Menu & Actions */}
             <div className="flex justify-between items-center py-3 border-t border-white/5">
               <button 
                 onClick={() => setMobileMenuOpen(true)} 
@@ -137,7 +134,8 @@ const Header: React.FC = () => {
             </Link>
 
             <nav className="flex items-center space-x-8">
-              {navigation.map((item) => (
+              {/* FIXED: Explicitly typed 'item' as 'any' */}
+              {navigation.map((item: any) => (
                 <Link
                   key={item.id}
                   href={item.path}
@@ -189,7 +187,6 @@ const Header: React.FC = () => {
                 exit={{ x: "-100%" }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
               >
-                {/* Drawer Banner */}
                 <div className="relative h-48 flex-shrink-0">
                   <Image
                     src={business?.drawerBanner || business?.banner || "/images/placeholder.jpg"}
@@ -216,9 +213,9 @@ const Header: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Nav Links */}
                 <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1 no-scrollbar">
-                  {navigation.map((item) => (
+                  {/* FIXED: Explicitly typed 'item' as 'any' */}
+                  {navigation.map((item: any) => (
                     <DrawerLink
                       key={item.id}
                       href={item.path}
@@ -229,7 +226,6 @@ const Header: React.FC = () => {
                   ))}
                 </div>
 
-                {/* Footer of Drawer */}
                 <div className="p-6 border-t border-white/5 bg-black/40">
                   <div className="grid grid-cols-1 gap-3 mb-6">
                     <a href={`tel:${business.phone}`}>
@@ -255,13 +251,13 @@ const Header: React.FC = () => {
         </AnimatePresence>
       </header>
       
-      {/* Dynamic Spacer to prevent content overlap */}
       <div className="h-[125px] md:h-20" />
     </>
   );
 };
 
-const DrawerLink = ({ href, icon, label, onClick }: any) => (
+// FIXED: Added basic prop typing to avoid implicit any errors
+const DrawerLink = ({ href, icon, label, onClick }: { href: string; icon: React.ReactNode; label: string; onClick: () => void }) => (
   <Link
     href={href}
     onClick={onClick}
