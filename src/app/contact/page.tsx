@@ -5,8 +5,8 @@ import { FaUser, FaEnvelope, FaPhone, FaWhatsapp, FaEdit, FaCheckCircle, FaMapMa
 import { getUIConfig } from "@/lib/getBusinessData";
 
 const ContactSection: React.FC = () => {
-  // 1. SOURCING DATA FROM YOUR JSON
-  const config = getUIConfig();
+  // 1. SOURCING DATA FROM YOUR JSON - Cast to 'any' to fix Vercel Build Error
+  const config = getUIConfig() as any; 
   const business = config?.business || {};
   const ui = config?.ui || {};
   const socialProof = business?.socialProof || [];
@@ -24,7 +24,7 @@ const ContactSection: React.FC = () => {
       return;
     }
 
-    // 2. DYNAMIC WHATSAPP LINK (Sourced from business.whatsapp)
+    // 2. DYNAMIC WHATSAPP LINK
     const whatsappNumber = business?.whatsapp || "254729724433";
     const cleanNumber = whatsappNumber.replace(/\D/g, "");
     const text = `*New Inquiry*%0A*Name:* ${form.name}%0A*Message:* ${form.message}`;
@@ -39,7 +39,7 @@ const ContactSection: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto py-12 px-4">
-      {/* HEADER: Sourced from business.tagline */}
+      {/* HEADER */}
       <header className="mb-10">
         <h1 className="text-4xl font-black tracking-tighter text-slate-900 leading-none italic">
           PRIME <span className="text-[#FDB813]">DEALS</span>
@@ -49,8 +49,8 @@ const ContactSection: React.FC = () => {
         </p>
       </header>
 
-      {/* 3. DYNAMIC ANNOUNCEMENT (Timed/Timeless) */}
-      {ui.announcement?.active && (
+      {/* 3. DYNAMIC ANNOUNCEMENT */}
+      {ui?.announcement?.active && (
         <div className="mb-6 bg-slate-900 text-white p-4 rounded-xl flex items-center gap-4 border-b-4 border-[#FDB813]">
           <FaBullhorn className="text-[#FDB813] animate-pulse" />
           <p className="text-[11px] font-bold uppercase tracking-wider">
@@ -71,17 +71,32 @@ const ContactSection: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className={labelClasses}><FaUser size={8}/> Full Name</label>
-                <input className={inputStyle} value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} />
+                <input 
+                  className={inputStyle} 
+                  value={form.name} 
+                  onChange={(e) => setForm({...form, name: e.target.value})} 
+                  placeholder="Enter your name"
+                />
               </div>
               <div className="space-y-1">
                 <label className={labelClasses}><FaPhone size={8}/> Phone</label>
-                <input className={inputStyle} value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} />
+                <input 
+                  className={inputStyle} 
+                  value={form.phone} 
+                  onChange={(e) => setForm({...form, phone: e.target.value})} 
+                  placeholder="254..."
+                />
               </div>
             </div>
 
             <div className="space-y-1">
               <label className={labelClasses}><FaEdit size={9}/> Your Request</label>
-              <textarea className={`${inputStyle} min-h-[100px]`} value={form.message} onChange={(e) => setForm({...form, message: e.target.value})} />
+              <textarea 
+                className={`${inputStyle} min-h-[100px]`} 
+                value={form.message} 
+                onChange={(e) => setForm({...form, message: e.target.value})} 
+                placeholder="What are you looking for?"
+              />
             </div>
 
             <button onClick={handleWhatsAppSend} className="w-full bg-[#25D366] text-white h-14 rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all">
@@ -91,23 +106,25 @@ const ContactSection: React.FC = () => {
           </div>
         </section>
 
-        {/* 4. TIMELESS SOCIAL PROOF: Sourced from business.socialProof */}
-        <section className="bg-slate-50 border border-slate-200 rounded-xl p-6">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-slate-400">Prime Activity</h2>
-          <div className="space-y-3">
-            {socialProof.map((item: any) => (
-              <div key={item.id} className="flex items-start gap-3 bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
-                <FaCheckCircle size={12} className="mt-1 text-[#25D366]" />
-                <div>
-                  <p className="text-[11px] font-bold text-slate-800 leading-tight">{item.text}</p>
-                  <span className="text-[9px] font-black uppercase text-[#FDB813]">{item.time}</span>
+        {/* 4. SOCIAL PROOF */}
+        {socialProof.length > 0 && (
+          <section className="bg-slate-50 border border-slate-200 rounded-xl p-6">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-slate-400">Prime Activity</h2>
+            <div className="space-y-3">
+              {socialProof.map((item: any) => (
+                <div key={item.id} className="flex items-start gap-3 bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
+                  <FaCheckCircle size={12} className="mt-1 text-[#25D366]" />
+                  <div>
+                    <p className="text-[11px] font-bold text-slate-800 leading-tight">{item.text}</p>
+                    <span className="text-[9px] font-black uppercase text-[#FDB813]">{item.time}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        )}
 
-        {/* FOOTER: Sourced from business.location */}
+        {/* FOOTER */}
         <div className="text-center pt-6">
           <div className="inline-flex items-center gap-2 text-slate-400 font-black text-[9px] uppercase tracking-widest bg-slate-100 px-4 py-2 rounded-full">
             <FaMapMarkerAlt size={10} className="text-[#FDB813]"/>
