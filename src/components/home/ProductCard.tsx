@@ -80,7 +80,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div
-      className={`group bg-white rounded-2xl border border-slate-100 flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ${
+      className={`group bg-white rounded-lg border border-slate-100 flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ${
         isBundle ? "min-h-[380px] sm:min-h-[420px]" : ""
       }`}
       onMouseEnter={() => setIsHovered(true)}
@@ -150,18 +150,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-full h-10 bg-slate-900 rounded-xl flex items-center justify-between px-4"
+                /* CHANGED: h-10 -> h-8 for a slimmer look */
+                className="w-full h-8 bg-slate-900 rounded-md flex items-center justify-between px-4"
               >
                 <button onClick={handleDecrease} className="text-[#FDB813]">
-                  <FaMinus size={12} />
+                  <FaMinus size={10} />
                 </button>
 
-                <span className="text-white font-black text-sm">
+                <span className="text-white font-black text-xs">
                   {quantity}
                 </span>
 
                 <button onClick={handleAddToCart} className="text-[#FDB813]">
-                  <FaPlus size={12} />
+                  <FaPlus size={10} />
                 </button>
               </motion.div>
             ) : (
@@ -172,9 +173,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                /* CHANGED: h-10 -> h-8 and text-xs */
                 className={`
-                  w-full h-10 rounded-xl flex items-center justify-center gap-2
-                  text-[11px] font-black uppercase tracking-widest
+                  w-full h-8 rounded-md flex items-center justify-center gap-2
+                  text-[10px] font-black uppercase tracking-widest
                   transition-all duration-300
                   ${
                     available
@@ -183,7 +185,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   }
                 `}
               >
-                <FaShoppingBag size={12} />
+                <FaShoppingBag size={10} />
                 {available ? "Add To Bag" : "Sold Out"}
               </motion.button>
             )}
