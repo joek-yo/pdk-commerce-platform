@@ -6,7 +6,8 @@ import { motion } from "framer-motion";
 import { getBusinessData } from "@/lib/getBusinessData";
 
 const DrawerHero: React.FC = () => {
-  const business = getBusinessData();
+  // FIXED: Cast to 'any' to allow dynamic properties like 'slogan' or 'drawerBanner'
+  const business = getBusinessData() as any;
 
   return (
     <div className="relative w-full h-52 shrink-0 overflow-hidden">
@@ -29,12 +30,12 @@ const DrawerHero: React.FC = () => {
         transition={{ delay: 0.2, duration: 0.5, ease: "easeOut" }}
         className="absolute bottom-5 left-5 text-white"
       >
-        <h2 className="text-2xl font-black text-yellow-400 drop-shadow-lg tracking-tight">
+        <h2 className="text-2xl font-black text-[#FDB813] drop-shadow-lg tracking-tight">
           {business.name}
         </h2>
         
         <div className="flex items-center space-x-2 mt-1">
-          <span className="h-[2px] w-4 bg-yellow-400 rounded-full" />
+          <span className="h-[2px] w-4 bg-[#FDB813] rounded-full" />
           <p className="text-xs font-semibold italic text-white/90 tracking-wide drop-shadow-md">
             {business.slogan || "Crafted Moments The Jaby Way"}
           </p>
