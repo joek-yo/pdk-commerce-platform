@@ -73,28 +73,26 @@ const ProductCard: React.FC<ProductCardProps> = ({
     else updateQuantity(id, quantity - 1);
   };
 
-  const isCompact = variant === "compact";
-
   const badgeBase =
     "absolute top-2 left-2 z-30 px-2 py-1 text-[9px] font-black uppercase tracking-widest rounded-md shadow-sm";
 
   return (
     <div
       className={`group bg-white rounded-lg border border-slate-100 flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ${
-        isBundle ? "min-h-[380px] sm:min-h-[420px]" : ""
+        isBundle ? "min-h-[300px] sm:min-h-[340px]" : ""
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* IMAGE */}
+      {/* IMAGE - Tighter constraints */}
       <div
         className={`relative bg-white overflow-hidden ${
-          isBundle ? "h-44 sm:h-56" : "aspect-square"
+          isBundle ? "h-36 sm:h-44" : "aspect-square"
         }`}
       >
         {stock && stock <= 5 ? (
           <span className={`${badgeBase} bg-red-600 text-white`}>
-            Only {stock} Left
+            Only {stock}
           </span>
         ) : featured ? (
           <span className={`${badgeBase} bg-slate-900 text-white`}>
@@ -102,11 +100,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </span>
         ) : trending ? (
           <span className={`${badgeBase} bg-[#FDB813] text-black`}>
-            Trending
+            Hot
           </span>
         ) : discountPercent ? (
           <span className={`${badgeBase} bg-red-600 text-white`}>
-            {discountPercent}% OFF
+            -{discountPercent}%
           </span>
         ) : !available ? (
           <span className={`${badgeBase} bg-slate-400 text-white`}>
@@ -115,34 +113,32 @@ const ProductCard: React.FC<ProductCardProps> = ({
         ) : null}
 
         <Image
-          src={
-            isHovered && hoverImage ? hoverImage : image || "/placeholder.jpg"
-          }
+          src={isHovered && hoverImage ? hoverImage : image || "/placeholder.jpg"}
           alt={name}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
       </div>
 
-      {/* CONTENT */}
-      <div className="p-3 md:p-4 flex flex-col flex-1">
-        <h3 className="text-sm font-black uppercase text-slate-900 line-clamp-1">
+      {/* CONTENT - Slashed padding and gaps */}
+      <div className="p-2 flex flex-col flex-1">
+        <h3 className="text-[11px] sm:text-xs font-black uppercase text-slate-900 line-clamp-1 leading-tight">
           {name}
         </h3>
 
-        <p className="text-[10px] sm:text-xs text-slate-400 font-bold mt-1 line-clamp-2">
+        <p className="text-[9px] text-slate-400 font-bold mt-0.5 line-clamp-1">
           {description}
         </p>
 
-        {/* PRICE */}
-        <div className="mt-3">
-          <span className="text-sm sm:text-lg font-black text-slate-900">
+        {/* PRICE - Tighter margin */}
+        <div className="mt-1.5">
+          <span className="text-xs sm:text-sm font-black text-slate-900">
             KES {price.toLocaleString()}
           </span>
         </div>
 
-        {/* 🔥 BOTTOM FULL CTA BAR */}
-        <div className="mt-auto pt-3">
+        {/* BOTTOM CTA BAR - Minimal top padding */}
+        <div className="mt-auto pt-2">
           <AnimatePresence mode="wait">
             {cartItem ? (
               <motion.div
@@ -150,19 +146,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                /* CHANGED: h-10 -> h-8 for a slimmer look */
-                className="w-full h-8 bg-slate-900 rounded-md flex items-center justify-between px-4"
+                className="w-full h-7 bg-slate-900 rounded-md flex items-center justify-between px-3"
               >
                 <button onClick={handleDecrease} className="text-[#FDB813]">
-                  <FaMinus size={10} />
+                  <FaMinus size={8} />
                 </button>
-
-                <span className="text-white font-black text-xs">
+                <span className="text-white font-black text-[10px]">
                   {quantity}
                 </span>
-
                 <button onClick={handleAddToCart} className="text-[#FDB813]">
-                  <FaPlus size={10} />
+                  <FaPlus size={8} />
                 </button>
               </motion.div>
             ) : (
@@ -173,10 +166,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                /* CHANGED: h-10 -> h-8 and text-xs */
                 className={`
-                  w-full h-8 rounded-md flex items-center justify-center gap-2
-                  text-[10px] font-black uppercase tracking-widest
+                  w-full h-7 rounded-md flex items-center justify-center gap-1.5
+                  text-[9px] font-black uppercase tracking-wider
                   transition-all duration-300
                   ${
                     available
@@ -185,8 +177,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   }
                 `}
               >
-                <FaShoppingBag size={10} />
-                {available ? "Add To Bag" : "Sold Out"}
+                <FaShoppingBag size={9} />
+                {available ? "Add" : "Out"}
               </motion.button>
             )}
           </AnimatePresence>
