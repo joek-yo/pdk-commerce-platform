@@ -86,7 +86,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedBranch, setSelectedBranch] = useState("");
 
   // ---------------- HYDRATION & INITIAL LOAD ----------------
-  // This prevents the "Text content does not match" error in Next.js
   useEffect(() => {
     try {
       const savedCart = localStorage.getItem("prime_deals_cart");
@@ -143,11 +142,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   // ---------------- UTILS ----------------
   const triggerToast = useCallback((message: string, type: ToastState["type"] = "success") => {
     setToast({ show: true, message, type });
-    // Auto-hide after 3s
     setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
   }, []);
 
   const hideToast = useCallback(() => setToast(prev => ({ ...prev, show: false })), []);
+
+  const toggleDrawer = useCallback((state?: boolean) => {
+    setIsDrawerOpen((prev) => (typeof state === "boolean" ? state : !prev));
+  }, []);
 
   // ---------------- CART ACTIONS ----------------
   const addToCart = useCallback((item: CartItem, options?: { silent?: boolean }) => {
@@ -162,9 +164,17 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     if (!options?.silent) {
+      // SMART TRIGGER: 
+      // On Desktop (> 768px), open the drawer immediately.
+      // On Mobile, we ONLY show the toast (handled below).
+      if (typeof window !== "undefined" && window.innerWidth >= 768) {
+        toggleDrawer(true);
+      }
+      
+      // Toast appears on ALL devices (Mobile gets it as the primary feedback)
       triggerToast(`${item.name} added to cart`, "success");
     }
-  }, [triggerToast]);
+  }, [triggerToast, toggleDrawer]);
 
   const removeFromCart = useCallback((id: number) => {
     setCart((prev) => prev.filter((item) => item.id !== id));
@@ -177,10 +187,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
       )
     );
-  }, []);
-
-  const toggleDrawer = useCallback((state?: boolean) => {
-    setIsDrawerOpen((prev) => (typeof state === "boolean" ? state : !prev));
   }, []);
 
   const clearCart = useCallback(() => {

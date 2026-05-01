@@ -1,86 +1,79 @@
-// src/components/home/FeaturedCarousel.tsx
-
 "use client";
 
-import React, { useRef } from "react";
-import { motion } from "framer-motion";
+import React, { useRef, forwardRef, useImperativeHandle } from "react";
 import ProductCard from "@/components/home/ProductCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-// Renamed interface to be universal
 interface FeaturedCarouselProps {
-  products: any[]; 
+  products: any[];
 }
 
-// Renamed component to FeaturedCarousel
-const FeaturedCarousel: React.FC<FeaturedCarouselProps> = ({ products }) => {
-  const carouselRef = useRef<HTMLDivElement>(null);
+const FeaturedCarousel = forwardRef<HTMLDivElement, FeaturedCarouselProps>(
+  ({ products }, ref) => {
+    const scrollRef = useRef<HTMLDivElement>(null);
 
-  // We use the passed products directly
-  const displayItems = products;
+    const displayItems = Array.isArray(products) ? products : [];
 
-  if (displayItems.length === 0) return null;
+    useImperativeHandle(ref, () => scrollRef.current as HTMLDivElement);
 
-  const scrollAmount = 280;
+    const scroll = (direction: "left" | "right") => {
+      if (scrollRef.current) {
+        const { clientWidth } = scrollRef.current;
+        const scrollAmount = direction === "left" ? -clientWidth : clientWidth;
+        
+        scrollRef.current.scrollBy({
+          left: scrollAmount,
+          behavior: "smooth",
+        });
+      }
+    };
 
-  const scrollLeft = () => {
-    carouselRef.current?.scrollBy({
-      left: -scrollAmount,
-      behavior: "smooth",
-    });
-  };
+    if (displayItems.length === 0) return null;
 
-  const scrollRight = () => {
-    carouselRef.current?.scrollBy({
-      left: scrollAmount,
-      behavior: "smooth",
-    });
-  };
+    return (
+      <div className="relative group px-1">
+        {/* Navigation Arrows - Pulled inside with left-2 and right-2 */}
+        <button 
+          onClick={() => scroll("left")}
+          className="opacity-0 group-hover:opacity-100 absolute left-2 top-[40%] -translate-y-1/2 z-50 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-slate-900 text-white shadow-2xl transition-all duration-300 hover:bg-[#FDB813] hover:text-black active:scale-95 cursor-pointer pointer-events-none group-hover:pointer-events-auto border-2 border-white/10"
+        >
+          <FaChevronLeft size={16} />
+        </button>
+        
+        <button 
+          onClick={() => scroll("right")}
+          className="opacity-0 group-hover:opacity-100 absolute right-2 top-[40%] -translate-y-1/2 z-50 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-slate-900 text-white shadow-2xl transition-all duration-300 hover:bg-[#FDB813] hover:text-black active:scale-95 cursor-pointer pointer-events-none group-hover:pointer-events-auto border-2 border-white/10"
+        >
+          <FaChevronRight size={16} />
+        </button>
 
-  return (
-    <section className="mt-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {/* SCROLLABLE AREA - THE SNAP ZONE */}
+        <div
+          ref={scrollRef}
+          className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-8 snap-x snap-mandatory"
+          style={{ 
+            scrollbarWidth: 'none', 
+            msOverflowStyle: 'none',
+          }}
+        >
+          <style jsx>{`
+            div::-webkit-scrollbar { display: none; }
+          `}</style>
 
-      {/* TITLE (UNIVERSAL) */}
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900">
-        ⭐ Featured Picks
-      </h2>
-
-      {/* NAVIGATION ARROWS */}
-      <button
-        onClick={scrollLeft}
-        aria-label="Scroll Left"
-        className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur shadow-md border border-gray-100 rounded-full p-2 sm:p-3 hover:bg-white transition"
-      >
-        <FaChevronLeft size={16} />
-      </button>
-
-      <button
-        onClick={scrollRight}
-        aria-label="Scroll Right"
-        className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur shadow-md border border-gray-100 rounded-full p-2 sm:p-3 hover:bg-white transition"
-      >
-        <FaChevronRight size={16} />
-      </button>
-
-      {/* CAROUSEL */}
-      <div
-        ref={carouselRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
-      >
-        {displayItems.map((product) => (
-          <motion.div
-            key={product.id}
-            className="flex-none w-[48%] sm:w-56 md:w-64 lg:w-72"
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
-            <ProductCard {...product} />
-          </motion.div>
-        ))}
+          {displayItems.map((product) => (
+            <div
+              key={product.id}
+              className="flex-none w-[calc(50%-8px)] md:w-[calc(25%-12px)] snap-start transition-transform duration-500 hover:-translate-y-2"
+            >
+              <ProductCard {...product} />
+            </div>
+          ))}
+        </div>
       </div>
+    );
+  }
+);
 
-    </section>
-  );
-};
+FeaturedCarousel.displayName = "FeaturedCarousel";
 
 export default FeaturedCarousel;

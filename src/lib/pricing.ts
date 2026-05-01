@@ -1,8 +1,6 @@
 // FILE: src/lib/pricing.ts
 
-import { deliveryZones } from "./deliveryZones";
-
-export const DELIVERY_FEE = 300;
+import menuData from "@/data/menu.json";
 
 /**
  * Cart item contract
@@ -17,13 +15,14 @@ export interface CartItem {
  */
 export function calculateSubtotal(cart: CartItem[]) {
   return cart.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) => total + (item.price || 0) * (item.quantity || 0),
     0
   );
 }
 
 /**
  * DELIVERY ENGINE (SINGLE SOURCE OF TRUTH)
+ * Updated to pull data from deliverySettings in menu.json
  */
 export function getDeliveryFee(
   orderType?: "pickup" | "delivery",
@@ -32,18 +31,18 @@ export function getDeliveryFee(
   // 🚫 Pickup is always free
   if (orderType !== "delivery") return 0;
 
-  // 🔥 normalize safely
+  const { deliverySettings } = menuData;
   const loc = (location || "").toLowerCase().trim();
 
-  // ⚡ match zones
-  for (const zone of deliveryZones) {
-    if (zone.keywords.some((k) => loc.includes(k))) {
+  // ⚡ match zones using keywords from JSON
+  for (const zone of deliverySettings.zones) {
+    if (zone.keywords.some((k) => loc.includes(k.toLowerCase()))) {
       return zone.fee;
     }
   }
 
-  // 🟢 DEFAULT FALLBACK (CRITICAL RULE)
-  return DELIVERY_FEE;
+  // 🟢 DEFAULT FALLBACK (Pulls from JSON defaultFee)
+  return deliverySettings.defaultFee;
 }
 
 /**
@@ -55,7 +54,13 @@ export function calculateTotal(
   location?: string
 ) {
   const subtotal = calculateSubtotal(cart);
-  const delivery = getDeliveryFee(orderType, location);
+  let delivery = getDeliveryFee(orderType, location);
+
+  // Apply Free Delivery Threshold if subtotal exceeds limit in JSON
+  const { deliverySettings } = menuData;
+  if (subtotal >= deliverySettings.freeDeliveryThreshold) {
+    delivery = 0;
+  }
 
   return {
     subtotal,

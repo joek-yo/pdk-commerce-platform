@@ -19,6 +19,7 @@ export function getBusinessData() {
     logo: business.logo ?? "",
     banner: business.banner ?? "",
     drawerBanner: business.drawerBanner ?? "",
+    socialProof: business.socialProof ?? [], // NEW: For SocialProof.tsx
   };
 }
 
@@ -26,6 +27,16 @@ export function getBusinessData() {
 export function getUIConfig() {
   const ui = data.ui ?? {};
   return {
+    announcement: {
+      text: ui.announcement?.text ?? "", // NEW: For AnnouncementBar.tsx
+      active: ui.announcement?.active ?? false,
+    },
+    flashSale: {
+      active: ui.flashSale?.active ?? false, // NEW: For FlashSales.tsx
+      title: ui.flashSale?.title ?? "Flash Sale",
+      endTime: ui.flashSale?.endTime ?? "",
+      badge: ui.flashSale?.badge ?? "Limited Time",
+    },
     hero: {
       title: ui.hero?.title ?? "Welcome",
       subtitle: ui.hero?.subtitle ?? "",
@@ -33,7 +44,7 @@ export function getUIConfig() {
       ctaSecondary: ui.hero?.ctaSecondary ?? "Contact Us",
     },
     menuPage: {
-      tagline: ui.menuPage?.tagline ?? "Selection", // NEW: For high-end labels
+      tagline: ui.menuPage?.tagline ?? "Selection", 
       title: ui.menuPage?.title ?? "Our Collection",
       subtitle: ui.menuPage?.subtitle ?? "",
       ctaTitle: ui.menuPage?.ctaTitle ?? "",
@@ -41,7 +52,7 @@ export function getUIConfig() {
       ctaButton: ui.menuPage?.ctaButton ?? "Request Custom",
     },
     customOrder: {
-      badge: ui.customOrder?.badge ?? "Bespoke", // NEW: For studio-style badges
+      badge: ui.customOrder?.badge ?? "Bespoke", 
       title: ui.customOrder?.title ?? "Need Something Custom?",
       description: ui.customOrder?.description ?? "Request specialized items made just for you.",
       buttonText: ui.customOrder?.buttonText ?? "Request Custom Order",
@@ -97,9 +108,16 @@ export function getBestSellers(limit = 6) {
     .slice(0, limit);
 }
 
+// ================= FLASH SALE PRODUCTS =================
+export function getFlashSaleProducts() {
+  // Pull products that specifically have a discountPercent or a manual flashSale flag
+  return getAllProducts().filter(
+    (p) => (p?.discountPercent > 0 || p?.onFlashSale === true) && p?.available !== false
+  );
+}
+
 // ================= WHATSAPP =================
 export function getBusinessWhatsAppNumber() {
-  // Pull directly from the dedicated whatsapp field, fallback to phone
   const wa = data.business?.whatsapp || data.business?.phone || "";
   return wa.replace(/[^0-9]/g, "");
 }

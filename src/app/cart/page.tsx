@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import Image from "next/image";
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import menuData from "@/data/menu.json";
+import ProductCard from "@/components/home/ProductCard";
 import { 
   FaTrashAlt, FaPlus, FaMinus, FaChevronRight, FaChevronLeft, 
-  FaShoppingCart, FaPenNib, FaLightbulb, FaRocket
+  FaShoppingCart, FaPenNib, FaLightbulb, FaArrowLeft, FaTruck
 } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const CartPage: React.FC = () => {
   const {
@@ -17,16 +19,26 @@ const CartPage: React.FC = () => {
     updateQuantity,
     customOrder,
     setCustomOrder,
-    orderNotes,
-    setOrderNotes,
-    addToCart,
   } = useCart();
 
   const router = useRouter();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [suggestedDeals, setSuggestedDeals] = useState<any[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const shippingThreshold = menuData.deliverySettings?.freeDeliveryThreshold || 10000;
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const progress = Math.min((subtotal / shippingThreshold) * 100, 100);
+  const remaining = shippingThreshold - subtotal;
+
+  useEffect(() => {
+    const allItems = menuData.categories.flatMap(cat => cat.items);
+    const filteredItems = allItems.filter(
+      (item) => !cart.some((cartItem) => cartItem.id === item.id)
+    );
+    const shuffled = [...filteredItems].sort(() => 0.5 - Math.random()).slice(0, 8);
+    setSuggestedDeals(shuffled);
+  }, [cart.length]); 
 
   const handleProceed = () => {
     if (cart.length === 0 && !customOrder) {
@@ -39,184 +51,200 @@ const CartPage: React.FC = () => {
 
   const scrollDeals = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollTo = direction === "left" ? scrollLeft - clientWidth : scrollLeft + clientWidth;
-      scrollRef.current.scrollTo({ left: scrollTo, behavior: "smooth" });
+      const { clientWidth } = scrollRef.current;
+      const scrollAmount = direction === "left" ? -clientWidth : clientWidth;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
 
-  const handleAddSuggestion = (item: any) => {
-    addToCart({ ...item, quantity: 1 });
-    setToastMessage(`${item.name} added!`);
-    setTimeout(() => setToastMessage(null), 2000);
-  };
-
-  const sectionClasses = "bg-white border-l-8 border-l-[#FDB813] border-y border-r border-slate-200 p-6 sm:p-8 rounded-[2rem] shadow-[0_20px_40px_rgba(0,0,0,0.08)] mb-8 relative overflow-hidden";
-  const labelClasses = "flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-4 ml-1";
-  const inputStyle = "w-full bg-slate-50 border-2 border-slate-100 p-5 rounded-2xl text-slate-900 font-bold text-lg placeholder:text-slate-300 focus:bg-white focus:border-[#FDB813] outline-none transition-all duration-300";
+  const sectionClasses = "bg-white border-l-4 border-l-[#FDB813] border-y border-r border-slate-200 p-4 rounded-xl shadow-sm mb-4 relative overflow-hidden";
+  const labelClasses = "flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.1em] text-slate-500 mb-2 ml-1";
+  const inputStyle = "w-full bg-slate-50 border border-slate-200 p-3 rounded-lg text-slate-900 font-bold text-sm placeholder:text-slate-300 focus:bg-white focus:border-[#FDB813] outline-none transition-all duration-200";
 
   return (
-    <div className="min-h-screen bg-[#F1F5F9] text-slate-900 pt-24 pb-40 px-4 font-sans">
+    <div className="min-h-screen bg-[#F1F5F9] text-slate-900 pt-12 pb-32 px-4 font-sans">
       <div className="max-w-2xl mx-auto">
         
-        {/* HEADER */}
-        <div className="mb-10 px-2 flex justify-between items-end">
+        {/* HEADER SECTION */}
+        <div className="mb-6 flex justify-between items-end px-1">
           <div>
-            <h1 className="text-5xl font-black tracking-tighter text-slate-900">
+            <h1 className="text-3xl font-black tracking-tighter text-slate-900 leading-none">
               My <span className="text-[#FDB813]">Bag</span>
             </h1>
-            <div className="flex items-center gap-2 mt-1">
-               <div className="h-1 w-12 bg-[#FDB813] rounded-full"></div>
-               <p className="text-slate-400 font-black text-[10px] uppercase tracking-[0.3em]">
-                 {cart.length} ITEMS
-               </p>
-            </div>
+            <p className="text-slate-400 font-black text-[9px] uppercase tracking-[0.2em] mt-1">
+              {cart.length} items
+            </p>
           </div>
+          <button 
+            onClick={() => router.push("/menu")}
+            className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-all cursor-pointer"
+          >
+            <FaArrowLeft size={8}/>
+            <span>Back to Shop</span>
+          </button>
         </div>
 
-        {/* 1. CART ITEMS LIST */}
+        {/* PROGRESS BAR */}
+        {cart.length > 0 && (
+          <div className="bg-white border border-slate-200 p-4 rounded-xl mb-6 shadow-sm">
+            <div className="flex justify-between items-center mb-2">
+               <div className="flex items-center gap-2">
+                 <FaTruck className={remaining <= 0 ? "text-green-500" : "text-[#FDB813]"} size={12} />
+                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">
+                    {remaining > 0 
+                      ? `Add KES ${remaining.toLocaleString()} for Free Delivery` 
+                      : "Free Delivery Unlocked!"}
+                 </span>
+               </div>
+               <span className="text-[10px] font-black text-slate-400">{Math.round(progress)}%</span>
+            </div>
+            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+               <motion.div 
+                 initial={{ width: 0 }}
+                 animate={{ width: `${progress}%` }}
+                 className="h-full bg-[#FDB813]"
+               />
+            </div>
+          </div>
+        )}
+
+        {/* CART ITEMS LIST */}
         {cart.length > 0 ? (
-          <div className="space-y-4 mb-6">
+          <div className="space-y-3 mb-8">
             {cart.map((item) => (
-              <div key={item.id} className="bg-white border border-slate-200 p-4 sm:p-6 rounded-[2.5rem] flex items-center gap-4 sm:gap-6 shadow-[0_10px_25px_rgba(0,0,0,0.04)] group">
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-[1.5rem] overflow-hidden bg-slate-100 flex-shrink-0">
-                  <Image src={item.image || "/images/placeholder.jpg"} alt={item.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+              <div key={item.id} className="bg-white border border-slate-200 p-3 rounded-xl flex gap-4 shadow-sm relative group">
+                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-slate-50 flex-shrink-0 border border-slate-100">
+                  <Image src={item.image || "/images/placeholder.jpg"} alt={item.name} fill className="object-cover" />
                 </div>
                 
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-black text-slate-900 text-base sm:text-xl leading-tight truncate">{item.name}</h3>
-                  <p className="text-[#FDB813] font-black text-xs mb-3">KES {item.price.toLocaleString()}</p>
-                  
+                <div className="flex-1 flex flex-col justify-center min-w-0">
+                  <h3 className="font-black text-slate-900 text-sm sm:text-base leading-tight truncate mb-1">
+                    {item.name}
+                  </h3>
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center bg-slate-900 rounded-xl p-1">
-                      <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white"><FaMinus size={8}/></button>
-                      <span className="w-8 text-center font-black text-xs text-white">{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white"><FaPlus size={8}/></button>
-                    </div>
-                    <button onClick={() => removeFromCart(item.id)} className="w-10 h-10 flex items-center justify-center text-red-400 hover:text-red-600 transition-colors"><FaTrashAlt size={14}/></button>
+                    <span className="text-[10px] font-bold text-slate-400">Unit:</span>
+                    <p className="text-[#FDB813] font-black text-xs">KES {item.price.toLocaleString()}</p>
                   </div>
+                  <p className="mt-2 text-slate-900 font-black text-lg tracking-tighter">
+                    KES {(item.price * item.quantity).toLocaleString()}
+                  </p>
                 </div>
 
-                <div className="text-right">
-                  <p className="font-black text-slate-900 text-lg sm:text-2xl tracking-tighter">
-                    {(item.price * item.quantity).toLocaleString()}
-                  </p>
+                <div className="flex flex-col items-end justify-between border-l border-slate-100 pl-3 py-1">
+                  <button 
+                    onClick={() => removeFromCart(item.id)} 
+                    className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-red-500 transition-colors cursor-pointer"
+                  >
+                    <FaTrashAlt size={12}/>
+                  </button>
+
+                  <div className="flex items-center bg-slate-900 rounded-lg p-0.5 shadow-md">
+                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-7 h-7 flex items-center justify-center text-white/40 hover:text-white cursor-pointer"><FaMinus size={8}/></button>
+                    <span className="w-6 text-center font-black text-[10px] text-white">{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-7 h-7 flex items-center justify-center text-white/40 hover:text-white cursor-pointer"><FaPlus size={8}/></button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="bg-white/50 border-2 border-dashed border-slate-200 rounded-[3rem] text-center py-20 mb-12">
-            <FaShoppingCart className="mx-auto text-slate-200 mb-4" size={60} />
-            <p className="text-slate-400 font-black uppercase text-xs tracking-widest">Bag is empty</p>
+          <div className="bg-white border border-slate-200 rounded-xl text-center py-12 mb-8">
+            <FaShoppingCart className="mx-auto text-slate-200 mb-3" size={32} />
+            <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Empty Bag</h2>
           </div>
         )}
 
-        {/* 2. IMMEDIATE TOTAL & QUICK CHECKOUT (The New Pop-up Section) */}
-        {cart.length > 0 && (
-          <div className="bg-slate-900 rounded-[2.5rem] p-8 mb-16 shadow-2xl shadow-slate-400/50 flex flex-col sm:flex-row items-center justify-between gap-6 border border-white/10">
-            <div className="text-center sm:text-left">
-              <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.4em] block mb-1">Quick Total</span>
-              <div className="flex items-baseline gap-2 justify-center sm:justify-start text-white">
-                <span className="text-sm font-bold opacity-50 uppercase">KES</span>
-                <span className="text-4xl font-black tracking-tighter tabular-nums leading-none">
+        {/* RECOMMENDED ITEMS */}
+        {suggestedDeals.length > 0 && (
+          <div className="mb-10 relative">
+            <div className="flex justify-between items-center mb-4 px-1">
+              <h2 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-900 flex items-center gap-2">
+                <FaLightbulb className="text-[#FDB813]"/> Recommended
+              </h2>
+            </div>
+
+            <div className="relative group/nav">
+              <button 
+                onClick={() => scrollDeals("left")}
+                className="absolute left-[-12px] top-1/2 -translate-y-1/2 z-40 w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-white shadow-xl opacity-0 group-hover/nav:opacity-100 pointer-events-none group-hover/nav:pointer-events-auto transition-all duration-300 hover:bg-[#FDB813] hover:text-black active:scale-90 cursor-pointer border-2 border-white"
+              >
+                <FaChevronLeft size={12} />
+              </button>
+
+              <button 
+                onClick={() => scrollDeals("right")}
+                className="absolute right-[-12px] top-1/2 -translate-y-1/2 z-40 w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-white shadow-xl opacity-0 group-hover/nav:opacity-100 pointer-events-none group-hover/nav:pointer-events-auto transition-all duration-300 hover:bg-[#FDB813] hover:text-black active:scale-90 cursor-pointer border-2 border-white"
+              >
+                <FaChevronRight size={12} />
+              </button>
+
+              <div 
+                ref={scrollRef} 
+                className="flex gap-3 overflow-x-auto pb-6 no-scrollbar snap-x snap-mandatory scroll-smooth px-1"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                <style jsx>{`
+                  div::-webkit-scrollbar { display: none; }
+                `}</style>
+
+                {suggestedDeals.map((item) => (
+                  <div 
+                    key={item.id} 
+                    className="flex-none w-[calc(50%-6px)] sm:w-[calc((100%-24px)/3)] snap-start"
+                  >
+                    <ProductCard {...item} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CUSTOM SOURCING SECTION */}
+        <div className="mb-12">
+          <section className={sectionClasses}>
+            <label className={labelClasses}><FaPenNib size={9}/> Custom Sourcing</label>
+            <textarea 
+              value={customOrder} 
+              onChange={(e) => setCustomOrder(e.target.value)}
+              className={inputStyle + " min-h-[60px] resize-none"}
+              placeholder="Searching for something specific?"
+            />
+          </section>
+        </div>
+
+        {/* STICKY CHECKOUT BAR */}
+        <div className="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+          <div className="max-w-2xl mx-auto flex items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-[9px] font-black text-slate-400 uppercase">Total Payable</span>
+                {remaining <= 0 && (
+                  <span className="bg-green-100 text-green-600 text-[7px] font-black px-1.5 py-0.5 rounded uppercase">Free Delivery</span>
+                )}
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-xs font-bold text-slate-400">KES</span>
+                <span className="text-2xl font-black text-slate-900 tracking-tighter tabular-nums">
                   {subtotal.toLocaleString()}
                 </span>
               </div>
             </div>
+
             <button 
               onClick={handleProceed}
-              className="w-full sm:w-auto bg-[#FDB813] text-black px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center justify-center gap-3"
+              className="flex-1 max-w-[240px] bg-[#FDB813] text-black h-14 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-yellow-500 transition-all flex items-center justify-center gap-2 shadow-lg shadow-yellow-100 active:scale-95 cursor-pointer"
             >
-              <FaRocket size={14}/>
-              <span>Review Now</span>
+              <span>Review & Checkout</span>
+              <FaChevronRight size={10}/>
             </button>
           </div>
-        )}
-
-        {/* 3. MOST WANTED DEALS (Discovery) */}
-        <div className="mb-16">
-          <div className="flex justify-between items-center mb-6 px-2">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900 flex items-center gap-2">
-              <FaLightbulb className="text-[#FDB813]"/> Up Your Game
-            </h2>
-            <div className="flex gap-2">
-              <button onClick={() => scrollDeals("left")} className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-[#FDB813] transition-all shadow-md">
-                <FaChevronLeft size={12} />
-              </button>
-              <button onClick={() => scrollDeals("right")} className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-[#FDB813] transition-all shadow-md">
-                <FaChevronRight size={12} />
-              </button>
-            </div>
-          </div>
-          
-          <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-6 no-scrollbar snap-x snap-mandatory">
-            {menuData.categories.flatMap(cat => cat.items).slice(0, 8).map((item) => (
-              <div key={item.id} className="min-w-[200px] bg-white p-5 rounded-[2rem] border border-slate-100 shadow-xl snap-start">
-                <div className="relative h-32 w-full rounded-2xl overflow-hidden mb-4">
-                  <Image src={item.image} alt={item.name} fill className="object-cover" />
-                </div>
-                <h4 className="font-black text-xs text-slate-900 truncate mb-1 uppercase">{item.name}</h4>
-                <p className="text-[10px] font-black text-slate-400 mb-4">KES {item.price.toLocaleString()}</p>
-                <button onClick={() => handleAddSuggestion(item)} className="w-full py-3 bg-slate-50 hover:bg-[#FDB813] hover:text-black transition-all rounded-xl text-[9px] font-black uppercase tracking-widest">
-                  + Add
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 4. CUSTOM ORDER & NOTES (Further down for deep intent) */}
-        <div className="space-y-6 mb-16">
-          <section className={sectionClasses}>
-            <label className={labelClasses}><FaPenNib size={10} className="text-[#FDB813]"/> Custom Sourcing Request</label>
-            <textarea 
-              value={customOrder} 
-              onChange={(e) => setCustomOrder(e.target.value)}
-              className={inputStyle + " min-h-[120px] resize-none"}
-              placeholder="Tell us what product you are looking for..."
-            />
-          </section>
-
-          <section className={sectionClasses}>
-            <label className={labelClasses}><FaPenNib size={10} className="text-[#FDB813]"/> Order Instructions</label>
-            <textarea 
-              value={orderNotes} 
-              onChange={(e) => setOrderNotes(e.target.value)}
-              className={inputStyle + " min-h-[100px] resize-none"}
-              placeholder="Delivery notes, color preferences, etc."
-            />
-          </section>
-        </div>
-
-        {/* 5. FINAL GRAND TOTAL & CTA */}
-        <div className="mt-16 pt-12 border-t-4 border-white">
-           <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-12 px-4">
-             <div className="text-center sm:text-left">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.5em] block mb-2">Final Selection</span>
-                <div className="flex items-baseline gap-2 justify-center sm:justify-start">
-                  <span className="text-xl font-black text-slate-300 uppercase">KES</span>
-                  <span className="text-6xl font-black text-slate-900 tracking-tighter tabular-nums leading-none">
-                    {subtotal.toLocaleString()}
-                  </span>
-                </div>
-             </div>
-           </div>
-
-           <button 
-              onClick={handleProceed}
-              className="w-full bg-[#FDB813] text-black py-8 rounded-[2.5rem] font-black text-2xl hover:bg-[#E5A711] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_25px_60px_rgba(253,184,19,0.5)] flex items-center justify-center gap-4 group"
-            >
-              <span>Review Special Order</span>
-              <FaChevronRight size={20} className="group-hover:translate-x-1 transition-transform"/>
-           </button>
         </div>
 
       </div>
 
-      {/* TOAST */}
       {toastMessage && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-slate-900 text-[#FDB813] px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-[0_30px_60px_rgba(0,0,0,0.3)] z-[100] animate-in fade-in slide-in-from-bottom-5">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-slate-900 text-[#FDB813] px-6 py-3 rounded-lg font-black text-[10px] uppercase tracking-widest shadow-xl z-[100]">
           {toastMessage}
         </div>
       )}

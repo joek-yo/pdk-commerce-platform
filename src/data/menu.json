@@ -9,7 +9,23 @@
     "whatsapp": "254729724433",
     "logo": "/images/logo.png",
     "banner": "/images/hero-banner.jpg",
-    "drawerBanner": "/images/drawer-hero.jpg"
+    "drawerBanner": "/images/drawer-hero.jpg",
+    "socialProof": [
+      { "id": 1, "text": "Highly Requested: 50,000mAh Powerbanks are currently trending in Kangemi", "time": "Daily Essential" },
+      { "id": 2, "text": "Ultra Series 9 Smartwatches remain a top pick for Westlands deliveries", "time": "Verified Order" },
+      { "id": 3, "text": "Restocked: Creator Kits are back in the inventory for immediate dispatch", "time": "In Stock" },
+      { "id": 4, "text": "Join 500+ tech lovers in Nairobi sourcing their gadgets through Prime Deals", "time": "Community Pick" }
+    ]
+  },
+  "deliverySettings": {
+    "defaultFee": 300,
+    "freeDeliveryThreshold": 10000,
+    "zones": [
+      { "name": "Nairobi", "fee": 200, "keywords": ["nairobi", "westlands", "kileleshwa", "karen", "lavington", "kangemi", "cbd"] },
+      { "name": "Kiambu", "fee": 250, "keywords": ["kiambu", "ruaka", "ridgeways", "banana hill"] },
+      { "name": "Thika", "fee": 300, "keywords": ["thika", "makongeni", "gatuanyaga"] },
+      { "name": "Juja", "fee": 300, "keywords": ["juja", "juja farm", "jkuat"] }
+    ]
   },
   "navigation": [
     { "id": "home", "label": "Home", "path": "/" },
@@ -17,17 +33,23 @@
     { "id": "contact", "label": "Contact", "path": "/contact" }
   ],
   "ui": {
+    "announcement": {
+      "text": "The Latest in Global Tech, Curated for the Kenyan Lifestyle.",
+      "active": true
+    },
+    "flashSale": {
+      "active": true,
+      "title": "Midnight Madness",
+      "endTime": "2026-12-31T23:59:59",
+      "badge": "Hot Deal"
+    },
+    "featuredTitle": "Featured Items",
+    "bundlesTitle": "Value Packs",
     "hero": {
       "heading": "Premium Tech, Local Prices",
       "description": "The best of Nairobi's electronics, all in one place.",
       "ctaPrimary": "Explore Deals",
       "ctaSecondary": "WhatsApp Us"
-    },
-    "customOrder": {
-      "badge": "Bespoke Sourcing",
-      "title": "Need Something Specific?",
-      "description": "Can't find a particular gadget or looking to source in bulk? We handle the logistics and delivery for custom tech requests.",
-      "buttonText": "Request Custom Item"
     }
   },
   "categories": [
@@ -35,198 +57,64 @@
       "id": "wearables",
       "name": "Wearable Tech",
       "items": [
-        {
-          "id": 101,
-          "name": "Ultra Series 9 Smartwatch",
-          "price": 4500,
-          "discount": 15,
-          "image": "/images/smartwatch-ultra.jpg",
-          "description": "AMOLED Display, Bluetooth calling, and health tracking.",
-          "available": true,
-          "featured": true,
-          "isBestSeller": true
-        },
-        {
-          "id": 102,
-          "name": "Pro Buds Wireless Earbuds",
-          "price": 2800,
-          "discount": 10,
-          "image": "/images/earbuds-pro.jpg",
-          "description": "Active Noise Cancellation with 24-hour battery life.",
-          "available": true,
-          "trending": true
-        },
-        {
-          "id": 103,
-          "name": "Magnetic Charging Dock",
-          "price": 1200,
-          "image": "/images/charger.jpg",
-          "description": "Fast wireless charging for watches and phones.",
-          "available": true
-        }
+        { "id": 101, "name": "Ultra Series 9 Smartwatch", "price": 4500, "discountPercent": 15, "image": "/images/smartwatch-ultra.jpg", "description": "AMOLED Display, Bluetooth calling, and health tracking.", "available": true, "featured": true, "trending": false, "stock": 12 },
+        { "id": 102, "name": "Pro Buds Wireless Earbuds", "price": 2800, "discountPercent": 10, "image": "/images/earbuds-pro.jpg", "description": "Active Noise Cancellation with 24-hour battery life.", "available": true, "featured": true, "trending": true, "stock": 2 },
+        { "id": 103, "name": "Magnetic Charging Dock", "price": 1200, "image": "/images/charger.jpg", "description": "Fast wireless charging for watches and phones.", "available": true, "featured": false, "trending": false, "stock": 15 },
+        { "id": 104, "name": "Smart Fitness Tracker Band", "price": 1800, "discountPercent": 5, "image": "/images/fitness-band.jpg", "description": "Step counter, heart rate monitor, and sleep tracker.", "available": true, "featured": true, "trending": true, "stock": 3 }
       ]
     },
     {
       "id": "creator",
       "name": "Creator Studio",
       "items": [
-        {
-          "id": 201,
-          "name": "Professional 12\" Ring Light",
-          "price": 3500,
-          "discount": 20,
-          "image": "/images/ringlight.jpg",
-          "description": "Adjustable tripod with 3 color modes for TikTok and YouTube.",
-          "available": true,
-          "featured": true
-        },
-        {
-          "id": 202,
-          "name": "RGB LED Strip Lights (5M)",
-          "price": 1200,
-          "image": "/images/led-strips.jpg",
-          "description": "Bluetooth controlled room ambiance with music sync.",
-          "available": true,
-          "trending": true
-        },
-        {
-          "id": 203,
-          "name": "Bluetooth Lavalier Mic",
-          "price": 2500,
-          "discount": 5,
-          "image": "/images/mic.jpg",
-          "description": "Clear wireless audio for content creators and vloggers.",
-          "available": true,
-          "featured": true
-        }
+        { "id": 201, "name": "Professional 12\" Ring Light", "price": 3500, "discountPercent": 20, "image": "/images/ringlight.jpg", "description": "Adjustable tripod with 3 color modes for content creators.", "available": true, "featured": true, "trending": false, "stock": 8 },
+        { "id": 202, "name": "RGB LED Strip Lights (5M)", "price": 1200, "image": "/images/led-strips.jpg", "description": "Bluetooth controlled room ambiance with music sync.", "available": true, "featured": true, "trending": true, "stock": 4 },
+        { "id": 203, "name": "Bluetooth Lavalier Mic", "price": 2500, "discountPercent": 5, "image": "/images/mic.jpg", "description": "Clear wireless audio for content creators and vloggers.", "available": true, "featured": true, "trending": false, "stock": 20 },
+        { "id": 204, "name": "Green Screen Backdrop", "price": 4200, "image": "/images/greenscreen.jpg", "description": "Wrinkle-resistant polyester for professional video effects.", "available": true, "featured": false, "trending": false, "stock": 5 }
       ]
     },
     {
       "id": "computing",
       "name": "Computing Essentials",
       "items": [
-        {
-          "id": 401,
-          "name": "Backlit Mechanical Keyboard",
-          "price": 5500,
-          "discount": 10,
-          "image": "/images/keyboard.jpg",
-          "description": "Clicky mechanical switches with customizable RGB lighting.",
-          "available": true,
-          "isBestSeller": true
-        },
-        {
-          "id": 402,
-          "name": "Ergonomic Wireless Mouse",
-          "price": 1800,
-          "image": "/images/mouse.jpg",
-          "description": "Silent clicks and 1600 DPI for smooth navigation.",
-          "available": true
-        },
-        {
-          "id": 403,
-          "name": "USB-C 7-in-1 Hub",
-          "price": 3200,
-          "image": "/images/hub.jpg",
-          "description": "HDMI, USB 3.0, and SD card slots for your laptop.",
-          "available": true,
-          "trending": true
-        }
+        { "id": 401, "name": "Backlit Mechanical Keyboard", "price": 5500, "discountPercent": 10, "image": "/images/keyboard.jpg", "description": "Clicky mechanical switches with customizable RGB lighting.", "available": true, "featured": false, "trending": false, "stock": 10 },
+        { "id": 402, "name": "Ergonomic Wireless Mouse", "price": 1800, "image": "/images/mouse.jpg", "description": "Silent clicks and 1600 DPI for smooth navigation.", "available": true, "featured": false, "trending": false, "stock": 14 },
+        { "id": 403, "name": "USB-C 7-in-1 Hub", "price": 3200, "image": "/images/hub.jpg", "description": "HDMI, USB 3.0, and SD card slots for your laptop.", "available": true, "featured": true, "trending": true, "stock": 1 },
+        { "id": 404, "name": "Laptop Cooling Pad", "price": 2400, "image": "/images/coolingpad.jpg", "description": "Dual fans with blue LED light to keep your laptop cool.", "available": true, "featured": false, "trending": false, "stock": 6 }
       ]
     },
     {
       "id": "home-security",
       "name": "Smart Home & Security",
       "items": [
-        {
-          "id": 601,
-          "name": "Wifi Smart Camera 360°",
-          "price": 4800,
-          "discount": 12,
-          "image": "/images/camera.jpg",
-          "description": "Night vision and motion detection with phone alerts.",
-          "available": true,
-          "featured": true
-        },
-        {
-          "id": 602,
-          "name": "Smart Fingerprint Padlock",
-          "price": 2400,
-          "image": "/images/lock.jpg",
-          "description": "Keyless entry for bags and gym lockers.",
-          "available": true
-        }
+        { "id": 601, "name": "Wifi Smart Camera 360°", "price": 4800, "discountPercent": 12, "image": "/images/camera.jpg", "description": "Night vision and motion detection with phone alerts.", "available": true, "featured": true, "trending": false, "stock": 4 },
+        { "id": 602, "name": "Smart Fingerprint Padlock", "price": 2400, "image": "/images/lock.jpg", "description": "Keyless entry for bags and gym lockers.", "available": true, "featured": false, "trending": false, "stock": 9 },
+        { "id": 603, "name": "Smart Wifi Light Bulb", "price": 1500, "image": "/images/bulb.jpg", "description": "Voice controlled RGB lighting for your smart home.", "available": true, "featured": false, "trending": true, "stock": 2 }
       ]
     },
     {
       "id": "lifestyle",
       "name": "Lifestyle & Utility",
       "items": [
-        {
-          "id": 301,
-          "name": "6-Blade Portable Blender",
-          "price": 2200,
-          "discount": 5,
-          "image": "/images/blender.jpg",
-          "description": "USB rechargeable, perfect for smoothies on the go.",
-          "available": true,
-          "isBestSeller": true
-        },
-        {
-          "id": 701,
-          "name": "Digital Tyre Inflator",
-          "price": 3800,
-          "image": "/images/inflator.jpg",
-          "description": "Portable air pump for cars, bikes, and balls.",
-          "available": true,
-          "trending": true
-        },
-        {
-          "id": 702,
-          "name": "50,000mAh Fast Powerbank",
-          "price": 5500,
-          "discount": 8,
-          "image": "/images/powerbank.jpg",
-          "description": "High capacity with dual fast-charging ports.",
-          "available": true,
-          "isBestSeller": true
-        }
+        { "id": 301, "name": "6-Blade Portable Blender", "price": 2200, "discountPercent": 5, "image": "/images/blender.jpg", "description": "USB rechargeable, perfect for smoothies on the go.", "available": true, "featured": false, "trending": false, "stock": 11 },
+        { "id": 701, "name": "Digital Tyre Inflator", "price": 3800, "image": "/images/inflator.jpg", "description": "Portable air pump for cars, bikes, and balls.", "available": true, "featured": false, "trending": true, "stock": 3 },
+        { "id": 702, "name": "50,000mAh Fast Powerbank", "price": 5500, "discountPercent": 8, "image": "/images/powerbank.jpg", "description": "High capacity with dual fast-charging ports.", "available": true, "featured": false, "trending": false, "stock": 18 },
+        { "id": 703, "name": "Electric Lint Remover", "price": 1400, "image": "/images/lintremover.jpg", "description": "Revitalize your clothes by removing fuzz and lint.", "available": true, "featured": false, "trending": true, "stock": 2 }
       ]
     }
   ],
   "bundles": [
-    {
-      "id": 501,
-      "name": "The Ultimate Creator Kit",
-      "price": 5500,
-      "oldPrice": 7200,
-      "image": "/images/creator-bundle.jpg",
-      "description": "Ring Light + Mic + LED Strips. The complete setup.",
-      "available": true,
-      "featured": true,
-      "isBundle": true
-    },
-    {
-      "id": 502,
-      "name": "Remote Work Pack",
-      "price": 9500,
-      "oldPrice": 11500,
-      "image": "/images/work-bundle.jpg",
-      "description": "Keyboard + Mouse + USB Hub combo for home office.",
-      "available": true,
-      "featured": true,
-      "isBundle": true
-    },
-    {
-      "id": 503,
-      "name": "Smart Security Duo",
-      "price": 6500,
-      "oldPrice": 7200,
-      "image": "/images/security-bundle.jpg",
-      "description": "Wifi Camera + Fingerprint Lock for peace of mind.",
-      "available": true,
-      "featured": false,
-      "isBundle": true
-    }
-  ]
+    { "id": 501, "name": "The Ultimate Creator Kit", "price": 5500, "oldPrice": 7200, "image": "/images/creator-bundle.jpg", "description": "Ring Light + Mic + LED Strips. The complete setup.", "available": true, "featured": true, "isBundle": true },
+    { "id": 502, "name": "Remote Work Pack", "price": 9500, "oldPrice": 11500, "image": "/images/work-bundle.jpg", "description": "Keyboard + Mouse + USB Hub combo for home office.", "available": true, "featured": true, "isBundle": true },
+    { "id": 503, "name": "Smart Security Duo", "price": 6500, "oldPrice": 8500, "image": "/images/security-bundle.jpg", "description": "Wifi Camera + Fingerprint Padlock for total peace of mind.", "available": true, "featured": true, "isBundle": true },
+    { "id": 504, "name": "Traveler's Essential Kit", "price": 8200, "oldPrice": 9800, "image": "/images/travel-bundle.jpg", "description": "50,000mAh Powerbank + Portable Blender + Lint Remover.", "available": true, "featured": true, "isBundle": true },
+    { "id": 505, "name": "Vlogger Pro Max Bundle", "price": 11000, "oldPrice": 14500, "image": "/images/vlog-bundle.jpg", "description": "Ring Light + Lavalier Mic + Green Screen Backdrop.", "available": true, "featured": true, "isBundle": true },
+    { "id": 506, "name": "Ultimate Home Smart Lighting", "price": 3800, "oldPrice": 4800, "image": "/images/light-bundle.jpg", "description": "LED Strip Lights + 2x Smart Wifi Light Bulbs.", "available": true, "featured": true, "isBundle": true }
+  ],
+  "bespokeSourcing": {
+    "badge": "Bespoke Sourcing",
+    "title": "Need Something Specific?",
+    "description": "Can't find a particular gadget or looking to source in bulk? We handle the logistics and delivery for custom tech requests.",
+    "buttonText": "Request Custom Item"
+  }
 }

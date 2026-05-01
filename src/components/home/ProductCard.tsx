@@ -1,17 +1,16 @@
-// src/components/home/ProductCard.tsx
-
 "use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaPlus, FaMinus, FaShoppingBag } from "react-icons/fa";
 
 interface ProductProps {
-  id: number;
+  id: any;
   name: string;
   price?: number;
   oldPrice?: number;
-  discount?: number; // Added to match your JSON
   image?: string;
   hoverImage?: string;
   description: string;
@@ -19,11 +18,13 @@ interface ProductProps {
   featured?: boolean;
   trending?: boolean;
   discountPercent?: number;
+  stock?: number;
 }
 
 interface ProductCardProps extends ProductProps {
   isBundle?: boolean;
   onAddToCart?: () => void;
+  variant?: "grid" | "compact";
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -31,7 +32,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   name,
   price = 0,
   oldPrice,
-  discount, // From JSON
   image,
   hoverImage,
   description,
@@ -39,25 +39,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
   featured = false,
   trending = false,
   isBundle = false,
-  discountPercent, // From Props
+  discountPercent,
+  stock,
   onAddToCart,
+  variant = "grid",
 }) => {
   const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
   const [isHovered, setIsHovered] = useState(false);
 
-  // 1. Determine the percentage to display (prioritize discountPercent prop, then discount from JSON)
-  const finalDiscount = discountPercent || discount;
-
-  // 2. Determine the strikethrough price (prioritize oldPrice, then calculate from discount)
-  const strikePrice = oldPrice 
-    ? oldPrice 
-    : (finalDiscount ? Math.round(price / (1 - finalDiscount / 100)) : null);
-
   const cartItem = cart.find((item) => item.id === id);
   const quantity = cartItem ? cartItem.quantity : 0;
-
-  const qtyBtn =
-    "w-8 h-8 flex items-center justify-center rounded-lg font-bold transition bg-slate-100 hover:bg-slate-200 text-slate-900 disabled:opacity-40";
 
   const handleAddToCart = () => {
     if (!available) return;
@@ -78,100 +69,125 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   const handleDecrease = () => {
     if (!cartItem) return;
-    if (quantity <= 1) {
-      removeFromCart(id);
-    } else {
-      updateQuantity(id, quantity - 1);
-    }
+    if (quantity <= 1) removeFromCart(id);
+    else updateQuantity(id, quantity - 1);
   };
+
+  const isCompact = variant === "compact";
+
+  const badgeBase =
+    "absolute top-2 left-2 z-30 px-2 py-1 text-[9px] font-black uppercase tracking-widest rounded-md shadow-sm";
 
   return (
     <div
-      className="bg-white border border-slate-100 rounded-[1.5rem] shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500 flex flex-col relative overflow-hidden group h-full"
+      className={`group bg-white rounded-2xl border border-slate-100 flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ${
+        isBundle ? "min-h-[380px] sm:min-h-[420px]" : ""
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* ---------------- DISCOUNT TAG (Sleek Red) ---------------- */}
-      {finalDiscount && finalDiscount > 0 && (
-        <div className="absolute top-3 right-3 z-10 bg-red-600 text-white text-[9px] px-2 py-1 rounded-full font-black uppercase tracking-tighter shadow-lg animate-pulse">
-          -{finalDiscount}%
-        </div>
-      )}
-
-      {/* ---------------- STUDIO BADGES ---------------- */}
-      <div className="absolute top-3 left-3 flex flex-col space-y-1.5 z-10">
-        {featured && (
-          <span className="bg-slate-900 text-white text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded shadow-md">
+      {/* IMAGE */}
+      <div
+        className={`relative bg-white overflow-hidden ${
+          isBundle ? "h-44 sm:h-56" : "aspect-square"
+        }`}
+      >
+        {stock && stock <= 5 ? (
+          <span className={`${badgeBase} bg-red-600 text-white`}>
+            Only {stock} Left
+          </span>
+        ) : featured ? (
+          <span className={`${badgeBase} bg-slate-900 text-white`}>
             Featured
           </span>
-        )}
-        {trending && (
-          <span className="bg-[#FDB813] text-slate-900 text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded shadow-md">
+        ) : trending ? (
+          <span className={`${badgeBase} bg-[#FDB813] text-black`}>
             Trending
           </span>
-        )}
-        {isBundle && (
-          <span className="bg-white border border-slate-200 text-slate-500 text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded shadow-sm">
-            Bundle
+        ) : discountPercent ? (
+          <span className={`${badgeBase} bg-red-600 text-white`}>
+            {discountPercent}% OFF
           </span>
-        )}
-      </div>
+        ) : !available ? (
+          <span className={`${badgeBase} bg-slate-400 text-white`}>
+            Sold Out
+          </span>
+        ) : null}
 
-      {/* ---------------- IMAGE SECTION ---------------- */}
-      <div className="relative h-44 sm:h-56 w-full overflow-hidden bg-slate-50">
         <Image
-          src={isHovered && hoverImage ? hoverImage : image || "/images/placeholder.jpg"}
+          src={
+            isHovered && hoverImage ? hoverImage : image || "/placeholder.jpg"
+          }
           alt={name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
       </div>
 
-      {/* ---------------- CONTENT ---------------- */}
-      <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between bg-white">
-        <div className="mb-4">
-          <h3 className="text-sm sm:text-base font-black text-slate-900 line-clamp-1 tracking-tight">
-            {name}
-          </h3>
-          <p className="text-slate-400 mt-1 text-xs font-bold leading-snug line-clamp-2">
-            {description}
-          </p>
+      {/* CONTENT */}
+      <div className="p-3 md:p-4 flex flex-col flex-1">
+        <h3 className="text-sm font-black uppercase text-slate-900 line-clamp-1">
+          {name}
+        </h3>
+
+        <p className="text-[10px] sm:text-xs text-slate-400 font-bold mt-1 line-clamp-2">
+          {description}
+        </p>
+
+        {/* PRICE */}
+        <div className="mt-3">
+          <span className="text-sm sm:text-lg font-black text-slate-900">
+            KES {price.toLocaleString()}
+          </span>
         </div>
 
-        {/* ---------------- PRICE & ACTIONS ---------------- */}
-        <div className="mt-auto">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-slate-900 font-black text-base sm:text-lg tracking-tighter">
-              KES {price.toLocaleString()}
-            </span>
-            {strikePrice && (
-              <span className="text-slate-300 line-through text-[10px] sm:text-xs font-bold">
-                KES {strikePrice.toLocaleString()}
-              </span>
-            )}
-          </div>
+        {/* 🔥 BOTTOM FULL CTA BAR */}
+        <div className="mt-auto pt-3">
+          <AnimatePresence mode="wait">
+            {cartItem ? (
+              <motion.div
+                key="qty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="w-full h-10 bg-slate-900 rounded-xl flex items-center justify-between px-4"
+              >
+                <button onClick={handleDecrease} className="text-[#FDB813]">
+                  <FaMinus size={12} />
+                </button>
 
-          {cartItem ? (
-            <div className="flex items-center justify-between p-1 bg-slate-50 rounded-xl border border-slate-100">
-              <button onClick={handleDecrease} className={qtyBtn}>−</button>
-              <span className="font-black text-xs text-slate-900">{quantity}</span>
-              <button onClick={handleAddToCart} className={qtyBtn}>+</button>
-            </div>
-          ) : (
-            <button
-              onClick={handleAddToCart}
-              disabled={!available}
-              className={`
-                w-full py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
-                ${available 
-                  ? "bg-slate-900 text-white hover:bg-black shadow-lg shadow-slate-200 hover:shadow-slate-300 active:scale-95" 
-                  : "bg-slate-100 text-slate-400 cursor-not-allowed"
-                }
-              `}
-            >
-              {available ? "Add to Cart" : "Out of Stock"}
-            </button>
-          )}
+                <span className="text-white font-black text-sm">
+                  {quantity}
+                </span>
+
+                <button onClick={handleAddToCart} className="text-[#FDB813]">
+                  <FaPlus size={12} />
+                </button>
+              </motion.div>
+            ) : (
+              <motion.button
+                key="add"
+                onClick={handleAddToCart}
+                disabled={!available}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className={`
+                  w-full h-10 rounded-xl flex items-center justify-center gap-2
+                  text-[11px] font-black uppercase tracking-widest
+                  transition-all duration-300
+                  ${
+                    available
+                      ? "bg-slate-900 text-white hover:bg-[#FDB813] hover:text-black"
+                      : "bg-slate-200 text-slate-400"
+                  }
+                `}
+              >
+                <FaShoppingBag size={12} />
+                {available ? "Add To Bag" : "Sold Out"}
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

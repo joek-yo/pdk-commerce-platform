@@ -1,102 +1,85 @@
-// src/components/home/FeaturedBundles.tsx
-
 "use client";
 
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
-import ProductCard from "@/components/home/ProductCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { getUIConfig } from "@/lib/getBusinessData";
+import ProductCard from "@/components/home/ProductCard";
 
-interface FeaturedBundlesProps {
+interface BundleProps {
   bundles: any[];
 }
 
-const FeaturedBundles: React.FC<FeaturedBundlesProps> = ({ bundles }) => {
-  const carouselRef = useRef<HTMLDivElement>(null);
+const FeaturedBundles: React.FC<BundleProps> = ({ bundles }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const ui = getUIConfig();
 
-  if (!bundles || bundles.length === 0) return null;
+  const safeBundles = Array.isArray(bundles) ? bundles : [];
 
-  const scrollAmount = 320; 
+  const scroll = (direction: "left" | "right") => {
+    if (!scrollRef.current) return;
 
-  const scrollLeft = () => {
-    carouselRef.current?.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+    const { clientWidth } = scrollRef.current;
+    const scrollAmount = direction === "left" ? -clientWidth : clientWidth;
+
+    scrollRef.current.scrollBy({
+      left: scrollAmount,
+      behavior: "smooth",
+    });
   };
 
-  const scrollRight = () => {
-    carouselRef.current?.scrollBy({ left: scrollAmount, behavior: "smooth" });
-  };
+  if (safeBundles.length === 0) return null;
 
   return (
-    <section className="relative group">
-      {/* TITLE REMOVED: 
-          Managed by the parent page (Value Packs) for better SaaS consistency.
-      */}
-
-      {/* LEFT NAVIGATION ARROW - Restored for Mobile & Desktop */}
+    <section className="relative group px-1">
+      
+      {/* NAVIGATION ARROWS */}
       <button
-        onClick={scrollLeft}
-        className="
-          absolute -left-2 sm:left-4 top-1/2 -translate-y-1/2 
-          z-30 
-          bg-white/95 backdrop-blur-xl 
-          shadow-2xl shadow-slate-200/50 
-          border border-slate-100 
-          rounded-full 
-          p-3.5 sm:p-5 
-          hover:bg-white hover:scale-110 
-          active:scale-90 
-          transition-all 
-          opacity-100 sm:opacity-0 sm:group-hover:opacity-100
-        "
-        aria-label="Previous"
+        onClick={() => scroll("left")}
+        className="opacity-0 group-hover:opacity-100 absolute left-2 top-[40%] -translate-y-1/2 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-white shadow-2xl transition-all duration-300 hover:bg-[#FDB813] hover:text-black cursor-pointer pointer-events-none group-hover:pointer-events-auto border border-white/10"
       >
-        <FaChevronLeft size={12} className="text-slate-900" />
+        <FaChevronLeft size={16} />
       </button>
 
-      {/* RIGHT NAVIGATION ARROW - Restored for Mobile & Desktop */}
       <button
-        onClick={scrollRight}
-        className="
-          absolute -right-2 sm:right-4 top-1/2 -translate-y-1/2 
-          z-30 
-          bg-white/95 backdrop-blur-xl 
-          shadow-2xl shadow-slate-200/50 
-          border border-slate-100 
-          rounded-full 
-          p-3.5 sm:p-5 
-          hover:bg-white hover:scale-110 
-          active:scale-90 
-          transition-all 
-          opacity-100 sm:opacity-0 sm:group-hover:opacity-100
-        "
-        aria-label="Next"
+        onClick={() => scroll("right")}
+        className="opacity-0 group-hover:opacity-100 absolute right-2 top-[40%] -translate-y-1/2 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-white shadow-2xl transition-all duration-300 hover:bg-[#FDB813] hover:text-black cursor-pointer pointer-events-none group-hover:pointer-events-auto border border-white/10"
       >
-        <FaChevronRight size={12} className="text-slate-900" />
+        <FaChevronRight size={16} />
       </button>
 
-      {/* CAROUSEL CONTAINER */}
+      {/* SCROLL CONTAINER */}
       <div
-        ref={carouselRef}
-        className="
-          flex 
-          gap-5 sm:gap-10 
-          overflow-x-auto 
-          no-scrollbar 
-          scroll-smooth 
-          pb-10 
-          px-2
-        "
+        ref={scrollRef}
+        className="flex gap-4 sm:gap-6 overflow-x-auto pb-8 no-scrollbar scroll-smooth snap-x snap-mandatory"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {bundles.map((bundle) => (
+        <style jsx>{`
+          div::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
+
+        {safeBundles.map((bundle) => (
           <motion.div
             key={bundle.id}
-            className="flex-none w-[85vw] sm:w-[45vw] md:w-[35vw] lg:w-[28vw]"
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.3 }}
+            className="flex-none w-[calc(85%-8px)] md:w-[calc(33.33%-16px)] snap-start"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
+            {/* 🔥 REUSING YOUR PRODUCT CARD (NO DUPLICATE LOGIC) */}
             <ProductCard
-              {...bundle}
-              isBundle
+              id={bundle.id}
+              name={bundle.name}
+              price={bundle.price}
+              oldPrice={bundle.oldPrice}
+              description={bundle.description}
+              image={bundle.image}
+              hoverImage={bundle.hoverImage}
+              available={bundle.available}
+              isBundle={true}
+              variant="grid"
             />
           </motion.div>
         ))}

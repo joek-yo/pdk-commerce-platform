@@ -21,8 +21,8 @@ export interface OrderDetails {
 }
 
 /**
- * WHATSAPP MESSAGE BUILDER (PURE FORMATTER)
- * - Refactored for Prime Deals Kenya (Universal Commerce)
+ * WHATSAPP MESSAGE BUILDER
+ * Formats the order data into a clean, readable Kenyan business message.
  */
 export function generateWhatsAppMessage(order: OrderDetails) {
   const {
@@ -39,7 +39,7 @@ export function generateWhatsAppMessage(order: OrderDetails) {
   const business = getBusinessData();
   const orderId = generateOrderId();
 
-  // ✅ SINGLE SOURCE OF TRUTH (pricing engine)
+  // SINGLE SOURCE OF TRUTH (pricing engine)
   const { subtotal, delivery, total } = calculateTotal(
     cart,
     orderType,
@@ -66,12 +66,12 @@ ${icons.customer || "👤"} *CUSTOMER DETAILS*
 
 ━━━━━━━━━━━━━━━━━━
 ${icons.item || "🛒"} *ORDER ITEMS*
-${itemsText}
+${itemsText || "_(No catalog items)_"}
 
 ━━━━━━━━━━━━━━━━━━
 💰 *SUBTOTAL: KES ${subtotal.toLocaleString()}*`;
 
-  // 🚚 Delivery Fee
+  // Delivery Fee calculation
   if (orderType === "delivery") {
     message += `\n🚚 *DELIVERY FEE: KES ${delivery.toLocaleString()}*`;
   }
@@ -82,24 +82,24 @@ ${itemsText}
 ━━━━━━━━━━━━━━━━━━
 ${icons.delivery || "📍"} *ORDER TYPE:* ${(orderType || "pickup").toUpperCase()}`;
 
-  // 📍 Location info
+  // Location info
   if (orderType === "delivery" && deliveryLocation) {
     message += `\n📍 *DELIVERY TO:* ${deliveryLocation}`;
   }
 
-  // ⏰ Schedule
+  // Schedule/Timing info
   if (scheduleTime) {
     message += `\n⏰ *SCHEDULED FOR:* ${scheduleTime}`;
   }
 
-  // 🧾 Custom Requests
+  // ✅ CUSTOM SOURCING REQUEST (From Cart Page)
   if (customOrder?.trim()) {
-    message += `\n\n${icons.custom || "✨"} *CUSTOM REQUEST*\n${customOrder}`;
+    message += `\n\n${icons.custom || "✨"} *CUSTOM SOURCING REQUEST*\n${customOrder}`;
   }
 
-  // 📝 General Notes
+  // ✅ DELIVERY INSTRUCTIONS / NOTES (From Review Page)
   if (orderNotes?.trim()) {
-    message += `\n\n${icons.note || "📝"} *NOTES*\n${orderNotes}`;
+    message += `\n\n${icons.note || "📝"} *DELIVERY INSTRUCTIONS*\n${orderNotes}`;
   }
 
   message += `
@@ -120,7 +120,7 @@ ${icons.success || "✅"} Thank you for shopping with *${business.name}*!`;
 
 /**
  * SIDE EFFECT ONLY (OPEN WHATSAPP)
- * - Improved phone number sanitization for Kenyan users
+ * - Improved phone number sanitization for Kenyan users (254)
  */
 export function openWhatsApp(order: OrderDetails) {
   if (typeof window === "undefined") return;
@@ -136,18 +136,16 @@ export function openWhatsApp(order: OrderDetails) {
     return;
   }
 
-  // ✅ Ensure Kenyan numbers are in International Format (254...)
+  // Ensure Kenyan numbers are in International Format (254...)
   if (phone.startsWith("0")) {
     phone = "254" + phone.substring(1);
-  } else if (phone.startsWith("7") || phone.startsWith("1")) {
-    // Handles cases like "729..." instead of "0729..."
+  } else if ((phone.startsWith("7") || phone.startsWith("1")) && phone.length === 9) {
     phone = "254" + phone;
   }
 
   const message = generateWhatsAppMessage(order);
   const encodedMessage = encodeURIComponent(message);
 
-  // Using api.whatsapp.com for better cross-device compatibility
   const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`;
 
   window.open(whatsappUrl, "_blank");

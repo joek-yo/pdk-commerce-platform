@@ -76,13 +76,14 @@ export default function Button({
         inline-flex items-center justify-center gap-2
         font-semibold rounded-lg
         transition-all duration-200
+        
+        /* ADDED CURSOR POINTER HERE */
+        ${!(disabled || loading) ? "cursor-pointer" : "cursor-not-allowed opacity-50"}
 
         ${variants[variant]}
         ${sizes[size]}
 
         ${fullWidth ? "w-full" : ""}
-
-        ${(disabled || loading) ? "opacity-50 cursor-not-allowed" : ""}
 
         ${iconOnly ? "p-3 aspect-square" : ""}
 
