@@ -1,21 +1,23 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// Import Icons for the section headers
+import Link from "next/link";
 import { 
   FaRocket, FaCompass, FaThLarge, FaTag, 
-  FaUsers, FaLifeRing, FaShieldAlt 
+  FaUsers, FaLifeRing, FaShieldAlt, FaHome, 
+  FaShoppingBag, FaUtensils 
 } from "react-icons/fa";
 
 // Import Drawer Sections
 import DrawerHeader from "./drawer/DrawerHeader";
 import QuickActions from "./drawer/QuickActions";
-import NavigationSection from "./drawer/NavigationSection";
-import CategorySection from "./drawer/CategorySection";
 import DealsSection from "./drawer/DealsSection";
 import SocialProofSection from "./drawer/SocialProofSection";
 import SupportSection from "./drawer/SupportSection";
 import FooterTrust from "./drawer/FooterTrust";
+
+// Import your data
+import menuData from "@/data/menu.json";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -23,20 +25,36 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  // Lock background scroll when open
   useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
     if (isOpen) {
       document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
     }
-    return () => {
-      document.body.style.overflow = originalOverflow || "";
-    };
   }, [isOpen]);
 
   // UI Standardized Styles
   const sectionClasses = "bg-white border-l-4 border-l-[#FDB813] border-y border-r border-slate-100 p-5 rounded-lg shadow-sm mb-4 relative overflow-hidden";
   const labelClasses = "flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 mb-4 ml-1";
-  const iconStyle = "text-[#FDB813]"; // Brand Gold for all icons
+  const iconStyle = "text-[#FDB813]"; 
+  const linkStyle = "flex items-center gap-3 py-3 px-1 text-slate-700 hover:text-[#FDB813] transition-colors border-b border-slate-50 last:border-0";
+  const textStyle = "text-[11px] font-black uppercase tracking-wider";
+
+  // Randomize Categories on every open
+  const randomizedCategories = useMemo(() => {
+    if (!menuData.categories) return [];
+    return [...menuData.categories]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 6);
+  }, [isOpen]);
+
+  // UPDATED NAVIGATION (clean + wired)
+  const navLinks = [
+    { name: "Home", href: "/", icon: <FaHome size={14} /> },
+    { name: "Shop All", href: "/menu", icon: <FaShoppingBag size={14} /> },
+    { name: "Contacts", href: "/contact", icon: <FaShieldAlt size={14} /> },
+  ];
 
   return (
     <AnimatePresence>
@@ -58,38 +76,78 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             transition={{ duration: 0.3, ease: "circOut" }}
           >
             <div className="bg-white border-b border-slate-200">
-                <DrawerHeader onClose={onClose} />
+              <DrawerHeader onClose={onClose} />
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar">
               
               <div className={sectionClasses}>
-                <label className={labelClasses}><FaRocket className={iconStyle} size={10}/> Quick Start</label>
+                <label className={labelClasses}>
+                  <FaRocket className={iconStyle} size={10}/> Quick Start
+                </label>
                 <QuickActions />
               </div>
 
+              {/* NAVIGATION SECTION */}
               <div className={sectionClasses}>
-                <label className={labelClasses}><FaCompass className={iconStyle} size={10}/> Navigation</label>
-                <NavigationSection />
+                <label className={labelClasses}>
+                  <FaCompass className={iconStyle} size={10}/> Navigation
+                </label>
+
+                <div className="flex flex-col">
+                  {navLinks.map((link) => (
+                    <Link 
+                      key={link.name} 
+                      href={link.href} 
+                      onClick={onClose} 
+                      className={linkStyle}
+                    >
+                      <span className="text-[#FDB813]/60">{link.icon}</span>
+                      <span className={textStyle}>{link.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* CATEGORY SECTION */}
+              <div className={sectionClasses}>
+                <label className={labelClasses}>
+                  <FaThLarge className={iconStyle} size={10}/> Fresh Categories
+                </label>
+
+                <div className="grid grid-cols-1">
+                  {randomizedCategories.map((cat: any) => (
+                    <Link 
+                      key={cat.id} 
+                      href={`/menu?category=${cat.id}`} 
+                      onClick={onClose} 
+                      className={linkStyle}
+                    >
+                      <FaUtensils className="text-[#FDB813]/60" size={12} />
+                      <span className={textStyle}>{cat.name}</span>
+                    </Link>
+                  ))}
+                </div>
               </div>
 
               <div className={sectionClasses}>
-                <label className={labelClasses}><FaThLarge className={iconStyle} size={10}/> Categories</label>
-                <CategorySection />
-              </div>
-
-              <div className={sectionClasses}>
-                <label className={labelClasses}><FaTag className={iconStyle} size={10}/> Exclusive Deals</label>
+                <label className={labelClasses}>
+                  <FaTag className={iconStyle} size={10}/> Exclusive Deals
+                </label>
                 <DealsSection />
               </div>
 
               <div className={sectionClasses}>
-                <label className={labelClasses}><FaUsers className={iconStyle} size={10}/> Community</label>
+                <label className={labelClasses}>
+                  <FaUsers className={iconStyle} size={10}/> Community
+                </label>
                 <SocialProofSection />
               </div>
 
               <div className={sectionClasses}>
-                <label className={labelClasses}><FaLifeRing className={iconStyle} size={10}/> Help & Support</label>
+                <label className={labelClasses}>
+                  <FaLifeRing className={iconStyle} size={10}/> Help & Support
+                </label>
                 <SupportSection />
               </div>
 
@@ -98,7 +156,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <div className="border-t border-slate-100 p-5 bg-white">
               <div className="flex items-center gap-2 mb-4 opacity-50">
                 <FaShieldAlt className="text-slate-400" size={12}/>
-                <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Verified Secure</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+                  Verified Secure
+                </span>
               </div>
               <FooterTrust />
             </div>
