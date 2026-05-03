@@ -5,7 +5,8 @@ import Link from "next/link";
 import { 
   FaRocket, FaCompass, FaThLarge, FaTag, 
   FaUsers, FaLifeRing, FaShieldAlt, FaHome, 
-  FaShoppingBag, FaUtensils 
+  FaShoppingBag, FaPhoneAlt,
+  FaVideo, FaLaptop, FaBox, FaShieldAlt as FaShield, FaLayerGroup
 } from "react-icons/fa";
 
 // Import Drawer Sections
@@ -25,23 +26,33 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
-  // Lock background scroll when open
+
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = isOpen ? "hidden" : "unset";
   }, [isOpen]);
 
-  // UI Standardized Styles
-  const sectionClasses = "bg-white border-l-4 border-l-[#FDB813] border-y border-r border-slate-100 p-5 rounded-lg shadow-sm mb-4 relative overflow-hidden";
-  const labelClasses = "flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 mb-4 ml-1";
-  const iconStyle = "text-[#FDB813]"; 
-  const linkStyle = "flex items-center gap-3 py-3 px-1 text-slate-700 hover:text-[#FDB813] transition-colors border-b border-slate-50 last:border-0";
-  const textStyle = "text-[11px] font-black uppercase tracking-wider";
+  const sectionClasses =
+    "bg-white border-l-4 border-l-[#FDB813] border-y border-r border-slate-100 p-5 rounded-lg shadow-sm mb-4 relative overflow-hidden";
 
-  // Randomize Categories on every open
+  const labelClasses =
+    "flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 mb-4 ml-1";
+
+  const iconStyle = "text-[#FDB813]";
+  const linkStyle =
+    "flex items-center gap-3 py-3 px-1 text-slate-700 hover:text-[#FDB813] transition-colors border-b border-slate-50 last:border-0";
+
+  const textStyle =
+    "text-[11px] font-black uppercase tracking-wider";
+
+  // 🔥 CATEGORY ICON MAPPING (NEW)
+  const categoryIcons: Record<string, JSX.Element> = {
+    wearables: <FaBox size={12} />,
+    creator: <FaVideo size={12} />,
+    computing: <FaLaptop size={12} />,
+    "home-security": <FaShield size={12} />,
+    lifestyle: <FaLayerGroup size={12} />,
+  };
+
   const randomizedCategories = useMemo(() => {
     if (!menuData.categories) return [];
     return [...menuData.categories]
@@ -49,11 +60,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       .slice(0, 6);
   }, [isOpen]);
 
-  // UPDATED NAVIGATION (clean + wired)
   const navLinks = [
     { name: "Home", href: "/", icon: <FaHome size={14} /> },
     { name: "Shop All", href: "/menu", icon: <FaShoppingBag size={14} /> },
-    { name: "Contacts", href: "/contact", icon: <FaShieldAlt size={14} /> },
+    { name: "Contacts", href: "/contact", icon: <FaPhoneAlt size={14} /> },
   ];
 
   return (
@@ -67,7 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             exit={{ opacity: 0 }}
             onClick={onClose}
           />
-          
+
           <motion.div
             className="fixed top-0 left-0 h-full w-[85%] max-w-sm bg-[#F8FAFC] z-[100] shadow-2xl flex flex-col border-r border-slate-200"
             initial={{ x: "-100%" }}
@@ -80,26 +90,26 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar">
-              
+
               <div className={sectionClasses}>
                 <label className={labelClasses}>
-                  <FaRocket className={iconStyle} size={10}/> Quick Start
+                  <FaRocket className={iconStyle} size={10} /> Quick Start
                 </label>
                 <QuickActions />
               </div>
 
-              {/* NAVIGATION SECTION */}
+              {/* NAVIGATION */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
-                  <FaCompass className={iconStyle} size={10}/> Navigation
+                  <FaCompass className={iconStyle} size={10} /> Navigation
                 </label>
 
                 <div className="flex flex-col">
                   {navLinks.map((link) => (
-                    <Link 
-                      key={link.name} 
-                      href={link.href} 
-                      onClick={onClose} 
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={onClose}
                       className={linkStyle}
                     >
                       <span className="text-[#FDB813]/60">{link.icon}</span>
@@ -109,21 +119,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* CATEGORY SECTION */}
+              {/* CATEGORY SECTION (FIXED) */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
-                  <FaThLarge className={iconStyle} size={10}/> Fresh Categories
+                  <FaThLarge className={iconStyle} size={10} /> Fresh Categories
                 </label>
 
                 <div className="grid grid-cols-1">
                   {randomizedCategories.map((cat: any) => (
-                    <Link 
-                      key={cat.id} 
-                      href={`/menu?category=${cat.id}`} 
-                      onClick={onClose} 
+                    <Link
+                      key={cat.id}
+                      href={`/menu?category=${cat.id}`}
+                      onClick={onClose}
                       className={linkStyle}
                     >
-                      <FaUtensils className="text-[#FDB813]/60" size={12} />
+                      <span className="text-[#FDB813]/60">
+                        {categoryIcons[cat.id] || <FaLayerGroup size={12} />}
+                      </span>
                       <span className={textStyle}>{cat.name}</span>
                     </Link>
                   ))}
@@ -132,21 +144,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
               <div className={sectionClasses}>
                 <label className={labelClasses}>
-                  <FaTag className={iconStyle} size={10}/> Exclusive Deals
+                  <FaTag className={iconStyle} size={10} /> Exclusive Deals
                 </label>
                 <DealsSection />
               </div>
 
               <div className={sectionClasses}>
                 <label className={labelClasses}>
-                  <FaUsers className={iconStyle} size={10}/> Community
+                  <FaUsers className={iconStyle} size={10} /> Community
                 </label>
                 <SocialProofSection />
               </div>
 
               <div className={sectionClasses}>
                 <label className={labelClasses}>
-                  <FaLifeRing className={iconStyle} size={10}/> Help & Support
+                  <FaLifeRing className={iconStyle} size={10} /> Help & Support
                 </label>
                 <SupportSection />
               </div>
@@ -155,13 +167,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
             <div className="border-t border-slate-100 p-5 bg-white">
               <div className="flex items-center gap-2 mb-4 opacity-50">
-                <FaShieldAlt className="text-slate-400" size={12}/>
+                <FaShieldAlt className="text-slate-400" size={12} />
                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">
                   Verified Secure
                 </span>
               </div>
               <FooterTrust />
             </div>
+
           </motion.div>
         </>
       )}
