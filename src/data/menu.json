@@ -83,6 +83,7 @@
       "id": "wearables",
       "name": "Wearable Tech",
       "icon": "watch",
+      "image": "/images/smartwatch-ultra.jpg",
       "hot": false,
       "items": [
         { 
@@ -142,6 +143,7 @@
       "id": "creator",
       "name": "Creator Studio",
       "icon": "video",
+      "image": "/images/ringlight.jpg",
       "hot": true,
       "items": [
         { 
@@ -200,6 +202,7 @@
       "id": "computing",
       "name": "Computing Essentials",
       "icon": "laptop",
+      "image": "/images/keyboard.jpg",
       "hot": false,
       "items": [
         { 
@@ -257,6 +260,7 @@
       "id": "home-security",
       "name": "Smart Home & Security",
       "icon": "shield",
+      "image": "/images/camera.jpg",
       "hot": true,
       "items": [
         { 
@@ -302,6 +306,7 @@
       "id": "lifestyle",
       "name": "Lifestyle & Utility",
       "icon": "shopping-bag",
+      "image": "/images/powerbank.jpg",
       "hot": false,
       "items": [
         { 
