@@ -62,8 +62,10 @@ const Header: React.FC = () => {
                     className="rounded-lg"
                   />
                 )}
+
+                {/* 🔥 BRAND FIX */}
                 <span className="text-base font-black tracking-tighter uppercase">
-                  {business?.name}
+                  Prime <span className="text-[#FDB813]">Deals</span> Kenya
                 </span>
               </Link>
 
@@ -140,8 +142,10 @@ const Header: React.FC = () => {
                   />
                 </div>
               )}
+
+              {/* 🔥 BRAND FIX */}
               <span className="text-2xl font-black tracking-tighter uppercase">
-                {business?.name}
+                Prime <span className="text-[#FDB813]">Deals</span> Kenya
               </span>
             </Link>
 
