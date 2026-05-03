@@ -1,11 +1,21 @@
-// src components/layout/drawer/NavigationSection.tsx
+// src/components/layout/drawer/NavigationSection.tsx
+
+"use client";
 
 import React from "react";
 import Link from "next/link";
 import { getNavigation } from "@/lib/getBusinessData";
 
+// ---------------- TYPES ----------------
+type NavItem = {
+  id: string | number;
+  label: string;
+  path: string;
+};
+
 const NavigationSection = () => {
-  const nav = getNavigation();
+  // SAFE TYPE CAST (because lib is not strictly typed yet)
+  const nav: NavItem[] = (getNavigation() as NavItem[]) ?? [];
 
   return (
     <div>

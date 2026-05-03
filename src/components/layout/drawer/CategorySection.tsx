@@ -1,21 +1,25 @@
-// src components/layout/drawer/CategorySection.tsx
+// src/components/layout/drawer/CategorySection.tsx
 
 "use client";
 
 import React from "react";
 import { getBusinessData } from "@/lib/getBusinessData";
 
+// ---------------- TYPES ----------------
 type Category = {
   id: string | number;
   name: string;
 };
 
-const CategorySection = () => {
-  const business = getBusinessData();
+type BusinessData = {
+  categories?: Category[];
+};
 
-  // SAFE extraction with fallback (no UI change)
-  const categories: Category[] =
-    (business as any)?.categories ?? [];
+const CategorySection = () => {
+  const business = getBusinessData() as BusinessData;
+
+  // SAFE fallback (no any, no unsafe casting)
+  const categories: Category[] = business?.categories ?? [];
 
   return (
     <div>
@@ -23,7 +27,7 @@ const CategorySection = () => {
         Shop by Category
       </h3>
 
-      {categories.map((cat: Category) => (
+      {categories.map((cat) => (
         <div
           key={cat.id}
           className="flex justify-between py-2 text-sm"
