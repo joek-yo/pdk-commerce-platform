@@ -20,7 +20,7 @@ import {
   FaLayerGroup,
 } from "react-icons/fa";
 
-// Import Drawer Sections
+// Drawer Sections
 import DrawerHeader from "./drawer/DrawerHeader";
 import QuickActions from "./drawer/QuickActions";
 import DealsSection from "./drawer/DealsSection";
@@ -28,7 +28,7 @@ import SocialProofSection from "./drawer/SocialProofSection";
 import SupportSection from "./drawer/SupportSection";
 import FooterTrust from "./drawer/FooterTrust";
 
-// Import your data
+// Data
 import menuData from "@/data/menu.json";
 
 interface SidebarProps {
@@ -55,8 +55,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     "text-[11px] font-black uppercase tracking-wider";
 
   /**
-   * ✅ FIX: use React.ReactNode instead of JSX.Element
-   * This removes the Vercel/TS "JSX namespace" crash permanently
+   * ✅ FINAL FIX:
+   * No JSX.Element, no JSX namespace issues, fully safe for Vercel/Next 16
    */
   const categoryIcons: Record<string, React.ReactNode> = {
     wearables: <FaBox size={12} />,
@@ -67,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   };
 
   const randomizedCategories = useMemo(() => {
-    if (!menuData.categories) return [];
+    if (!menuData?.categories) return [];
     return [...menuData.categories]
       .sort(() => Math.random() - 0.5)
       .slice(0, 6);
@@ -83,6 +83,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* overlay */}
           <motion.div
             className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[90]"
             initial={{ opacity: 0 }}
@@ -91,6 +92,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             onClick={onClose}
           />
 
+          {/* sidebar */}
           <motion.div
             className="fixed top-0 left-0 h-full w-[85%] max-w-sm bg-[#F8FAFC] z-[100] shadow-2xl flex flex-col border-r border-slate-200"
             initial={{ x: "-100%" }}
@@ -98,10 +100,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             exit={{ x: "-100%" }}
             transition={{ duration: 0.3, ease: "circOut" }}
           >
+            {/* header */}
             <div className="bg-white border-b border-slate-200">
               <DrawerHeader onClose={onClose} />
             </div>
 
+            {/* body */}
             <div className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar">
 
               <div className={sectionClasses}>
@@ -111,6 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <QuickActions />
               </div>
 
+              {/* navigation */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
                   <FaCompass className={iconStyle} size={10} /> Navigation
@@ -131,6 +136,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
+              {/* categories */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
                   <FaThLarge className={iconStyle} size={10} /> Fresh Categories
@@ -145,7 +151,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                       className={linkStyle}
                     >
                       <span className="text-[#FDB813]/60">
-                        {categoryIcons[cat.id] || <FaLayerGroup size={12} />}
+                        {categoryIcons[cat.id] ?? <FaLayerGroup size={12} />}
                       </span>
                       <span className={textStyle}>{cat.name}</span>
                     </Link>
@@ -153,6 +159,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
+              {/* deals */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
                   <FaTag className={iconStyle} size={10} /> Exclusive Deals
@@ -160,6 +167,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <DealsSection />
               </div>
 
+              {/* community */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
                   <FaUsers className={iconStyle} size={10} /> Community
@@ -167,6 +175,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <SocialProofSection />
               </div>
 
+              {/* support */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
                   <FaLifeRing className={iconStyle} size={10} /> Help & Support
@@ -176,6 +185,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
             </div>
 
+            {/* footer */}
             <div className="border-t border-slate-100 p-5 bg-white">
               <div className="flex items-center gap-2 mb-4 opacity-50">
                 <FaShieldAlt className="text-slate-400" size={12} />
@@ -183,6 +193,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   Verified Secure
                 </span>
               </div>
+
               <FooterTrust />
             </div>
 
