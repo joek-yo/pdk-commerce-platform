@@ -136,18 +136,28 @@ export default function ReviewPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="space-y-1">
               <label className={labelClasses}><FaUser size={8}/> Full Name</label>
-              <input className={inputStyle} value={customer.name} onChange={(e) => setCustomer({...customer, name: e.target.value})} />
+              <input 
+                className={inputStyle} 
+                placeholder="e.g. John Doe"
+                value={customer.name} 
+                onChange={(e) => setCustomer({...customer, name: e.target.value})} 
+              />
             </div>
             <div className="space-y-1">
               <label className={labelClasses}><FaPhone size={8}/> Phone</label>
-              <input className={inputStyle} value={customer.phone} onChange={(e) => setCustomer({...customer, phone: e.target.value})} />
+              <input 
+                className={inputStyle} 
+                placeholder="07XX XXX XXX"
+                value={customer.phone} 
+                onChange={(e) => setCustomer({...customer, phone: e.target.value})} 
+              />
             </div>
           </div>
 
           <div className="space-y-1 mb-6">
             <label className={labelClasses}><FaClock size={8}/> Requested Timeline / Urgency</label>
             <input 
-              placeholder="e.g. ASAP / Today" 
+              placeholder="e.g. Today / ASAP / Within 48 hours" 
               className={inputStyle} 
               value={globalSchedule} 
               onChange={(e) => setScheduleTime(e.target.value)} 
@@ -165,13 +175,23 @@ export default function ReviewPage() {
           {globalOrderType === "delivery" && (
             <div className="space-y-1 mb-6 text-slate-900">
               <label className={labelClasses}><FaMapMarkerAlt size={8}/> Delivery Address</label>
-              <input placeholder="e.g. Westlands, Nairobi" className={inputStyle} value={globalLocation} onChange={(e) => setDeliveryLocation(e.target.value)} />
+              <input 
+                placeholder="Area or Building Name" 
+                className={inputStyle} 
+                value={globalLocation} 
+                onChange={(e) => setDeliveryLocation(e.target.value)} 
+              />
             </div>
           )}
 
           <div className="space-y-1">
             <label className={labelClasses}><FaStickyNote size={8}/> General Notes</label>
-            <textarea placeholder="Any other instructions..." className={`${inputStyle} h-24 resize-none`} value={orderNotes} onChange={(e) => setOrderNotes(e.target.value)} />
+            <textarea 
+              placeholder="Budget range or specific color preferences..." 
+              className={`${inputStyle} h-24 resize-none`} 
+              value={orderNotes} 
+              onChange={(e) => setOrderNotes(e.target.value)} 
+            />
           </div>
         </section>
 

@@ -75,7 +75,7 @@ const ContactSection: React.FC = () => {
                   className={inputStyle} 
                   value={form.name} 
                   onChange={(e) => setForm({...form, name: e.target.value})} 
-                  placeholder="Enter your name"
+                  placeholder="e.g. John Doe"
                 />
               </div>
               <div className="space-y-1">
@@ -84,7 +84,7 @@ const ContactSection: React.FC = () => {
                   className={inputStyle} 
                   value={form.phone} 
                   onChange={(e) => setForm({...form, phone: e.target.value})} 
-                  placeholder="254..."
+                  placeholder="07XX XXX XXX"
                 />
               </div>
             </div>
@@ -92,14 +92,17 @@ const ContactSection: React.FC = () => {
             <div className="space-y-1">
               <label className={labelClasses}><FaEdit size={9}/> Your Request</label>
               <textarea 
-                className={`${inputStyle} min-h-[100px]`} 
+                className={`${inputStyle} min-h-[100px] resize-none`} 
                 value={form.message} 
                 onChange={(e) => setForm({...form, message: e.target.value})} 
-                placeholder="What are you looking for?"
+                placeholder="Describe what you are looking for..."
               />
             </div>
 
-            <button onClick={handleWhatsAppSend} className="w-full bg-[#25D366] text-white h-14 rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all">
+            <button 
+              onClick={handleWhatsAppSend} 
+              className="w-full bg-[#25D366] text-white h-14 rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all cursor-pointer"
+            >
               <span>Send To WhatsApp</span>
               <FaWhatsapp size={18}/>
             </button>
