@@ -1,12 +1,14 @@
 "use client";
+
 import React, { useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { 
-  FaRocket, FaCompass, FaThLarge, FaTag, 
-  FaUsers, FaLifeRing, FaShieldAlt, FaHome, 
+import {
+  FaRocket, FaCompass, FaThLarge, FaTag,
+  FaUsers, FaLifeRing, FaShieldAlt, FaHome,
   FaShoppingBag, FaPhoneAlt,
-  FaVideo, FaLaptop, FaBox, FaShieldAlt as FaShield, FaLayerGroup
+  FaVideo, FaLaptop, FaBox,
+  FaShieldAlt as FaShield, FaLayerGroup
 } from "react-icons/fa";
 
 // Import Drawer Sections
@@ -44,8 +46,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const textStyle =
     "text-[11px] font-black uppercase tracking-wider";
 
-  // 🔥 CATEGORY ICON MAPPING (NEW)
-  const categoryIcons: Record<string, JSX.Element> = {
+  // ✅ FIXED TYPE (THIS WAS BREAKING BUILD)
+  const categoryIcons: Record<string, React.ReactElement> = {
     wearables: <FaBox size={12} />,
     creator: <FaVideo size={12} />,
     computing: <FaLaptop size={12} />,
@@ -119,7 +121,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* CATEGORY SECTION (FIXED) */}
+              {/* CATEGORY SECTION */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
                   <FaThLarge className={iconStyle} size={10} /> Fresh Categories
