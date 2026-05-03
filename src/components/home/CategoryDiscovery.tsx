@@ -4,7 +4,23 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaChevronRight } from 'react-icons/fa';
+
+// Lucide Icons (Recommended)
+import { 
+  Watch, Video, Laptop, Shield, ShoppingBag, 
+  Home, Cpu, Gift 
+} from 'lucide-react';
+
 import menuData from "@/data/menu.json";
+
+const iconMap: Record<string, React.ElementType> = {
+  watch: Watch,
+  video: Video,
+  laptop: Laptop,
+  shield: Shield,
+  "shopping-bag": ShoppingBag,
+  // Add more if you create new categories later
+};
 
 const CategoryDiscovery = () => {
   const [mounted, setMounted] = useState(false);
@@ -21,6 +37,11 @@ const CategoryDiscovery = () => {
 
   const mobileVisible = categories.slice(0, 4);
 
+  const getIcon = (iconName: string | undefined) => {
+    if (!iconName) return ShoppingBag;
+    return iconMap[iconName] || ShoppingBag;
+  };
+
   return (
     <section className="bg-transparent">
       
@@ -32,29 +53,33 @@ const CategoryDiscovery = () => {
           </h2>
         </div>
         <div className="flex flex-col">
-          {/* FIXED: Added cat: any to bypass TypeScript icon property check */}
-          {categories.map((cat: any) => (
-            <Link 
-              key={cat.id} 
-              href={`/menu?category=${cat.id}`}
-              className="group flex items-center justify-between px-5 py-3 hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0"
-            >
-              <div className="flex items-center gap-4">
-                <div className="relative w-8 h-8 flex-shrink-0 overflow-hidden rounded-md border border-slate-100">
-                  <Image
-                    src={cat.icon || cat.items[0]?.image || '/images/placeholder.jpg'}
-                    alt={cat.name}
-                    fill
-                    className="object-cover transition-transform group-hover:scale-110"
-                  />
+          {categories.map((cat: any) => {
+            const IconComponent = getIcon(cat.icon);
+            
+            return (
+              <Link 
+                key={cat.id} 
+                href={`/menu?category=${cat.id}`}
+                className="group flex items-center justify-between px-5 py-3 hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white border border-slate-100 rounded-md">
+                    <IconComponent size={22} className="text-slate-700 group-hover:text-[#FDB813] transition-colors" />
+                  </div>
+                  <span className="text-[13px] font-bold text-slate-700 group-hover:text-slate-900 uppercase tracking-tight">
+                    {cat.name}
+                  </span>
+                  {cat.hot && (
+                    <span className="ml-2 px-2 py-0.5 text-[10px] font-bold bg-red-500 text-white rounded-full">
+                      HOT
+                    </span>
+                  )}
                 </div>
-                <span className="text-[13px] font-bold text-slate-700 group-hover:text-slate-900 uppercase tracking-tight">
-                  {cat.name}
-                </span>
-              </div>
-              <FaChevronRight className="text-slate-300 group-hover:text-[#FDB813] transition-colors" size={10} />
-            </Link>
-          ))}
+                <FaChevronRight className="text-slate-300 group-hover:text-[#FDB813] transition-colors" size={10} />
+              </Link>
+            );
+          })}
+
           <Link href="/menu" className="px-5 py-3 text-center text-[10px] font-black text-[#FDB813] uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">
             View All +
           </Link>
@@ -68,31 +93,32 @@ const CategoryDiscovery = () => {
            <Link href="/menu" className="text-[10px] font-black text-[#FDB813] uppercase tracking-widest">More +</Link>
         </div>
         
-        <div className="grid grid-cols-5 gap-2">
-          {/* FIXED: Added cat: any to bypass TypeScript icon property check */}
-          {mobileVisible.map((cat: any) => (
-            <Link 
-              key={cat.id} 
-              href={`/menu?category=${cat.id}`}
-              className="flex flex-col items-center gap-2"
-            >
-              <div className="relative w-full aspect-square bg-slate-100 rounded-xl overflow-hidden border border-slate-100 active:scale-95 transition-transform">
-                <Image
-                  src={cat.icon || cat.items[0]?.image || '/images/placeholder.jpg'}
-                  alt={cat.name}
-                  fill
-                  className="object-cover" 
-                />
-              </div>
-              <span className="text-[8px] font-black text-slate-500 uppercase text-center truncate w-full px-1">
-                {cat.name.split(' ')[0]}
-              </span>
-            </Link>
-          ))}
+        <div className="grid grid-cols-5 gap-3">
+          {mobileVisible.map((cat: any) => {
+            const IconComponent = getIcon(cat.icon);
+            
+            return (
+              <Link 
+                key={cat.id} 
+                href={`/menu?category=${cat.id}`}
+                className="flex flex-col items-center gap-2"
+              >
+                <div className="w-full aspect-square bg-white border border-slate-100 rounded-2xl flex items-center justify-center active:scale-95 transition-transform">
+                  <IconComponent size={28} className="text-slate-700" />
+                </div>
+                <span className="text-[8px] font-black text-slate-500 uppercase text-center truncate w-full px-1">
+                  {cat.name.split(' ')[0]}
+                </span>
+                {cat.hot && (
+                  <span className="absolute -top-1 -right-1 text-[9px] bg-red-500 text-white px-1 rounded-full font-bold">●</span>
+                )}
+              </Link>
+            );
+          })}
 
           {/* THE "MORE" BUTTON */}
           <Link href="/menu" className="flex flex-col items-center gap-2">
-            <div className="w-full aspect-square bg-slate-900 rounded-xl flex flex-col items-center justify-center gap-1 shadow-lg shadow-slate-200">
+            <div className="w-full aspect-square bg-slate-900 rounded-2xl flex flex-col items-center justify-center gap-1 shadow-lg shadow-slate-200">
               <div className="grid grid-cols-3 gap-0.5">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="w-1 h-1 bg-[#FDB813] rounded-full" />

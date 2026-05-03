@@ -19,7 +19,10 @@ export function getBusinessData() {
     logo: business.logo ?? "",
     banner: business.banner ?? "",
     drawerBanner: business.drawerBanner ?? "",
-    socialProof: business.socialProof ?? [], // NEW: For SocialProof.tsx
+    socialProof: business.socialProof ?? [],
+
+    // ←←← NAVIGATION ADDED HERE
+    navigation: data.navigation ?? [],
   };
 }
 
@@ -28,11 +31,11 @@ export function getUIConfig() {
   const ui = data.ui ?? {};
   return {
     announcement: {
-      text: ui.announcement?.text ?? "", // NEW: For AnnouncementBar.tsx
+      text: ui.announcement?.text ?? "",
       active: ui.announcement?.active ?? false,
     },
     flashSale: {
-      active: ui.flashSale?.active ?? false, // NEW: For FlashSales.tsx
+      active: ui.flashSale?.active ?? false,
       title: ui.flashSale?.title ?? "Flash Sale",
       endTime: ui.flashSale?.endTime ?? "",
       badge: ui.flashSale?.badge ?? "Limited Time",
@@ -110,7 +113,6 @@ export function getBestSellers(limit = 6) {
 
 // ================= FLASH SALE PRODUCTS =================
 export function getFlashSaleProducts() {
-  // Pull products that specifically have a discountPercent or a manual flashSale flag
   return getAllProducts().filter(
     (p) => (p?.discountPercent > 0 || p?.onFlashSale === true) && p?.available !== false
   );
