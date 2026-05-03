@@ -37,10 +37,25 @@ export default function ReviewPage() {
     return calculateTotal(cart, globalOrderType, globalLocation);
   }, [cart, globalOrderType, globalLocation]);
 
-  const handleCheckout = () => {
-    if (!customer.name || !customer.phone) return alert("Please provide details.");
+  // Mandatory logic: Name, Phone, and (if delivery) Address
+  const isCertified = useMemo(() => {
+    const hasInfo = customer.name.trim() !== "" && customer.phone.trim() !== "";
+    const hasLocationIfRequired = globalOrderType === "delivery" ? globalLocation?.trim() !== "" : true;
     
-    // This triggers the uniform WhatsApp format you showed
+    return hasInfo && hasLocationIfRequired;
+  }, [customer, globalOrderType, globalLocation]);
+
+  const handleCheckout = () => {
+    // Check basic info first
+    if (customer.name.trim() === "" || customer.phone.trim() === "") {
+      return alert("Please fill in your Name and Phone Number.");
+    }
+
+    // Check location specifically if delivery is selected
+    if (globalOrderType === "delivery" && (!globalLocation || globalLocation.trim() === "")) {
+      return alert("Please provide a Delivery Address to proceed.");
+    }
+    
     openWhatsApp({
       cart,
       customerName: customer.name,
@@ -48,7 +63,7 @@ export default function ReviewPage() {
       orderType: globalOrderType,
       deliveryLocation: globalOrderType === "delivery" ? globalLocation : "Store Pickup",
       orderNotes: orderNotes,
-      scheduleTime: globalSchedule, // This maps to "Urgency"
+      scheduleTime: globalSchedule,
       customOrder: customOrder 
     });
   };
@@ -129,7 +144,6 @@ export default function ReviewPage() {
             </div>
           </div>
 
-          {/* ADDED TIMELINE INPUT FOR UNIFORMITY */}
           <div className="space-y-1 mb-6">
             <label className={labelClasses}><FaClock size={8}/> Requested Timeline / Urgency</label>
             <input 
@@ -193,8 +207,11 @@ export default function ReviewPage() {
           <div className="max-w-2xl mx-auto">
             <button 
               onClick={handleCheckout}
-              disabled={!customer.name || !customer.phone}
-              className="w-full bg-[#B2F5CC] text-[#15803D] h-16 rounded-xl font-black text-sm uppercase tracking-widest shadow-sm flex items-center justify-center gap-3 border-2 border-white cursor-pointer active:scale-95 transition-all"
+              className={`w-full h-16 rounded-xl font-black text-sm uppercase tracking-widest shadow-sm flex items-center justify-center gap-3 border-2 transition-all active:scale-95 cursor-pointer ${
+                isCertified 
+                ? "bg-[#25D366] text-white border-[#25D366]" 
+                : "bg-[#B2F5CC] text-[#15803D] border-white"
+              }`}
             >
               <FaWhatsapp size={20} />
               <span>Confirm via WhatsApp</span>
