@@ -25,18 +25,14 @@ const CategorySection: React.FC = () => {
         Shop by Category
       </h3>
 
-      {categories.map((cat) => {
-        const category: Category = cat;
-
-        return (
-          <div
-            key={category.id}
-            className="flex justify-between py-2 text-sm"
-          >
-            <span>{category.name}</span>
-          </div>
-        );
-      })}
+      {categories.map((cat: Category) => (
+        <div
+          key={cat.id}
+          className="flex justify-between py-2 text-sm"
+        >
+          <span>{cat.name}</span>
+        </div>
+      ))}
     </div>
   );
 };
