@@ -46,8 +46,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const textStyle =
     "text-[11px] font-black uppercase tracking-wider";
 
-  // ✅ FIXED TYPE (THIS WAS BREAKING BUILD)
-  const categoryIcons: Record<string, React.ReactElement> = {
+  // ✅ FIXED (NO JSX NAMESPACE - SAFE FOR VERCEL)
+  const categoryIcons: Record<string, React.ReactNode> = {
     wearables: <FaBox size={12} />,
     creator: <FaVideo size={12} />,
     computing: <FaLaptop size={12} />,
