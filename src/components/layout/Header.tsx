@@ -15,9 +15,12 @@ import Sidebar from "./Sidebar";
 
 const Header: React.FC = () => {
   const business = getBusinessData() as any;
+
+  // 🛒 CART SYSTEM
   const { cart, toggleDrawer } = useCart();
   const totalItems = cart.reduce((t, i) => t + i.quantity, 0);
 
+  // 🍔 MENU SYSTEM (separate state)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const getWhatsAppLink = (waNumber: string | undefined) => {
@@ -26,7 +29,6 @@ const Header: React.FC = () => {
     return `https://wa.me/${cleaned}`;
   };
 
-  // Icon mapping for navigation
   const getNavIcon = (id: string) => {
     switch (id) {
       case "home":
@@ -45,9 +47,10 @@ const Header: React.FC = () => {
     <>
       <header className="bg-[#0D0D0D] text-white shadow-xl fixed top-0 left-0 w-full z-50 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* ================= MOBILE VIEW ================= */}
+
+          {/* ================= MOBILE ================= */}
           <div className="md:hidden">
+
             <div className="flex justify-between items-center py-3">
               <Link href="/" className="flex items-center space-x-3">
                 {business?.logo && (
@@ -64,6 +67,7 @@ const Header: React.FC = () => {
                 </span>
               </Link>
 
+              {/* 🛒 CART BUTTON */}
               <button
                 onClick={() => toggleDrawer(true)}
                 className="relative p-2.5 bg-white/5 rounded-xl border border-white/10 active:scale-90 transition-transform"
@@ -78,8 +82,10 @@ const Header: React.FC = () => {
             </div>
 
             <div className="flex justify-between items-center py-3 border-t border-white/5">
-              <button 
-                onClick={() => setMobileMenuOpen(true)} 
+
+              {/* 🍔 MENU BUTTON (FIXED) */}
+              <button
+                onClick={() => setMobileMenuOpen(true)}
                 className="flex items-center gap-2 text-white font-black uppercase text-[10px] tracking-widest"
               >
                 <div className="bg-[#FDB813] p-2 rounded-lg text-black">
@@ -92,12 +98,25 @@ const Header: React.FC = () => {
                 {business?.phone && (
                   <>
                     <a href={`tel:${business.phone}`}>
-                      <Button variant="primary" className="px-4 py-2 text-[9px] font-black uppercase tracking-widest" leftIcon={<FaPhoneAlt size={10} />}>
+                      <Button
+                        variant="primary"
+                        className="px-4 py-2 text-[9px] font-black uppercase tracking-widest"
+                        leftIcon={<FaPhoneAlt size={10} />}
+                      >
                         Call
                       </Button>
                     </a>
-                    <a href={getWhatsAppLink(business.whatsapp)} target="_blank" rel="noopener noreferrer">
-                      <Button variant="whatsapp" className="px-4 py-2 text-[9px] font-black uppercase tracking-widest" leftIcon={<FaWhatsapp size={12} />}>
+
+                    <a
+                      href={getWhatsAppLink(business.whatsapp)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button
+                        variant="whatsapp"
+                        className="px-4 py-2 text-[9px] font-black uppercase tracking-widest"
+                        leftIcon={<FaWhatsapp size={12} />}
+                      >
                         Chat
                       </Button>
                     </a>
@@ -107,18 +126,27 @@ const Header: React.FC = () => {
             </div>
           </div>
 
-          {/* ================= DESKTOP VIEW (with Icons) ================= */}
+          {/* ================= DESKTOP ================= */}
           <div className="hidden md:flex items-center justify-between py-4 h-20">
+
             <Link href="/" className="flex items-center space-x-3 group">
               {business?.logo && (
                 <div className="p-1 bg-white/5 rounded-xl border border-white/10 group-hover:border-[#FDB813]/50 transition-all">
-                  <Image src={business.logo} alt="Logo" width={40} height={40} className="rounded-lg" />
+                  <Image
+                    src={business.logo}
+                    alt="Logo"
+                    width={40}
+                    height={40}
+                    className="rounded-lg"
+                  />
                 </div>
               )}
-              <span className="text-2xl font-black tracking-tighter uppercase">{business?.name}</span>
+              <span className="text-2xl font-black tracking-tighter uppercase">
+                {business?.name}
+              </span>
             </Link>
 
-            {/* Navigation Items with Icons */}
+            {/* NAV */}
             <nav className="flex items-center gap-8">
               {business?.navigation?.map((item: any) => {
                 const IconComponent = getNavIcon(item.id);
@@ -135,7 +163,7 @@ const Header: React.FC = () => {
               })}
             </nav>
 
-            {/* Cart Button */}
+            {/* CART */}
             <button
               onClick={() => toggleDrawer(true)}
               className="group flex items-center gap-3 bg-white/5 border border-white/10 px-5 py-2.5 rounded-2xl hover:bg-white hover:text-black transition-all"
@@ -148,19 +176,20 @@ const Header: React.FC = () => {
                   </span>
                 )}
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest">Bag ({totalItems})</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">
+                Bag ({totalItems})
+              </span>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Sidebar Integration */}
-      <Sidebar 
-        isOpen={mobileMenuOpen} 
-        onClose={() => setMobileMenuOpen(false)} 
+      {/* 🍔 SIDEBAR (CORRECTLY WIRED) */}
+      <Sidebar
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
       />
 
-      {/* Spacer to prevent content overlap */}
       <div className="h-[125px] md:h-20" />
     </>
   );
