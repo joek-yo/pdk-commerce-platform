@@ -2,16 +2,16 @@
 
 "use client";
 
-import React, { 
-  createContext, 
-  useContext, 
-  useState, 
-  useEffect, 
-  useMemo, 
-  useCallback 
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
 } from "react";
 
-// ------------------------- TYPES -------------------------
+// ---------------- TYPES ----------------
 
 export interface CartItem {
   id: number;
@@ -31,18 +31,22 @@ interface ToastState {
 
 interface CartContextType {
   cart: CartItem[];
+
   addToCart: (item: CartItem, options?: { silent?: boolean }) => void;
   removeFromCart: (id: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
   clearCart: () => void;
 
-  // UI STATE
-  isDrawerOpen: boolean;
-  toggleDrawer: (state?: boolean) => void;
+  // ✅ SINGLE SOURCE OF TRUTH FOR DRAWER
+  isCartDrawerOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
+  toggleCart: () => void;
+
   toast: ToastState;
   hideToast: () => void;
 
-  // ORDER DATA
+  // ORDER STATE
   customOrder: string;
   setCustomOrder: (value: string) => void;
   orderNotes: string;
@@ -63,14 +67,13 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// ------------------------- PROVIDER -------------------------
+// ---------------- PROVIDER ----------------
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // PRETTIER TOAST STATE
   const [toast, setToast] = useState<ToastState>({
     show: false,
     message: "",
@@ -85,7 +88,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [scheduleTime, setScheduleTime] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("");
 
-  // ---------------- HYDRATION & INITIAL LOAD ----------------
+  // ---------------- DRAWER CONTROLS ----------------
+
+  const openCart = useCallback(() => setIsCartDrawerOpen(true), []);
+  const closeCart = useCallback(() => setIsCartDrawerOpen(false), []);
+  const toggleCart = useCallback(() => setIsCartDrawerOpen((p) => !p), []);
+
+  // ---------------- HYDRATION ----------------
+
   useEffect(() => {
     try {
       const savedCart = localStorage.getItem("prime_deals_cart");
@@ -106,13 +116,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         setSelectedBranch(data.selectedBranch || "");
       }
     } catch (err) {
-      console.error("Critical: Cart hydration failed", err);
+      console.error("Cart hydration failed", err);
     } finally {
       setIsHydrated(true);
     }
   }, []);
 
-  // ---------------- AUTO-PERSISTENCE ----------------
+  // ---------------- PERSISTENCE ----------------
+
   useEffect(() => {
     if (isHydrated) {
       localStorage.setItem("prime_deals_cart", JSON.stringify(cart));
@@ -133,53 +144,76 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         })
       );
     }
-  }, [customOrder, orderNotes, orderType, deliveryLocation, scheduleTime, selectedBranch, isHydrated]);
+  }, [
+    customOrder,
+    orderNotes,
+    orderType,
+    deliveryLocation,
+    scheduleTime,
+    selectedBranch,
+    isHydrated,
+  ]);
 
-  // ---------------- COMPUTED VALUES ----------------
-  const cartTotal = useMemo(() => cart.reduce((t, i) => t + i.price * i.quantity, 0), [cart]);
-  const cartCount = useMemo(() => cart.reduce((t, i) => t + i.quantity, 0), [cart]);
+  // ---------------- COMPUTED ----------------
 
-  // ---------------- UTILS ----------------
-  const triggerToast = useCallback((message: string, type: ToastState["type"] = "success") => {
-    setToast({ show: true, message, type });
-    setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
-  }, []);
+  const cartTotal = useMemo(
+    () => cart.reduce((t, i) => t + i.price * i.quantity, 0),
+    [cart]
+  );
 
-  const hideToast = useCallback(() => setToast(prev => ({ ...prev, show: false })), []);
+  const cartCount = useMemo(
+    () => cart.reduce((t, i) => t + i.quantity, 0),
+    [cart]
+  );
 
-  const toggleDrawer = useCallback((state?: boolean) => {
-    setIsDrawerOpen((prev) => (typeof state === "boolean" ? state : !prev));
-  }, []);
+  // ---------------- TOAST ----------------
+
+  const hideToast = useCallback(
+    () => setToast((p) => ({ ...p, show: false })),
+    []
+  );
+
+  const triggerToast = useCallback(
+    (message: string, type: ToastState["type"] = "success") => {
+      setToast({ show: true, message, type });
+      setTimeout(() => hideToast(), 2500);
+    },
+    [hideToast]
+  );
 
   // ---------------- CART ACTIONS ----------------
-  const addToCart = useCallback((item: CartItem, options?: { silent?: boolean }) => {
-    setCart((prev) => {
-      const existing = prev.find((p) => p.id === item.id);
-      if (existing) {
-        return prev.map((p) =>
-          p.id === item.id ? { ...p, quantity: p.quantity + item.quantity } : p
-        );
-      }
-      return [...prev, item];
-    });
 
-    if (!options?.silent) {
-      // SMART TRIGGER: 
-      // On Desktop (> 768px), open the drawer immediately.
-      // On Mobile, we ONLY show the toast (handled below).
-      if (typeof window !== "undefined" && window.innerWidth >= 768) {
-        toggleDrawer(true);
-      }
-      
-      // Toast appears on ALL devices (Mobile gets it as the primary feedback)
-      triggerToast(`${item.name} added to cart`, "success");
-    }
-  }, [triggerToast, toggleDrawer]);
+  const addToCart = useCallback(
+    (item: CartItem, options?: { silent?: boolean }) => {
+      setCart((prev) => {
+        const existing = prev.find((p) => p.id === item.id);
 
-  const removeFromCart = useCallback((id: number) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
-    triggerToast("Item removed", "info");
-  }, [triggerToast]);
+        if (existing) {
+          return prev.map((p) =>
+            p.id === item.id
+              ? { ...p, quantity: p.quantity + item.quantity }
+              : p
+          );
+        }
+
+        return [...prev, item];
+      });
+
+      if (!options?.silent) {
+        triggerToast(`${item.name} added to cart`, "success");
+        openCart(); // auto open drawer
+      }
+    },
+    [triggerToast, openCart]
+  );
+
+  const removeFromCart = useCallback(
+    (id: number) => {
+      setCart((prev) => prev.filter((item) => item.id !== id));
+      triggerToast("Item removed", "info");
+    },
+    [triggerToast]
+  );
 
   const updateQuantity = useCallback((id: number, quantity: number) => {
     setCart((prev) =>
@@ -195,22 +229,32 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setOrderNotes("");
     setDeliveryLocation("");
     setScheduleTime("");
+
     localStorage.removeItem("prime_deals_cart");
     localStorage.removeItem("prime_deals_order_meta");
+
     triggerToast("Cart cleared", "info");
   }, [triggerToast]);
 
   // ---------------- CONTEXT VALUE ----------------
-  const value = useMemo(() => ({
+
+  const value: CartContextType = {
     cart,
+
     addToCart,
     removeFromCart,
     updateQuantity,
     clearCart,
-    isDrawerOpen,
-    toggleDrawer,
+
+    // IMPORTANT: FINAL CONSISTENT NAME
+    isCartDrawerOpen,
+    openCart,
+    closeCart,
+    toggleCart,
+
     toast,
     hideToast,
+
     customOrder,
     setCustomOrder,
     orderNotes,
@@ -223,13 +267,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setScheduleTime,
     selectedBranch,
     setSelectedBranch,
+
     cartTotal,
     cartCount,
-  }), [
-    cart, isDrawerOpen, toast, customOrder, orderNotes, orderType, 
-    deliveryLocation, scheduleTime, selectedBranch, cartTotal, cartCount,
-    addToCart, removeFromCart, updateQuantity, clearCart, toggleDrawer, hideToast
-  ]);
+  };
 
   return (
     <CartContext.Provider value={value}>
@@ -237,6 +278,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     </CartContext.Provider>
   );
 };
+
+// ---------------- HOOK ----------------
 
 export const useCart = () => {
   const context = useContext(CartContext);

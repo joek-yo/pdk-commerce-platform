@@ -7,12 +7,10 @@ import { getBusinessData } from "@/lib/getBusinessData";
 import { useCart } from "@/context/CartContext";
 
 const QuickActions = () => {
-  const business = getBusinessData();
-  const whatsapp = business?.whatsapp || "";
+  const { whatsapp } = getBusinessData();
+  const { cart } = useCart(); // ✅ FIXED (was cartItems)
 
-  const { cart } = useCart();
-
-  const cartCount = cart?.length || 0;
+  const cartCount = cart?.reduce((t, i) => t + i.quantity, 0) || 0;
 
   return (
     <div className="grid grid-cols-4 gap-2">
@@ -45,8 +43,6 @@ const QuickActions = () => {
       {/* WHATSAPP */}
       <a
         href={`https://wa.me/${whatsapp}`}
-        target="_blank"
-        rel="noopener noreferrer"
         className="bg-green-500 text-white p-3 rounded-lg text-center"
       >
         💬

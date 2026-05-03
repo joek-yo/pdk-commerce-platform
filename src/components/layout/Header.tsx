@@ -16,11 +16,13 @@ import Sidebar from "./Sidebar";
 const Header: React.FC = () => {
   const business = getBusinessData() as any;
 
-  // 🛒 CART SYSTEM
-  const { cart, toggleDrawer } = useCart();
-  const totalItems = cart.reduce((t, i) => t + i.quantity, 0);
+  // 🛒 CART SYSTEM (UPDATED API)
+  const { cart, openCart } = useCart();
+  const totalItems = Array.isArray(cart)
+    ? cart.reduce((t, i) => t + (i?.quantity || 0), 0)
+    : 0;
 
-  // 🍔 MENU SYSTEM (separate state)
+  // 🍔 MENU SYSTEM
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const getWhatsAppLink = (waNumber: string | undefined) => {
@@ -67,9 +69,9 @@ const Header: React.FC = () => {
                 </span>
               </Link>
 
-              {/* 🛒 CART BUTTON */}
+              {/* 🛒 CART BUTTON (FIXED) */}
               <button
-                onClick={() => toggleDrawer(true)}
+                onClick={openCart}
                 className="relative p-2.5 bg-white/5 rounded-xl border border-white/10 active:scale-90 transition-transform"
               >
                 <FaShoppingCart className="text-lg text-[#FDB813]" />
@@ -83,7 +85,7 @@ const Header: React.FC = () => {
 
             <div className="flex justify-between items-center py-3 border-t border-white/5">
 
-              {/* 🍔 MENU BUTTON (FIXED) */}
+              {/* 🍔 MENU BUTTON */}
               <button
                 onClick={() => setMobileMenuOpen(true)}
                 className="flex items-center gap-2 text-white font-black uppercase text-[10px] tracking-widest"
@@ -163,9 +165,9 @@ const Header: React.FC = () => {
               })}
             </nav>
 
-            {/* CART */}
+            {/* CART (FIXED) */}
             <button
-              onClick={() => toggleDrawer(true)}
+              onClick={openCart}
               className="group flex items-center gap-3 bg-white/5 border border-white/10 px-5 py-2.5 rounded-2xl hover:bg-white hover:text-black transition-all"
             >
               <div className="relative">
@@ -184,7 +186,7 @@ const Header: React.FC = () => {
         </div>
       </header>
 
-      {/* 🍔 SIDEBAR (CORRECTLY WIRED) */}
+      {/* 🍔 SIDEBAR */}
       <Sidebar
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
