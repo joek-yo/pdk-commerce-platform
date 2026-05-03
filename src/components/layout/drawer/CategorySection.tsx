@@ -5,21 +5,16 @@
 import React from "react";
 import { getBusinessData } from "@/lib/getBusinessData";
 
-// ---------------- TYPES ----------------
 type Category = {
   id: string | number;
   name: string;
 };
 
-type BusinessData = {
-  categories?: Category[];
-};
+const CategorySection: React.FC = () => {
+  const business = getBusinessData();
 
-const CategorySection = () => {
-  const business = getBusinessData() as BusinessData;
-
-  // SAFE fallback (no any, no unsafe casting)
-  const categories: Category[] = business?.categories ?? [];
+  const categories: Category[] =
+    (business as any)?.categories ?? [];
 
   return (
     <div>
@@ -27,7 +22,7 @@ const CategorySection = () => {
         Shop by Category
       </h3>
 
-      {categories.map((cat) => (
+      {categories.map((cat: Category) => (
         <div
           key={cat.id}
           className="flex justify-between py-2 text-sm"
