@@ -10,11 +10,14 @@ type Category = {
   name: string;
 };
 
-const CategorySection: React.FC = () => {
-  const business = getBusinessData();
+type BusinessData = {
+  categories?: Category[];
+};
 
-  const categories: Category[] =
-    (business as any)?.categories ?? [];
+const CategorySection: React.FC = () => {
+  const business = getBusinessData() as BusinessData | null;
+
+  const categories: Category[] = business?.categories ?? [];
 
   return (
     <div>
@@ -22,14 +25,18 @@ const CategorySection: React.FC = () => {
         Shop by Category
       </h3>
 
-      {categories.map((cat: Category) => (
-        <div
-          key={cat.id}
-          className="flex justify-between py-2 text-sm"
-        >
-          <span>{cat.name}</span>
-        </div>
-      ))}
+      {categories.map((cat) => {
+        const category: Category = cat;
+
+        return (
+          <div
+            key={category.id}
+            className="flex justify-between py-2 text-sm"
+          >
+            <span>{category.name}</span>
+          </div>
+        );
+      })}
     </div>
   );
 };
