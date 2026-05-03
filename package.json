@@ -2,17 +2,16 @@
   "name": "whatsapp-ordering-system",
   "version": "0.1.0",
   "private": true,
-
   "scripts": {
     "dev": "export LANG=en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
-
   "dependencies": {
     "framer-motion": "^12.34.3",
     "leaflet": "^1.9.4",
+    "lucide-react": "^1.14.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -20,7 +19,6 @@
     "react-leaflet": "^5.0.0",
     "zustand": "^5.0.11"
   },
-
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

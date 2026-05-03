@@ -84,7 +84,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* IMAGE - Tighter constraints */}
+      {/* IMAGE CONTAINER */}
       <div
         className={`relative bg-white overflow-hidden ${
           isBundle ? "h-36 sm:h-44" : "aspect-square"
@@ -120,7 +120,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         />
       </div>
 
-      {/* CONTENT - Slashed padding and gaps */}
+      {/* CONTENT SECTION */}
       <div className="p-2 flex flex-col flex-1">
         <h3 className="text-[11px] sm:text-xs font-black uppercase text-slate-900 line-clamp-1 leading-tight">
           {name}
@@ -130,14 +130,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {description}
         </p>
 
-        {/* PRICE - Tighter margin */}
-        <div className="mt-1.5">
+        {/* PRICE SECTION WITH OLD PRICE FIX */}
+        <div className="mt-1.5 flex items-center gap-1.5">
           <span className="text-xs sm:text-sm font-black text-slate-900">
             KES {price.toLocaleString()}
           </span>
+          
+          {oldPrice && oldPrice > price && (
+            <span className="text-[9px] sm:text-[10px] text-slate-400 line-through font-bold">
+              KES {oldPrice.toLocaleString()}
+            </span>
+          )}
         </div>
 
-        {/* BOTTOM CTA BAR - Minimal top padding */}
+        {/* COMPACT CTA BAR */}
         <div className="mt-auto pt-2">
           <AnimatePresence mode="wait">
             {cartItem ? (
@@ -178,7 +184,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 `}
               >
                 <FaShoppingBag size={9} />
-                {available ? "Add" : "Out"}
+                {available ? "Add to Bag" : "Out"}
               </motion.button>
             )}
           </AnimatePresence>

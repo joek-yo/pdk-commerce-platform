@@ -27,7 +27,6 @@ const MiniCartDrawer: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   // DYNAMIC DATA FROM MENU.JSON
-  // Pulling 10,000 from deliverySettings.freeDeliveryThreshold
   const shippingThreshold = menuData.deliverySettings?.freeDeliveryThreshold || 0;
   
   const totalItems = Array.isArray(cart) ? cart.reduce((t, i) => t + (i?.quantity || 0), 0) : 0;
@@ -67,7 +66,7 @@ const MiniCartDrawer: React.FC = () => {
       {isMobile && totalItems > 0 && !hideFloatingCart && (
         <button
           onClick={() => toggleDrawer(true)}
-          className="fixed bottom-6 right-6 z-[60] flex items-center gap-3 px-6 py-4 rounded-xl font-black bg-slate-900 text-white shadow-xl active:scale-95 transition-all"
+          className="fixed bottom-6 right-6 z-[60] flex items-center gap-3 px-6 py-4 rounded-lg font-black bg-slate-900 text-white shadow-xl active:scale-95 transition-all"
         >
           <FaShoppingBag className="text-[#FDB813]" />
           <span className="uppercase text-[10px] tracking-widest">({totalItems})</span>
@@ -112,12 +111,12 @@ const MiniCartDrawer: React.FC = () => {
                   </div>
                 </div>
 
-                <button onClick={() => toggleDrawer(false)} className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:text-slate-900 transition-colors">
+                <button onClick={() => toggleDrawer(false)} className="w-8 h-8 flex items-center justify-center rounded-md bg-slate-50 text-slate-400 hover:text-slate-900 transition-colors">
                   <FaTimes size={14} />
                 </button>
               </div>
 
-              {/* DYNAMIC PROGRESS BAR (Threshold pulled from menu.json) */}
+              {/* DYNAMIC PROGRESS BAR */}
               <div className="px-5 py-4 bg-white border-b border-slate-100">
                 <p className="text-[10px] font-black uppercase tracking-widest mb-2 text-slate-600">
                   {remaining > 0 
@@ -142,34 +141,37 @@ const MiniCartDrawer: React.FC = () => {
                   </div>
                 ) : (
                   cart.map((item) => (
-                    <div key={item.id} className="bg-white border border-slate-100 p-3 rounded-2xl flex gap-3 shadow-sm relative group">
-                      <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-slate-50 flex-shrink-0 border border-slate-100">
+                    <div key={item.id} className="bg-white border border-slate-100 p-3 rounded-lg flex gap-3 shadow-sm relative group">
+                      {/* IMAGE WITH SUBTLE ROUNDED CORNERS */}
+                      <div className="relative w-20 h-20 rounded-md overflow-hidden bg-slate-50 flex-shrink-0 border border-slate-100">
                         <Image src={item.image || "/images/placeholder.jpg"} alt={item.name} fill className="object-cover" />
                       </div>
 
-                      <div className="flex-1 flex flex-col justify-between py-1">
-                        <div>
-                          <div className="flex justify-between items-start">
-                            <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-tight truncate leading-tight w-4/5">{item.name}</h4>
-                            <button 
-                              onClick={() => removeFromCart(item.id)} 
-                              className="text-slate-200 hover:text-red-500 transition-colors"
-                            >
-                              <FaTrashAlt size={10} />
-                            </button>
-                          </div>
-                          <p className="text-[#FDB813] font-black text-[10px] mt-0.5">KES {item.price?.toLocaleString()}</p>
+                      {/* INFO */}
+                      <div className="flex-1 flex flex-col justify-center min-w-0">
+                        <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-tight truncate leading-tight mb-0.5">{item.name}</h4>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Unit:</span>
+                          <p className="text-slate-900 font-black text-[10px]">KES {item.price?.toLocaleString()}</p>
                         </div>
+                        <p className="text-[#FDB813] font-black text-base tracking-tighter leading-none mt-1">
+                          KES {(item.price * item.quantity).toLocaleString()}
+                        </p>
+                      </div>
 
-                        <div className="flex items-center justify-between mt-auto">
-                          <div className="flex items-center bg-slate-50 rounded-lg p-1 border border-slate-100 scale-90 origin-left">
-                            <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="px-1.5 text-slate-400 hover:text-slate-900"><FaMinus size={8} /></button>
-                            <span className="px-2 text-xs font-black text-slate-900">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="px-1.5 text-slate-400 hover:text-slate-900"><FaPlus size={8} /></button>
-                          </div>
-                          <p className="font-black text-xs text-slate-900 tracking-tighter">
-                            KES {(item.price * item.quantity).toLocaleString()}
-                          </p>
+                      {/* ACTIONS */}
+                      <div className="flex flex-col items-end justify-between border-l border-slate-100 pl-3 py-0.5">
+                        <button 
+                          onClick={() => removeFromCart(item.id)} 
+                          className="text-slate-200 hover:text-red-500 transition-colors p-1"
+                        >
+                          <FaTrashAlt size={10} />
+                        </button>
+
+                        <div className="flex items-center bg-slate-900 rounded p-0.5 shadow-sm">
+                          <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-6 h-6 flex items-center justify-center text-[#FDB813] hover:text-white transition-colors"><FaMinus size={7} /></button>
+                          <span className="w-5 text-center font-black text-[10px] text-white">{item.quantity}</span>
+                          <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-6 h-6 flex items-center justify-center text-[#FDB813] hover:text-white transition-colors"><FaPlus size={7} /></button>
                         </div>
                       </div>
                     </div>
@@ -194,7 +196,7 @@ const MiniCartDrawer: React.FC = () => {
                 <div className="space-y-2">
                   <button 
                     onClick={handleViewCart} 
-                    className="w-full bg-[#FDB813] text-black h-14 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-yellow-500 transition-all flex items-center justify-center gap-2 shadow-xl shadow-yellow-100"
+                    className="w-full bg-[#FDB813] text-black h-14 rounded-lg font-black uppercase text-[11px] tracking-widest hover:bg-yellow-500 transition-all flex items-center justify-center gap-2 shadow-xl shadow-yellow-100 active:scale-[0.98]"
                   >
                     <span>Review Order</span>
                     <FaChevronRight size={10} />
