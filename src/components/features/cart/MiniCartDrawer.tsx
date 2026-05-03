@@ -48,7 +48,7 @@ const MiniCartDrawer: React.FC = () => {
 
   const remaining = Math.max(shippingThreshold - subtotal, 0);
 
-  // MOBILE
+  // MOBILE DETECTION
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize();
@@ -56,7 +56,7 @@ const MiniCartDrawer: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // AUTO CLOSE
+  // AUTO CLOSE (DESKTOP ONLY)
   useEffect(() => {
     if (isCartDrawerOpen && !isMobile) {
       const timer = setTimeout(() => {
@@ -79,11 +79,11 @@ const MiniCartDrawer: React.FC = () => {
 
   return (
     <>
-      {/* FLOATING BUTTON */}
+      {/* FLOATING BUTTON (MOBILE ONLY) */}
       {isMobile && totalItems > 0 && !hideFloatingCart && (
         <button
           onClick={openCart}
-          className="fixed bottom-6 right-6 z-[60] flex items-center gap-3 px-6 py-4 rounded-xl font-black bg-slate-900 text-white shadow-xl active:scale-95"
+          className="fixed bottom-6 right-6 z-[60] flex items-center gap-3 px-6 py-4 rounded-xl font-black bg-slate-900 text-white shadow-xl active:scale-95 cursor-pointer"
         >
           <FaShoppingCart className="text-[#FDB813]" />
           <span className="text-[10px] uppercase tracking-widest">
@@ -97,7 +97,7 @@ const MiniCartDrawer: React.FC = () => {
           <>
             {/* BACKDROP */}
             <motion.div
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] cursor-pointer"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -131,7 +131,7 @@ const MiniCartDrawer: React.FC = () => {
 
                 <button
                   onClick={closeCart}
-                  className="w-8 h-8 flex items-center justify-center rounded-md bg-slate-50 text-slate-400 hover:text-slate-900"
+                  className="w-8 h-8 flex items-center justify-center rounded-md bg-slate-50 text-slate-400 hover:text-slate-900 cursor-pointer"
                 >
                   <FaTimes size={14} />
                 </button>
@@ -154,9 +154,8 @@ const MiniCartDrawer: React.FC = () => {
                 </div>
               </div>
 
-              {/* ITEMS (FIXED STRUCTURE — MATCH CART PAGE) */}
+              {/* ITEMS */}
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
-
                 {cart.length === 0 ? (
                   <div className="bg-white border border-slate-200 rounded-xl text-center py-10">
                     <FaShoppingCart
@@ -173,7 +172,6 @@ const MiniCartDrawer: React.FC = () => {
                       key={item.id}
                       className="bg-white border border-slate-200 p-3 rounded-xl flex gap-4 shadow-sm"
                     >
-                      {/* IMAGE (FIXED ALIGNMENT) */}
                       <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-slate-50 border border-slate-100 flex-shrink-0">
                         <Image
                           src={item.image || "/images/placeholder.jpg"}
@@ -183,7 +181,6 @@ const MiniCartDrawer: React.FC = () => {
                         />
                       </div>
 
-                      {/* INFO */}
                       <div className="flex-1 flex flex-col justify-center min-w-0">
                         <h3 className="text-sm font-black text-slate-900 uppercase truncate">
                           {item.name}
@@ -198,24 +195,20 @@ const MiniCartDrawer: React.FC = () => {
                         </p>
                       </div>
 
-                      {/* ACTIONS (FIXED — NO FLOATING) */}
                       <div className="flex flex-col items-end justify-between border-l border-slate-100 pl-3">
-                        
-                        {/* TRASH */}
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="text-slate-300 hover:text-red-500"
+                          className="text-slate-300 hover:text-red-500 cursor-pointer"
                         >
                           <FaTrashAlt size={12} />
                         </button>
 
-                        {/* QUANTITY */}
                         <div className="flex items-center bg-slate-900 rounded-md p-0.5">
                           <button
                             onClick={() =>
                               updateQuantity(item.id, item.quantity - 1)
                             }
-                            className="w-6 h-6 flex items-center justify-center text-white"
+                            className="w-6 h-6 flex items-center justify-center text-white cursor-pointer"
                           >
                             <FaMinus size={8} />
                           </button>
@@ -228,7 +221,7 @@ const MiniCartDrawer: React.FC = () => {
                             onClick={() =>
                               updateQuantity(item.id, item.quantity + 1)
                             }
-                            className="w-6 h-6 flex items-center justify-center text-white"
+                            className="w-6 h-6 flex items-center justify-center text-white cursor-pointer"
                           >
                             <FaPlus size={8} />
                           </button>
@@ -243,7 +236,7 @@ const MiniCartDrawer: React.FC = () => {
               <div className="p-4 bg-white border-t border-slate-200">
                 <button
                   onClick={handleViewCart}
-                  className="w-full bg-[#FDB813] h-12 font-black uppercase text-xs rounded-xl"
+                  className="w-full bg-[#FDB813] h-12 font-black uppercase text-xs rounded-xl cursor-pointer"
                 >
                   Review Order
                 </button>
@@ -251,7 +244,7 @@ const MiniCartDrawer: React.FC = () => {
                 {cart.length > 0 && (
                   <button
                     onClick={clearCart}
-                    className="w-full text-xs mt-2 text-red-500 font-bold"
+                    className="w-full text-xs mt-2 text-red-500 font-bold cursor-pointer"
                   >
                     Clear Cart
                   </button>

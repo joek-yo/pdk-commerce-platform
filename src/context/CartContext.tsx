@@ -1,5 +1,3 @@
-// src/context/CartContext.tsx
-
 "use client";
 
 import React, {
@@ -37,7 +35,6 @@ interface CartContextType {
   updateQuantity: (id: number, quantity: number) => void;
   clearCart: () => void;
 
-  // ✅ SINGLE SOURCE OF TRUTH FOR DRAWER
   isCartDrawerOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
@@ -46,7 +43,6 @@ interface CartContextType {
   toast: ToastState;
   hideToast: () => void;
 
-  // ORDER STATE
   customOrder: string;
   setCustomOrder: (value: string) => void;
   orderNotes: string;
@@ -60,7 +56,6 @@ interface CartContextType {
   selectedBranch: string;
   setSelectedBranch: (branch: string) => void;
 
-  // COMPUTED
   cartTotal: number;
   cartCount: number;
 }
@@ -93,6 +88,13 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const openCart = useCallback(() => setIsCartDrawerOpen(true), []);
   const closeCart = useCallback(() => setIsCartDrawerOpen(false), []);
   const toggleCart = useCallback(() => setIsCartDrawerOpen((p) => !p), []);
+
+  // ---------------- SAFE DEVICE CHECK ----------------
+
+  const isMobileDevice = () => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth < 768;
+  };
 
   // ---------------- HYDRATION ----------------
 
@@ -181,7 +183,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     [hideToast]
   );
 
-  // ---------------- CART ACTIONS ----------------
+  // ---------------- CART ACTIONS (FIXED) ----------------
 
   const addToCart = useCallback(
     (item: CartItem, options?: { silent?: boolean }) => {
@@ -201,7 +203,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (!options?.silent) {
         triggerToast(`${item.name} added to cart`, "success");
-        openCart(); // auto open drawer
+
+        // 🔥 FIX: ONLY OPEN CART ON DESKTOP
+        if (!isMobileDevice()) {
+          openCart();
+        }
       }
     },
     [triggerToast, openCart]
@@ -246,7 +252,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     updateQuantity,
     clearCart,
 
-    // IMPORTANT: FINAL CONSISTENT NAME
     isCartDrawerOpen,
     openCart,
     closeCart,

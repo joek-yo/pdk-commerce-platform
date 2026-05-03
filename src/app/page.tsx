@@ -24,7 +24,6 @@ import {
 const Pages: React.FC = () => {
   const bundlesData = getBundles();
   const allItems = getAllProducts();
-  // 1. FIXED: Cast to any to bypass strict property checks during Vercel build
   const ui = getUIConfig() as any;
 
   const featuredProducts = allItems
@@ -42,7 +41,7 @@ const Pages: React.FC = () => {
   .slice(0, 4);
 
   const ViewAllLink = ({ href }: { href: string }) => (
-    <Link href={href} className="text-[10px] font-black uppercase tracking-widest text-slate-900 flex items-center gap-1.5 hover:opacity-70 transition-opacity whitespace-nowrap">
+    <Link href={href} className="text-[10px] font-black uppercase tracking-widest text-slate-900 flex items-center gap-1.5 hover:opacity-70 transition-opacity whitespace-nowrap cursor-pointer">
       {ui.viewAllText || "VIEW ALL"} <FaArrowRight size={10}/>
     </Link>
   );
@@ -101,7 +100,6 @@ const Pages: React.FC = () => {
               </section>
             )}
 
-            {/* ✅ FIXED FEATURED SECTION */}
             {featuredProducts.length > 0 && (
               <section className="rounded-2xl border border-slate-200">
                 
@@ -114,7 +112,6 @@ const Pages: React.FC = () => {
                   />
                 </div>
 
-                {/* FULL WIDTH CAROUSEL AREA (NO SQUEEZE) */}
                 <div className="px-2 sm:px-3 pb-4">
                   <FeaturedCarousel products={featuredProducts} />
                 </div>
@@ -143,11 +140,13 @@ const Pages: React.FC = () => {
           <span className="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-900 text-[9px] font-black uppercase tracking-[0.3em] mb-3">
             {ui.bespokeSourcing?.badge || "BESPOKE SOURCING"}
           </span>
+
           <h2 className="text-2xl sm:text-3xl font-black mb-2 text-slate-900 tracking-tighter uppercase">
             {ui.bespokeSourcing?.title || "Need Something Specific?"}
           </h2>
+
           <Link href="/custom-order">
-            <button className="group px-10 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 mx-auto mt-4 hover:bg-[#FDB813] hover:text-black transition-all">
+            <button className="group px-10 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 mx-auto mt-4 hover:bg-[#FDB813] hover:text-black transition-all cursor-pointer">
               {ui.bespokeSourcing?.buttonText || "Request Custom Item"}
               <FaArrowRight size={12} className="group-hover:translate-x-1 transition-transform"/>
             </button>

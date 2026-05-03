@@ -130,12 +130,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {description}
         </p>
 
-        {/* PRICE SECTION WITH OLD PRICE FIX */}
+        {/* PRICE SECTION */}
         <div className="mt-1.5 flex items-center gap-1.5">
           <span className="text-xs sm:text-sm font-black text-slate-900">
             KES {price.toLocaleString()}
           </span>
-          
+
           {oldPrice && oldPrice > price && (
             <span className="text-[9px] sm:text-[10px] text-slate-400 line-through font-bold">
               KES {oldPrice.toLocaleString()}
@@ -143,7 +143,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
 
-        {/* COMPACT CTA BAR */}
+        {/* CTA */}
         <div className="mt-auto pt-2">
           <AnimatePresence mode="wait">
             {cartItem ? (
@@ -152,15 +152,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-full h-7 bg-slate-900 rounded-md flex items-center justify-between px-3"
+                className="w-full h-7 bg-slate-900 rounded-md flex items-center justify-between px-3 cursor-pointer"
               >
-                <button onClick={handleDecrease} className="text-[#FDB813]">
+                <button onClick={handleDecrease} className="text-[#FDB813] cursor-pointer">
                   <FaMinus size={8} />
                 </button>
+
                 <span className="text-white font-black text-[10px]">
                   {quantity}
                 </span>
-                <button onClick={handleAddToCart} className="text-[#FDB813]">
+
+                <button onClick={handleAddToCart} className="text-[#FDB813] cursor-pointer">
                   <FaPlus size={8} />
                 </button>
               </motion.div>
@@ -175,7 +177,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 className={`
                   w-full h-7 rounded-md flex items-center justify-center gap-1.5
                   text-[9px] font-black uppercase tracking-wider
-                  transition-all duration-300
+                  transition-all duration-300 cursor-pointer
                   ${
                     available
                       ? "bg-slate-900 text-white hover:bg-[#FDB813] hover:text-black"
