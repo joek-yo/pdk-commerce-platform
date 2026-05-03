@@ -4,11 +4,20 @@ import React, { useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
-  FaRocket, FaCompass, FaThLarge, FaTag,
-  FaUsers, FaLifeRing, FaShieldAlt, FaHome,
-  FaShoppingBag, FaPhoneAlt,
-  FaVideo, FaLaptop, FaBox,
-  FaShieldAlt as FaShield, FaLayerGroup
+  FaRocket,
+  FaCompass,
+  FaThLarge,
+  FaTag,
+  FaUsers,
+  FaLifeRing,
+  FaHome,
+  FaShoppingBag,
+  FaPhoneAlt,
+  FaVideo,
+  FaLaptop,
+  FaBox,
+  FaShieldAlt,
+  FaLayerGroup
 } from "react-icons/fa";
 
 // Import Drawer Sections
@@ -46,12 +55,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const textStyle =
     "text-[11px] font-black uppercase tracking-wider";
 
-  // ✅ FIXED (NO JSX NAMESPACE - SAFE FOR VERCEL)
+  // ✅ FIXED ICON MAPPING (NO JSX TYPES, NO INVALID ICONS)
   const categoryIcons: Record<string, React.ReactNode> = {
     wearables: <FaBox size={12} />,
     creator: <FaVideo size={12} />,
     computing: <FaLaptop size={12} />,
-    "home-security": <FaShield size={12} />,
+    "home-security": <FaShieldAlt size={12} />,
     lifestyle: <FaLayerGroup size={12} />,
   };
 
@@ -72,6 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* BACKDROP */}
           <motion.div
             className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[90]"
             initial={{ opacity: 0 }}
@@ -80,6 +90,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             onClick={onClose}
           />
 
+          {/* SIDEBAR */}
           <motion.div
             className="fixed top-0 left-0 h-full w-[85%] max-w-sm bg-[#F8FAFC] z-[100] shadow-2xl flex flex-col border-r border-slate-200"
             initial={{ x: "-100%" }}
@@ -87,12 +98,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             exit={{ x: "-100%" }}
             transition={{ duration: 0.3, ease: "circOut" }}
           >
+            {/* HEADER */}
             <div className="bg-white border-b border-slate-200">
               <DrawerHeader onClose={onClose} />
             </div>
 
+            {/* BODY */}
             <div className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar">
 
+              {/* QUICK START */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
                   <FaRocket className={iconStyle} size={10} /> Quick Start
@@ -144,6 +158,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
+              {/* DEALS */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
                   <FaTag className={iconStyle} size={10} /> Exclusive Deals
@@ -151,6 +166,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <DealsSection />
               </div>
 
+              {/* COMMUNITY */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
                   <FaUsers className={iconStyle} size={10} /> Community
@@ -158,6 +174,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <SocialProofSection />
               </div>
 
+              {/* SUPPORT */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
                   <FaLifeRing className={iconStyle} size={10} /> Help & Support
@@ -167,6 +184,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
             </div>
 
+            {/* FOOTER */}
             <div className="border-t border-slate-100 p-5 bg-white">
               <div className="flex items-center gap-2 mb-4 opacity-50">
                 <FaShieldAlt className="text-slate-400" size={12} />
