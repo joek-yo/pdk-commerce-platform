@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { FaArrowRight, FaFingerprint } from "react-icons/fa";
@@ -13,7 +13,10 @@ import {
   getUIConfig,
 } from "@/lib/getBusinessData";
 
-const MenuPage: React.FC = () => {
+/**
+ * 🔥 MAIN CONTENT (uses search params)
+ */
+const MenuContent: React.FC = () => {
   const categories = getCategories();
   const bundles = getBundles();
   const ui = getUIConfig();
@@ -28,12 +31,11 @@ const MenuPage: React.FC = () => {
 
   const { addToCart } = useCart();
 
-  // 🔥 FIX: use ID instead of name
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     menuCategories[0]?.id ?? "bundles-category"
   );
 
-  // 🔥 URL sync (SAFE + SIMPLE)
+  // 🔥 URL sync
   useEffect(() => {
     if (!urlCategory) return;
 
@@ -44,7 +46,6 @@ const MenuPage: React.FC = () => {
     }
   }, [urlCategory]);
 
-  // active category
   const activeCategory =
     menuCategories.find((cat) => cat.id === selectedCategoryId) ??
     menuCategories[0];
@@ -150,6 +151,17 @@ const MenuPage: React.FC = () => {
       </div>
 
     </div>
+  );
+};
+
+/**
+ * 🔥 PAGE WRAPPER (Suspense fix)
+ */
+const MenuPage: React.FC = () => {
+  return (
+    <Suspense fallback={<div className="p-10 text-center">Loading menu...</div>}>
+      <MenuContent />
+    </Suspense>
   );
 };
 
