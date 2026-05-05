@@ -1,70 +1,64 @@
-// FILE: src/lib/pricing.ts
+// src/lib/pricing.ts
+// No more direct menu.json import.
+// Delivery settings flow in from TenantContext via tenantConfig param.
+// Falls back to menu.json data when no tenantConfig provided (local dev).
 
 import menuData from "@/data/menu.json";
+import type { StorefrontConfig } from "@/lib/api";
 
-/**
- * Cart item contract
- */
 export interface CartItem {
   price: number;
   quantity: number;
 }
 
-/**
- * Subtotal calculator
- */
-export function calculateSubtotal(cart: CartItem[]) {
+export function calculateSubtotal(cart: CartItem[]): number {
   return cart.reduce(
     (total, item) => total + (item.price || 0) * (item.quantity || 0),
     0
   );
 }
 
-/**
- * DELIVERY ENGINE (SINGLE SOURCE OF TRUTH)
- * Updated to pull data from deliverySettings in menu.json
- */
 export function getDeliveryFee(
   orderType?: "pickup" | "delivery",
-  location?: string
-) {
-  // 🚫 Pickup is always free
+  location?: string,
+  tenantConfig?: StorefrontConfig
+): number {
   if (orderType !== "delivery") return 0;
 
-  const { deliverySettings } = menuData;
   const loc = (location || "").toLowerCase().trim();
 
-  // ⚡ match zones using keywords from JSON
+  if (tenantConfig) {
+    for (const zone of tenantConfig.deliveryZones ?? []) {
+      if (zone.keywords.some((k) => loc.includes(k.toLowerCase()))) {
+        return zone.fee;
+      }
+    }
+    return tenantConfig.defaultDeliveryFee ?? 300;
+  }
+
+  const { deliverySettings } = menuData;
   for (const zone of deliverySettings.zones) {
     if (zone.keywords.some((k) => loc.includes(k.toLowerCase()))) {
       return zone.fee;
     }
   }
-
-  // 🟢 DEFAULT FALLBACK (Pulls from JSON defaultFee)
   return deliverySettings.defaultFee;
 }
 
-/**
- * SINGLE PRICING ENGINE (ONLY ENTRY POINT)
- */
 export function calculateTotal(
   cart: CartItem[],
   orderType?: "pickup" | "delivery",
-  location?: string
-) {
+  location?: string,
+  tenantConfig?: StorefrontConfig
+): { subtotal: number; delivery: number; total: number } {
   const subtotal = calculateSubtotal(cart);
-  let delivery = getDeliveryFee(orderType, location);
+  let delivery = getDeliveryFee(orderType, location, tenantConfig);
 
-  // Apply Free Delivery Threshold if subtotal exceeds limit in JSON
-  const { deliverySettings } = menuData;
-  if (subtotal >= deliverySettings.freeDeliveryThreshold) {
-    delivery = 0;
-  }
+  const threshold = tenantConfig
+    ? tenantConfig.freeDeliveryThreshold
+    : menuData.deliverySettings.freeDeliveryThreshold;
 
-  return {
-    subtotal,
-    delivery,
-    total: subtotal + delivery,
-  };
+  if (subtotal >= threshold) delivery = 0;
+
+  return { subtotal, delivery, total: subtotal + delivery };
 }

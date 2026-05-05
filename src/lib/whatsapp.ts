@@ -1,9 +1,12 @@
-// FILE: src/lib/whatsapp.ts
+// src/lib/whatsapp.ts
+// No more getBusinessData() import.
+// Business data flows in via orderDetails.tenantConfig from TenantContext.
+// Falls back to getBusinessData() for local dev without tenant prefix.
 
-import { getBusinessData } from "./getBusinessData";
 import { icons } from "./icons";
 import { calculateTotal } from "./pricing";
 import { generateOrderId } from "@/utils/orderId";
+import type { StorefrontConfig, TenantBusiness } from "@/lib/api";
 
 export interface OrderDetails {
   cart: {
@@ -18,13 +21,19 @@ export interface OrderDetails {
   scheduleTime?: string;
   customerName?: string;
   customerPhone?: string;
+  // Tenant data passed in from context — no direct import needed
+  tenant?: {
+    name: string;
+    tagline?: string;
+    whatsapp?: string;
+    phone?: string;
+    storefront?: StorefrontConfig;
+  };
 }
 
-/**
- * WHATSAPP MESSAGE BUILDER
- * Formats the order data into a clean, readable Kenyan business message.
- */
-export function generateWhatsAppMessage(order: OrderDetails) {
+// ── Message builder ────────────────────────────────────────────────────────
+
+export function generateWhatsAppMessage(order: OrderDetails): string {
   const {
     cart,
     customOrder,
@@ -34,16 +43,28 @@ export function generateWhatsAppMessage(order: OrderDetails) {
     scheduleTime,
     customerName,
     customerPhone,
+    tenant,
   } = order;
 
-  const business = getBusinessData();
+  // Resolve business data — tenant from context, fallback to getBusinessData
+  let businessName = tenant?.name ?? "";
+  let businessTagline = tenant?.tagline ?? "";
+
+  if (!businessName) {
+    // Fallback for local dev
+    const { getBusinessData } = require("./getBusinessData");
+    const business = getBusinessData();
+    businessName = business.name;
+    businessTagline = business.tagline;
+  }
+
   const orderId = generateOrderId();
 
-  // SINGLE SOURCE OF TRUTH (pricing engine)
   const { subtotal, delivery, total } = calculateTotal(
     cart,
     orderType,
-    deliveryLocation
+    deliveryLocation,
+    tenant?.storefront
   );
 
   const itemsText = cart
@@ -54,8 +75,8 @@ export function generateWhatsAppMessage(order: OrderDetails) {
     .join("\n");
 
   let message = `
-${icons.order || "📦"} *NEW ORDER - ${business.name}*
-${icons.sparkle || "✨"} ${business.tagline || "Smart Deals. Smart Choices."}
+${icons.order || "📦"} *NEW ORDER - ${businessName}*
+${icons.sparkle || "✨"} ${businessTagline || "Smart Deals. Smart Choices."}
 
 ━━━━━━━━━━━━━━━━━━
 ${icons.package || "🆔"} *ORDER ID:* ${orderId}
@@ -71,7 +92,6 @@ ${itemsText || "_(No catalog items)_"}
 ━━━━━━━━━━━━━━━━━━
 💰 *SUBTOTAL: KES ${subtotal.toLocaleString()}*`;
 
-  // Delivery Fee calculation
   if (orderType === "delivery") {
     message += `\n🚚 *DELIVERY FEE: KES ${delivery.toLocaleString()}*`;
   }
@@ -82,22 +102,18 @@ ${itemsText || "_(No catalog items)_"}
 ━━━━━━━━━━━━━━━━━━
 ${icons.delivery || "📍"} *ORDER TYPE:* ${(orderType || "pickup").toUpperCase()}`;
 
-  // Location info
   if (orderType === "delivery" && deliveryLocation) {
     message += `\n📍 *DELIVERY TO:* ${deliveryLocation}`;
   }
 
-  // Schedule/Timing info
   if (scheduleTime) {
     message += `\n⏰ *SCHEDULED FOR:* ${scheduleTime}`;
   }
 
-  // ✅ CUSTOM SOURCING REQUEST (From Cart Page)
   if (customOrder?.trim()) {
     message += `\n\n${icons.custom || "✨"} *CUSTOM SOURCING REQUEST*\n${customOrder}`;
   }
 
-  // ✅ DELIVERY INSTRUCTIONS / NOTES (From Review Page)
   if (orderNotes?.trim()) {
     message += `\n\n${icons.note || "📝"} *DELIVERY INSTRUCTIONS*\n${orderNotes}`;
   }
@@ -113,22 +129,24 @@ ${icons.action || "⚡"} *NEXT STEPS*
 3️⃣ Payment on delivery/M-Pesa
 
 ━━━━━━━━━━━━━━━━━━
-${icons.success || "✅"} Thank you for shopping with *${business.name}*!`;
+${icons.success || "✅"} Thank you for shopping with *${businessName}*!`;
 
   return message;
 }
 
-/**
- * SIDE EFFECT ONLY (OPEN WHATSAPP)
- * - Improved phone number sanitization for Kenyan users (254)
- */
-export function openWhatsApp(order: OrderDetails) {
+// ── Open WhatsApp ──────────────────────────────────────────────────────────
+
+export function openWhatsApp(order: OrderDetails): void {
   if (typeof window === "undefined") return;
 
-  const business = getBusinessData();
-  let phone = business.whatsapp || business.phone || "";
-  
-  // Remove all non-numeric characters
+  // Resolve WhatsApp number from tenant context first, fallback to getBusinessData
+  let phone = order.tenant?.storefront?.whatsapp || order.tenant?.phone || "";
+
+  if (!phone) {
+    const { getBusinessWhatsAppNumber } = require("./getBusinessData");
+    phone = getBusinessWhatsAppNumber();
+  }
+
   phone = phone.replace(/[^0-9]/g, "");
 
   if (!phone) {
@@ -136,7 +154,6 @@ export function openWhatsApp(order: OrderDetails) {
     return;
   }
 
-  // Ensure Kenyan numbers are in International Format (254...)
   if (phone.startsWith("0")) {
     phone = "254" + phone.substring(1);
   } else if ((phone.startsWith("7") || phone.startsWith("1")) && phone.length === 9) {
@@ -145,8 +162,5 @@ export function openWhatsApp(order: OrderDetails) {
 
   const message = generateWhatsAppMessage(order);
   const encodedMessage = encodeURIComponent(message);
-
-  const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`;
-
-  window.open(whatsappUrl, "_blank");
+  window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`, "_blank");
 }
