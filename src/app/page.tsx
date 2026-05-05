@@ -5,7 +5,6 @@ import Link from "next/link";
 import { FaArrowRight, FaStar, FaFire, FaGem } from "react-icons/fa";
 
 import Hero from "@/components/home/Hero";
-import GlobalSearch from "@/components/home/GlobalSearch";
 import TrustBar from "@/components/home/TrustBar";
 import CategoryDiscovery from "@/components/home/CategoryDiscovery";
 import FeaturedBundles from "@/components/home/FeaturedBundles";
@@ -66,7 +65,6 @@ const Pages: React.FC = () => {
   return (
     <main className="bg-[#F1F5F9] pb-6">
       <AnnouncementBar />
-      <GlobalSearch />
       
       <Hero />
       <div className="mt-[-20px] relative z-10">
