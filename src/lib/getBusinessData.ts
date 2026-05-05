@@ -20,8 +20,6 @@ export function getBusinessData() {
     banner: business.banner ?? "",
     drawerBanner: business.drawerBanner ?? "",
     socialProof: business.socialProof ?? [],
-
-    // ←←← NAVIGATION ADDED HERE
     navigation: data.navigation ?? [],
   };
 }
@@ -47,7 +45,7 @@ export function getUIConfig() {
       ctaSecondary: ui.hero?.ctaSecondary ?? "Contact Us",
     },
     menuPage: {
-      tagline: ui.menuPage?.tagline ?? "Selection", 
+      tagline: ui.menuPage?.tagline ?? "Selection",
       title: ui.menuPage?.title ?? "Our Collection",
       subtitle: ui.menuPage?.subtitle ?? "",
       ctaTitle: ui.menuPage?.ctaTitle ?? "",
@@ -55,7 +53,7 @@ export function getUIConfig() {
       ctaButton: ui.menuPage?.ctaButton ?? "Request Custom",
     },
     customOrder: {
-      badge: ui.customOrder?.badge ?? "Bespoke", 
+      badge: ui.customOrder?.badge ?? "Bespoke",
       title: ui.customOrder?.title ?? "Need Something Custom?",
       description: ui.customOrder?.description ?? "Request specialized items made just for you.",
       buttonText: ui.customOrder?.buttonText ?? "Request Custom Order",
@@ -84,7 +82,12 @@ export function getCategories() {
 
 // ================= PRODUCTS =================
 export function getAllProducts() {
-  const fromCategories = (data.categories ?? []).flatMap((cat: any) => cat.items ?? []);
+  const fromCategories = (data.categories ?? []).flatMap((cat: any) =>
+    (cat.items ?? []).map((item: any) => ({
+      ...item,
+      category: item.category ?? cat.name, // ← injects "Wearable Tech", "Creator Studio" etc.
+    }))
+  );
   const fromFlatList = data.products ?? [];
   return [...fromCategories, ...fromFlatList];
 }
@@ -93,7 +96,7 @@ export function getAllProducts() {
 export function getBundles() {
   return (data.bundles ?? []).map((bundle: any) => ({
     ...bundle,
-    available: bundle.available !== false 
+    available: bundle.available !== false
   }));
 }
 

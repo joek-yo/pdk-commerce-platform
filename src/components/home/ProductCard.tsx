@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link"; // Added for wiring
 import { useCart } from "@/context/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaMinus, FaShoppingBag } from "react-icons/fa";
@@ -50,7 +51,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const cartItem = cart.find((item) => item.id === id);
   const quantity = cartItem ? cartItem.quantity : 0;
 
-  const handleAddToCart = () => {
+  // Added 'e' to handle event stopping so the link doesn't trigger
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation(); 
+    
     if (!available) return;
     if (onAddToCart) return onAddToCart();
 
@@ -67,7 +72,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
     }
   };
 
-  const handleDecrease = () => {
+  const handleDecrease = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (!cartItem) return;
     if (quantity <= 1) removeFromCart(id);
     else updateQuantity(id, quantity - 1);
@@ -84,66 +92,71 @@ const ProductCard: React.FC<ProductCardProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* IMAGE CONTAINER */}
-      <div
-        className={`relative bg-white overflow-hidden ${
-          isBundle ? "h-36 sm:h-44" : "aspect-square"
-        }`}
-      >
-        {stock && stock <= 5 ? (
-          <span className={`${badgeBase} bg-red-600 text-white`}>
-            Only {stock}
-          </span>
-        ) : featured ? (
-          <span className={`${badgeBase} bg-slate-900 text-white`}>
-            Featured
-          </span>
-        ) : trending ? (
-          <span className={`${badgeBase} bg-[#FDB813] text-black`}>
-            Hot
-          </span>
-        ) : discountPercent ? (
-          <span className={`${badgeBase} bg-red-600 text-white`}>
-            -{discountPercent}%
-          </span>
-        ) : !available ? (
-          <span className={`${badgeBase} bg-slate-400 text-white`}>
-            Sold Out
-          </span>
-        ) : null}
-
-        <Image
-          src={isHovered && hoverImage ? hoverImage : image || "/placeholder.jpg"}
-          alt={name}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-      </div>
-
-      {/* CONTENT SECTION */}
-      <div className="p-2 flex flex-col flex-1">
-        <h3 className="text-[11px] sm:text-xs font-black uppercase text-slate-900 line-clamp-1 leading-tight">
-          {name}
-        </h3>
-
-        <p className="text-[9px] text-slate-400 font-bold mt-0.5 line-clamp-1">
-          {description}
-        </p>
-
-        {/* PRICE SECTION */}
-        <div className="mt-1.5 flex items-center gap-1.5">
-          <span className="text-xs sm:text-sm font-black text-slate-900">
-            KES {price.toLocaleString()}
-          </span>
-
-          {oldPrice && oldPrice > price && (
-            <span className="text-[9px] sm:text-[10px] text-slate-400 line-through font-bold">
-              KES {oldPrice.toLocaleString()}
+      {/* 1. WRAPPED IN LINK + ADDED CURSOR POINTER */}
+      <Link href={`/product/${id}`} className="flex flex-col flex-1 cursor-pointer">
+        {/* IMAGE CONTAINER */}
+        <div
+          className={`relative bg-white overflow-hidden ${
+            isBundle ? "h-36 sm:h-44" : "aspect-square"
+          }`}
+        >
+          {stock && stock <= 5 ? (
+            <span className={`${badgeBase} bg-red-600 text-white`}>
+              Only {stock}
             </span>
-          )}
+          ) : featured ? (
+            <span className={`${badgeBase} bg-slate-900 text-white`}>
+              Featured
+            </span>
+          ) : trending ? (
+            <span className={`${badgeBase} bg-[#FDB813] text-black`}>
+              Hot
+            </span>
+          ) : discountPercent ? (
+            <span className={`${badgeBase} bg-red-600 text-white`}>
+              -{discountPercent}%
+            </span>
+          ) : !available ? (
+            <span className={`${badgeBase} bg-slate-400 text-white`}>
+              Sold Out
+            </span>
+          ) : null}
+
+          <Image
+            src={isHovered && hoverImage ? hoverImage : image || "/placeholder.jpg"}
+            alt={name}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+          />
         </div>
 
-        {/* CTA */}
+        {/* CONTENT SECTION */}
+        <div className="p-2 flex flex-col flex-1">
+          <h3 className="text-[11px] sm:text-xs font-black uppercase text-slate-900 line-clamp-1 leading-tight">
+            {name}
+          </h3>
+
+          <p className="text-[9px] text-slate-400 font-bold mt-0.5 line-clamp-1">
+            {description}
+          </p>
+
+          {/* PRICE SECTION */}
+          <div className="mt-1.5 flex items-center gap-1.5">
+            <span className="text-xs sm:text-sm font-black text-slate-900">
+              KES {price.toLocaleString()}
+            </span>
+
+            {oldPrice && oldPrice > price && (
+              <span className="text-[9px] sm:text-[10px] text-slate-400 line-through font-bold">
+                KES {oldPrice.toLocaleString()}
+              </span>
+            )}
+          </div>
+        </div>
+      </Link>
+
+      {/* CTA */}
+      <div className="p-2 pt-0">
         <div className="mt-auto pt-2">
           <AnimatePresence mode="wait">
             {cartItem ? (

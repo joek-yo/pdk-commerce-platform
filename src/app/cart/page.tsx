@@ -196,13 +196,13 @@ const CartPage: React.FC = () => {
           </div>
         )}
 
-        {/* RECOMMENDED */}
+        {/* YOU MAY ALSO LIKE */}
         {suggestedDeals.length > 0 && (
           <div className="mb-10 relative">
             <div className="flex justify-between items-center mb-4 px-1">
               <h2 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-900 flex items-center gap-2">
                 <FaLightbulb className="text-[#FDB813]" />
-                Recommended
+                You May Also Like
               </h2>
             </div>
 

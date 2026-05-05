@@ -1,4 +1,4 @@
-// src/components/cart/CartToast.tsx
+// src/components/features/cart/CartToast.tsx
 
 "use client";
 
@@ -8,7 +8,7 @@ import { useCart } from "@/context/CartContext";
 import { FaCheckCircle } from "react-icons/fa";
 
 const CartToast: React.FC = () => {
-  const { toast } = useCart(); // ✅ FIX: removed toggleDrawer
+  const { toast, openCart } = useCart(); // ← added openCart
 
   return (
     <AnimatePresence>
@@ -29,9 +29,10 @@ const CartToast: React.FC = () => {
               </span>
             </div>
 
-            {/* View button (UI only — no drawer dependency) */}
+            {/* View button — opens MiniCartDrawer */}
             <button
-              className="text-[#FDB813] text-[10px] font-black uppercase tracking-tighter border-l border-white/10 pl-4 hover:text-white transition-colors"
+              onClick={openCart} // ← this is the only change
+              className="text-[#FDB813] text-[10px] font-black uppercase tracking-tighter border-l border-white/10 pl-4 hover:text-white transition-colors cursor-pointer"
             >
               View
             </button>
