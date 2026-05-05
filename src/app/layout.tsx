@@ -1,48 +1,118 @@
 // src/app/layout.tsx
-
 import "./globals.css";
-import { CartProvider } from "@/context/CartContext"; 
+import { headers } from "next/headers";
+import { CartProvider } from "@/context/CartContext";
+import { TenantProvider } from "@/context/TenantContext";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MiniCartDrawer from "@/components/features/cart/MiniCartDrawer";
 import CartToast from "@/components/features/cart/CartToast";
+import { getBusinessBySlug } from "@/lib/api";
+import type { TenantBusiness } from "@/lib/api";
 
-export const metadata = {
-  title: "Prime Deals Kenya",
-  description: "Smart Deals. Smart Choices.",
+// ── Fallback business (used when no tenant header is present) ──────────────
+// This keeps localhost:3000 working exactly as before during development.
+// When a slug IS resolved by middleware, this is never used.
+import menuData from "@/data/menu.json";
+
+const fallbackBusiness: TenantBusiness = {
+  _id: "local",
+  name: (menuData as any).business?.name ?? "Prime Deals Kenya",
+  slug: "pdk",
+  phone: (menuData as any).business?.phone ?? "",
+  email: (menuData as any).business?.email ?? "",
+  logoUrl: (menuData as any).business?.logo ?? "",
+  currency: "KES",
+  timezone: "Africa/Nairobi",
+  isActive: true,
+  subscriptionPlan: "starter",
+  storefront: {
+    tagline: (menuData as any).business?.tagline ?? "",
+    whatsapp: (menuData as any).business?.whatsapp ?? "",
+    banner: (menuData as any).business?.banner ?? "",
+    drawerBanner: (menuData as any).business?.drawerBanner ?? "",
+    defaultDeliveryFee: (menuData as any).deliverySettings?.defaultFee ?? 300,
+    freeDeliveryThreshold: (menuData as any).deliverySettings?.freeDeliveryThreshold ?? 10000,
+    deliveryZones: (menuData as any).deliverySettings?.zones ?? [],
+    navigation: (menuData as any).navigation ?? [],
+    socialProof: (menuData as any).business?.socialProof ?? [],
+    uiConfig: {
+      announcement: (menuData as any).ui?.announcement,
+      flashSale: (menuData as any).ui?.flashSale,
+      hero: (menuData as any).ui?.hero,
+      bespokeSourcing: (menuData as any).bespokeSourcing,
+    },
+    trustItems: (menuData as any).drawer?.trust ?? [],
+  },
 };
 
-export default function RootLayout({
+// ── Dynamic metadata per tenant ────────────────────────────────────────────
+export async function generateMetadata() {
+  const headersList = await headers();
+  const businessId = headersList.get("x-business-id");
+  const slug = headersList.get("x-business-slug");
+
+  if (!businessId || !slug) {
+    return {
+      title: fallbackBusiness.name,
+      description: fallbackBusiness.storefront.tagline,
+    };
+  }
+
+  try {
+    const business = await getBusinessBySlug(slug);
+    return {
+      title: business.name,
+      description: business.storefront?.tagline ?? "",
+    };
+  } catch {
+    return {
+      title: fallbackBusiness.name,
+      description: fallbackBusiness.storefront.tagline,
+    };
+  }
+}
+
+// ── Root layout ────────────────────────────────────────────────────────────
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const headersList = await headers();
+  const slug = headersList.get("x-business-slug");
+
+  // Resolve tenant — fall back to menu.json if no slug header
+  let business: TenantBusiness = fallbackBusiness;
+
+  if (slug) {
+    try {
+      business = await getBusinessBySlug(slug);
+    } catch {
+      // Backend down or slug not found — use fallback silently
+      business = fallbackBusiness;
+    }
+  }
+
   return (
     <html lang="en">
-      {/* Changed bg from #0D0D0D to #F1F5F9 and text to slate-900 */}
       <body className="bg-[#F1F5F9] text-slate-900 min-h-screen flex flex-col antialiased font-sans">
-        
-        <CartProvider>
-          {/* Header will sit on top of the new light background */}
-          <Header />
+        <TenantProvider business={business}>
+          <CartProvider>
+            <Header />
+            <MiniCartDrawer />
+            <CartToast />
 
-          <MiniCartDrawer />
-          <CartToast />
+            <main className="flex-grow relative">
+              <div className="absolute top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-white to-transparent pointer-events-none -z-10" />
+              <div className="relative z-10">
+                {children}
+              </div>
+            </main>
 
-          <main className="flex-grow relative">
-            {/* Modified the top glow: 
-               On a light background, we use a very faint Gold to White gradient 
-               so it feels like "sunlight" at the top of the page.
-            */}
-            <div className="absolute top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-white to-transparent pointer-events-none -z-10" />
-            
-            <div className="relative z-10">
-              {children}
-            </div>
-          </main>
-
-          <Footer />
-        </CartProvider>
+            <Footer />
+          </CartProvider>
+        </TenantProvider>
       </body>
     </html>
   );
