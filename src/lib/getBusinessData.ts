@@ -121,9 +121,9 @@ export function getAllProducts() {
 // ── PRODUCTS (tenant-aware — from NestJS) ─────────────────────────────────
 // Use these in server components when businessId is available.
 
-export async function getTenantProducts(businessId: string) {
+export async function getTenantProducts(slug: string) {
   try {
-    const products = await getProducts(businessId);
+    const products = await getProducts(slug);
     return products.map((p) => ({
       id: p._id,
       name: p.name,
@@ -148,9 +148,9 @@ export async function getTenantProducts(businessId: string) {
   }
 }
 
-export async function getTenantCategories(businessId: string) {
+export async function getTenantCategories(slug: string) {
   try {
-    return await apiGetCategories(businessId);
+    return await apiGetCategories(slug);
   } catch {
     return getCategories();
   }

@@ -1,10 +1,9 @@
 // src/lib/api.ts
 // Single entry point for all NestJS API calls.
-// All components and contexts must go through here — no raw fetch elsewhere.
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-// ── Types (mirror your NestJS schemas exactly) ─────────────────────────────
+// ── Types ──────────────────────────────────────────────────────────────────
 
 export interface DeliveryZone {
   name: string;
@@ -88,11 +87,22 @@ export interface ApiCategory {
 
 // ── Internal fetch helper ──────────────────────────────────────────────────
 
-async function apiFetch<T>(path: string): Promise<T> {
+async function apiFetch<T>(
+  path: string,
+  options: { slug?: string; revalidate?: number } = {}
+): Promise<T> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  // Inject tenant slug header for protected routes
+  if (options.slug) {
+    headers["x-tenant-slug"] = options.slug;
+  }
+
   const res = await fetch(`${BASE_URL}${path}`, {
-    headers: { "Content-Type": "application/json" },
-    // SSR cache: revalidate every 60s so pages stay fresh without full rebuilds
-    next: { revalidate: 60 },
+    headers,
+    next: { revalidate: options.revalidate ?? 60 },
   });
 
   if (!res.ok) {
@@ -104,24 +114,37 @@ async function apiFetch<T>(path: string): Promise<T> {
 
 // ── Business / Tenant ──────────────────────────────────────────────────────
 
-// Called by middleware.ts and TenantContext to resolve slug → business
 export async function getBusinessBySlug(slug: string): Promise<TenantBusiness> {
   return apiFetch<TenantBusiness>(`/businesses/slug/${slug}`);
 }
 
-// Called by TenantContext for lightweight storefront config only
 export async function getStorefront(businessId: string): Promise<StorefrontConfig> {
   return apiFetch<StorefrontConfig>(`/businesses/${businessId}/storefront`);
 }
 
-// ── Products ───────────────────────────────────────────────────────────────
+// ── Catalog ────────────────────────────────────────────────────────────────
 
-// All products for a tenant — replaces getAllProducts() from menu.json
-export async function getProducts(businessId: string): Promise<ApiProduct[]> {
-  return apiFetch<ApiProduct[]>(`/menu/products?businessId=${businessId}`);
+// Get all products for a tenant
+export async function getProducts(slug: string): Promise<ApiProduct[]> {
+  return apiFetch<ApiProduct[]>(`/catalog/products`, { slug });
 }
 
-// Categories for a tenant — replaces getCategories() from menu.json
-export async function getCategories(businessId: string): Promise<ApiCategory[]> {
-  return apiFetch<ApiCategory[]>(`/menu/categories?businessId=${businessId}`);
+// Get categories for a tenant
+export async function getCategories(slug: string): Promise<ApiCategory[]> {
+  const res = await apiFetch<{ success: boolean; categories: ApiCategory[] }>(
+    `/catalog/categories`,
+    { slug }
+  );
+  return res.categories ?? [];
+}
+
+// Get products by category
+export async function getProductsByCategory(
+  categoryId: string,
+  slug: string
+): Promise<ApiProduct[]> {
+  return apiFetch<ApiProduct[]>(
+    `/catalog/products/category/${categoryId}`,
+    { slug }
+  );
 }
