@@ -4,11 +4,10 @@
 import React, { useState, useEffect } from "react";
 import {
   FaShoppingCart, FaTruck, FaShieldAlt, FaBolt,
-  FaBoxOpen, FaPlus, FaMinus, FaWhatsapp, FaShareAlt, FaMapMarkerAlt,
+  FaBoxOpen, FaPlus, FaMinus, FaWhatsapp, FaShareAlt,
   FaArrowLeft
 } from "react-icons/fa";
 import { getBusinessData } from "@/lib/getBusinessData";
-import { getDeliveryFee } from "@/lib/pricing";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,12 +22,10 @@ const ProductDetail = ({ product }: { product: any }) => {
   const router = useRouter();
 
   const [activeImg, setActiveImg] = useState(product.image);
-  const [showBagToast, setShowBagToast] = useState(false);       // ← "Added to Bag"
-  const [showShareToast, setShowShareToast] = useState(false);   // ← "Link Copied!"
+  const [showBagToast, setShowBagToast] = useState(false);
+  const [showShareToast, setShowShareToast] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(product.variants ? product.variants[0] : null);
-  const [deliveryLocation, setDeliveryLocation] = useState("");
-  const [estimatedFee, setEstimatedFee] = useState<number | null>(null);
 
   // ── READ quantity directly from cart ──
   const cartItem = cart.find((item) => item.id === product.id);
@@ -52,15 +49,6 @@ const ProductDetail = ({ product }: { product: any }) => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [product]);
-
-  useEffect(() => {
-    if (deliveryLocation.trim().length > 2) {
-      const fee = getDeliveryFee("delivery", deliveryLocation);
-      setEstimatedFee(isFreeDelivery ? 0 : fee);
-    } else {
-      setEstimatedFee(null);
-    }
-  }, [deliveryLocation, isFreeDelivery]);
 
   // ── QUANTITY HANDLERS ──
   const handleIncrease = () => {
@@ -102,7 +90,6 @@ const ProductDetail = ({ product }: { product: any }) => {
     window.open(`https://api.whatsapp.com/send?phone=${clean}&text=${msg}`, "_blank");
   };
 
-  // ── SHARE — fully separate from bag toast ──
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -138,7 +125,6 @@ const ProductDetail = ({ product }: { product: any }) => {
             <span className="text-slate-900 truncate max-w-[120px]">{product.name}</span>
           </nav>
 
-          {/* BACK TO SHOP — same style as CartPage */}
           <button
             onClick={() => router.push("/menu")}
             className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-all cursor-pointer"
@@ -177,7 +163,6 @@ const ProductDetail = ({ product }: { product: any }) => {
                 </div>
               )}
 
-              {/* SHARE BUTTON */}
               <button
                 onClick={handleShare}
                 className="absolute bottom-4 right-4 w-9 h-9 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 border border-slate-100 shadow-sm cursor-pointer transition-all hover:scale-110"
@@ -319,40 +304,6 @@ const ProductDetail = ({ product }: { product: any }) => {
               </div>
             </div>
 
-            {/* DELIVERY ESTIMATOR */}
-            <div className="bg-white border border-slate-200 p-4 rounded-xl space-y-2">
-              <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 flex items-center gap-2">
-                <FaMapMarkerAlt className="text-[#FDB813]" /> Estimate Delivery
-              </h4>
-              <input
-                type="text"
-                placeholder="Enter your area e.g. Westlands, Thika..."
-                value={deliveryLocation}
-                onChange={e => setDeliveryLocation(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-lg text-slate-900 font-bold text-xs placeholder:text-slate-300 focus:border-[#FDB813] outline-none transition-all"
-              />
-              {estimatedFee !== null && (
-                <motion.div
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center justify-between"
-                >
-                  <span className="text-[10px] font-bold text-slate-500 flex items-center gap-1.5">
-                    <FaTruck size={10} className="text-[#FDB813]" />
-                    Delivery to {deliveryLocation}
-                  </span>
-                  <span className={`text-[10px] font-black ${estimatedFee === 0 ? "text-green-600" : "text-slate-900"}`}>
-                    {estimatedFee === 0 ? "FREE 🎉" : `KES ${estimatedFee.toLocaleString()}`}
-                  </span>
-                </motion.div>
-              )}
-              {isFreeDelivery && (
-                <p className="text-[9px] font-black text-green-600 uppercase tracking-wider">
-                  ✓ Order qualifies for free delivery
-                </p>
-              )}
-            </div>
-
             {/* ACTION BUTTONS */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
@@ -484,7 +435,7 @@ const ProductDetail = ({ product }: { product: any }) => {
         )}
       </AnimatePresence>
 
-      {/* SHARE TOAST — completely separate */}
+      {/* SHARE TOAST */}
       <AnimatePresence>
         {showShareToast && (
           <motion.div

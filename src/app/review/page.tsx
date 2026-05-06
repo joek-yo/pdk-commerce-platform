@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { calculateTotal } from "@/lib/pricing";
+import { motion } from "framer-motion";
 import { 
   FaWhatsapp, FaChevronLeft, FaShoppingCart, FaMapMarkerAlt, 
   FaUser, FaPhone, FaStickyNote, FaTruck, 
@@ -37,25 +38,19 @@ export default function ReviewPage() {
     return calculateTotal(cart, globalOrderType, globalLocation);
   }, [cart, globalOrderType, globalLocation]);
 
-  // Mandatory logic: Name, Phone, and (if delivery) Address
   const isCertified = useMemo(() => {
     const hasInfo = customer.name.trim() !== "" && customer.phone.trim() !== "";
     const hasLocationIfRequired = globalOrderType === "delivery" ? globalLocation?.trim() !== "" : true;
-    
     return hasInfo && hasLocationIfRequired;
   }, [customer, globalOrderType, globalLocation]);
 
   const handleCheckout = () => {
-    // Check basic info first
     if (customer.name.trim() === "" || customer.phone.trim() === "") {
       return alert("Please fill in your Name and Phone Number.");
     }
-
-    // Check location specifically if delivery is selected
     if (globalOrderType === "delivery" && (!globalLocation || globalLocation.trim() === "")) {
       return alert("Please provide a Delivery Address to proceed.");
     }
-    
     openWhatsApp({
       cart,
       customerName: customer.name,
@@ -96,11 +91,11 @@ export default function ReviewPage() {
               <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-slate-600 to-transparent opacity-30" />
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                        <FaEdit className="text-slate-500" size={12} />
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Custom Sourcing</span>
-                    </div>
-                    <FaQuoteLeft className="text-slate-800" size={16} />
+                  <div className="flex items-center gap-3">
+                    <FaEdit className="text-slate-500" size={12} />
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Custom Sourcing</span>
+                  </div>
+                  <FaQuoteLeft className="text-slate-800" size={16} />
                 </div>
                 <p className="text-white text-base font-medium leading-relaxed italic">
                   {customOrder}
@@ -181,6 +176,22 @@ export default function ReviewPage() {
                 value={globalLocation} 
                 onChange={(e) => setDeliveryLocation(e.target.value)} 
               />
+              {/* LIVE DELIVERY PREVIEW */}
+              {globalLocation?.trim().length > 2 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center justify-between mt-2 px-1"
+                >
+                  <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1.5">
+                    <FaTruck size={9} className="text-[#FDB813]" />
+                    Delivery to {globalLocation}
+                  </span>
+                  <span className={`text-[10px] font-black ${delivery === 0 ? "text-green-600" : "text-slate-900"}`}>
+                    {delivery === 0 ? "FREE 🎉" : `KES ${delivery.toLocaleString()}`}
+                  </span>
+                </motion.div>
+              )}
             </div>
           )}
 
@@ -209,15 +220,15 @@ export default function ReviewPage() {
             </div>
             
             <div className="pt-4 border-t border-dashed border-slate-200">
-                <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-1 px-1">Total Payable</p>
-                <div className="flex justify-between items-end px-1">
-                    <h2 className="text-3xl font-black text-slate-900 tracking-tighter leading-none">
-                        KES {total.toLocaleString()}
-                    </h2>
-                    <span className="bg-slate-100 text-slate-400 text-[8px] font-black px-2 py-1 rounded uppercase tracking-widest">
-                        Tax Included
-                    </span>
-                </div>
+              <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-1 px-1">Total Payable</p>
+              <div className="flex justify-between items-end px-1">
+                <h2 className="text-3xl font-black text-slate-900 tracking-tighter leading-none">
+                  KES {total.toLocaleString()}
+                </h2>
+                <span className="bg-slate-100 text-slate-400 text-[8px] font-black px-2 py-1 rounded uppercase tracking-widest">
+                  Tax Included
+                </span>
+              </div>
             </div>
           </div>
         </section>
