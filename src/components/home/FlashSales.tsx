@@ -23,7 +23,7 @@ const FlashSales: React.FC = () => {
 
     const counts: Record<number, number> = {};
     shuffled.forEach((p: any) => {
-      counts[p.id] = p.stock || Math.floor(Math.random() * 4) + 2; 
+      if (p.stock) counts[p.id] = p.stock;
     });
     setStockCounts(counts);
 

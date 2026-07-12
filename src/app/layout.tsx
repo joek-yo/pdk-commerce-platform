@@ -96,7 +96,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="bg-[#F1F5F9] text-slate-900 min-h-screen flex flex-col antialiased font-sans">
+      <body className="bg-background text-foreground min-h-screen flex flex-col antialiased font-sans">
         <TenantProvider business={business}>
           <CartProvider>
             <Header />

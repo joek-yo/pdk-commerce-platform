@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Link from "next/link"; // Added for wiring
+import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaMinus, FaShoppingBag } from "react-icons/fa";
@@ -51,11 +51,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const cartItem = cart.find((item) => item.id === id);
   const quantity = cartItem ? cartItem.quantity : 0;
 
-  // Added 'e' to handle event stopping so the link doesn't trigger
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation(); 
-    
+    e.stopPropagation();
+
     if (!available) return;
     if (onAddToCart) return onAddToCart();
 
@@ -86,17 +85,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div
-      className={`group bg-white rounded-lg border border-slate-100 flex flex-col overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ${
+      className={`group bg-surface rounded-lg border border-border flex flex-col overflow-hidden hover:border-border-strong transition-all duration-300 ${
         isBundle ? "min-h-[300px] sm:min-h-[340px]" : ""
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* 1. WRAPPED IN LINK + ADDED CURSOR POINTER */}
       <Link href={`/product/${id}`} className="flex flex-col flex-1 cursor-pointer">
         {/* IMAGE CONTAINER */}
         <div
-          className={`relative bg-white overflow-hidden ${
+          className={`relative bg-surface2 overflow-hidden ${
             isBundle ? "h-36 sm:h-44" : "aspect-square"
           }`}
         >
@@ -105,11 +103,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
               Only {stock}
             </span>
           ) : featured ? (
-            <span className={`${badgeBase} bg-slate-900 text-white`}>
+            <span className={`${badgeBase} bg-background text-foreground border border-border-strong`}>
               Featured
             </span>
           ) : trending ? (
-            <span className={`${badgeBase} bg-[#FDB813] text-black`}>
+            <span className={`${badgeBase} bg-gold text-black`}>
               Hot
             </span>
           ) : discountPercent ? (
@@ -117,7 +115,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               -{discountPercent}%
             </span>
           ) : !available ? (
-            <span className={`${badgeBase} bg-slate-400 text-white`}>
+            <span className={`${badgeBase} bg-muted text-background`}>
               Sold Out
             </span>
           ) : null}
@@ -132,22 +130,22 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* CONTENT SECTION */}
         <div className="p-2 flex flex-col flex-1">
-          <h3 className="text-[11px] sm:text-xs font-black uppercase text-slate-900 line-clamp-1 leading-tight">
+          <h3 className="text-[11px] sm:text-xs font-black uppercase text-foreground line-clamp-1 leading-tight">
             {name}
           </h3>
 
-          <p className="text-[9px] text-slate-400 font-bold mt-0.5 line-clamp-1">
+          <p className="text-[9px] text-subtext font-bold mt-0.5 line-clamp-1">
             {description}
           </p>
 
           {/* PRICE SECTION */}
           <div className="mt-1.5 flex items-center gap-1.5">
-            <span className="text-xs sm:text-sm font-black text-slate-900">
+            <span className="text-xs sm:text-sm font-black text-foreground">
               KES {price.toLocaleString()}
             </span>
 
             {oldPrice && oldPrice > price && (
-              <span className="text-[9px] sm:text-[10px] text-slate-400 line-through font-bold">
+              <span className="text-[9px] sm:text-[10px] text-muted line-through font-bold">
                 KES {oldPrice.toLocaleString()}
               </span>
             )}
@@ -165,17 +163,23 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-full h-7 bg-slate-900 rounded-md flex items-center justify-between px-3 cursor-pointer"
+                className="w-full h-7 bg-background border border-border-strong rounded-md flex items-center justify-between"
               >
-                <button onClick={handleDecrease} className="text-[#FDB813] cursor-pointer">
+                <button
+                  onClick={handleDecrease}
+                  className="text-gold h-full px-3 flex items-center justify-center cursor-pointer"
+                >
                   <FaMinus size={8} />
                 </button>
 
-                <span className="text-white font-black text-[10px]">
+                <span className="text-foreground font-black text-[10px]">
                   {quantity}
                 </span>
 
-                <button onClick={handleAddToCart} className="text-[#FDB813] cursor-pointer">
+                <button
+                  onClick={handleAddToCart}
+                  className="text-gold h-full px-3 flex items-center justify-center cursor-pointer"
+                >
                   <FaPlus size={8} />
                 </button>
               </motion.div>
@@ -189,12 +193,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 exit={{ opacity: 0 }}
                 className={`
                   w-full h-7 rounded-md flex items-center justify-center gap-1.5
-                  text-[9px] font-black uppercase tracking-wider
+                  text-[9px] font-black uppercase tracking-wider border
                   transition-all duration-300 cursor-pointer
                   ${
                     available
-                      ? "bg-slate-900 text-white hover:bg-[#FDB813] hover:text-black"
-                      : "bg-slate-200 text-slate-400"
+                      ? "border-border-strong text-foreground hover:bg-gold hover:border-gold hover:text-black"
+                      : "border-border text-muted"
                   }
                 `}
               >

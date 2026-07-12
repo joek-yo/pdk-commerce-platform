@@ -4,16 +4,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaBars, FaShoppingCart, FaSearch } from "react-icons/fa";
-
-// Lucide Icons
-import { Home, ShoppingBag, Phone, Info } from "lucide-react";
-
+import { Home, ShoppingBag, Phone, Info, BookOpen, Users } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { getBusinessData } from "@/lib/getBusinessData";
+import { useTenant } from "@/context/TenantContext";
 import Sidebar from "./Sidebar";
 
 const Header: React.FC = () => {
-  const business = getBusinessData() as any;
+  const { name, logoUrl, storefront } = useTenant();
+  const navigation = storefront?.navigation ?? [];
 
   const { cart, openCart } = useCart();
   const totalItems = Array.isArray(cart)
@@ -24,15 +22,13 @@ const Header: React.FC = () => {
 
   const getNavIcon = (id: string) => {
     switch (id) {
-      case "home":
-        return Home;
+      case "home":       return Home;
       case "products":
-      case "shop":
-        return ShoppingBag;
-      case "contact":
-        return Phone;
-      default:
-        return Info;
+      case "shop":       return ShoppingBag;
+      case "contact":    return Phone;
+      case "about":      return Users;
+      case "blog":       return BookOpen;
+      default:           return Info;
     }
   };
 
@@ -43,40 +39,30 @@ const Header: React.FC = () => {
 
           {/* MOBILE */}
           <div className="md:hidden space-y-3 py-3">
-
-            {/* Top row */}
             <div className="flex justify-between items-center">
-
               <div className="flex items-center gap-3">
-
-                {/* Hamburger */}
                 <button
                   onClick={() => setMobileMenuOpen(true)}
                   className="bg-[#FDB813] p-2 rounded-lg text-black active:scale-90 transition-transform"
                 >
                   <FaBars size={14} />
                 </button>
-
-                {/* Brand */}
                 <Link href="/" className="flex items-center space-x-2">
-                  {business?.logo && (
+                  {logoUrl && (
                     <Image
-                      src={business.logo}
-                      alt={business.name || "Prime Deals"}
+                      src={logoUrl}
+                      alt={name || "Logo"}
                       width={32}
                       height={32}
                       className="rounded-lg"
                     />
                   )}
-
                   <span className="text-base font-black tracking-tighter uppercase">
-                    Prime <span className="text-[#FDB813]">Deals</span> Kenya
+                    {name || "Prime Deals Kenya"}
                   </span>
                 </Link>
-
               </div>
 
-              {/* Cart (same size as hamburger) */}
               <button
                 onClick={openCart}
                 className="relative bg-white/5 border border-white/10 p-2 rounded-lg active:scale-90 transition-transform"
@@ -90,29 +76,23 @@ const Header: React.FC = () => {
               </button>
             </div>
 
-            {/* 🔥 PREMIUM FULL WIDTH INSET DIVIDER */}
             <div className="px-1">
               <div className="w-full h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
             </div>
 
-            {/* Mobile Search */}
             <div className="w-full">
               <div className="flex items-center bg-white/5 border border-white/10 rounded-full h-10 pl-4 overflow-hidden">
-
                 <input
                   type="text"
                   placeholder="Search products..."
                   className="flex-1 bg-transparent outline-none text-sm font-bold text-white placeholder:text-white/40"
                 />
-
                 <div className="w-px h-full bg-white/10" />
-
                 <button className="h-full px-4 bg-white/10 hover:bg-[#FDB813]/20 transition-all flex items-center justify-center">
                   <FaSearch size={13} className="text-white/70 hover:text-[#FDB813]" />
                 </button>
               </div>
             </div>
-
           </div>
 
           {/* DESKTOP */}
@@ -120,10 +100,10 @@ const Header: React.FC = () => {
 
             {/* LOGO */}
             <Link href="/" className="flex items-center space-x-3 shrink-0">
-              {business?.logo && (
+              {logoUrl && (
                 <div className="p-1 bg-white/5 rounded-xl border border-white/10">
                   <Image
-                    src={business.logo}
+                    src={logoUrl}
                     alt="Logo"
                     width={40}
                     height={40}
@@ -131,45 +111,62 @@ const Header: React.FC = () => {
                   />
                 </div>
               )}
-
               <span className="text-2xl font-black tracking-tighter uppercase">
-                Prime <span className="text-[#FDB813]">Deals</span> Kenya
+                {name || "Prime Deals Kenya"}
               </span>
             </Link>
 
             {/* Search */}
             <div className="flex-1 max-w-xl">
               <div className="flex items-center bg-white/5 border border-white/10 rounded-full h-10 pl-4 overflow-hidden hover:border-[#FDB813]/40 transition-all">
-
                 <input
                   type="text"
                   placeholder="Search products, brands..."
                   className="flex-1 bg-transparent outline-none text-sm font-bold text-white placeholder:text-white/40"
                 />
-
                 <div className="w-px h-full bg-white/10" />
-
                 <button className="h-full px-5 bg-white/10 hover:bg-[#FDB813]/20 transition-all flex items-center justify-center">
                   <FaSearch size={13} className="text-white/70 hover:text-[#FDB813]" />
                 </button>
               </div>
             </div>
 
-            {/* NAV */}
+            {/* NAV — dynamic from tenant storefront config */}
             <nav className="flex items-center gap-6 shrink-0">
-              {business?.navigation?.map((item: any) => {
-                const IconComponent = getNavIcon(item.id);
-                return (
-                  <Link
-                    key={item.id}
-                    href={item.path}
-                    className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group"
-                  >
-                    <IconComponent size={18} className="group-hover:scale-110 transition-transform" />
-                    {item.label}
+              {navigation.length > 0 ? (
+                navigation.map((item: any) => {
+                  const IconComponent = getNavIcon(item.id);
+                  return (
+                    <Link
+                      key={item.id}
+                      href={item.path}
+                      className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group"
+                    >
+                      <IconComponent size={18} className="group-hover:scale-110 transition-transform" />
+                      {item.label}
+                    </Link>
+                  );
+                })
+              ) : (
+                // Fallback nav when no storefront config yet
+                <>
+                  <Link href="/" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group">
+                    <Home size={18} className="group-hover:scale-110 transition-transform" /> Home
                   </Link>
-                );
-              })}
+                  <Link href="/menu" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group">
+                    <ShoppingBag size={18} className="group-hover:scale-110 transition-transform" /> Shop
+                  </Link>
+                  <Link href="/about" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group">
+                    <Users size={18} className="group-hover:scale-110 transition-transform" /> About
+                  </Link>
+                  <Link href="/blog" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group">
+                    <BookOpen size={18} className="group-hover:scale-110 transition-transform" /> Blog
+                  </Link>
+                  <Link href="/contact" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group">
+                    <Phone size={18} className="group-hover:scale-110 transition-transform" /> Contact
+                  </Link>
+                </>
+              )}
             </nav>
 
             {/* CART */}
@@ -194,11 +191,7 @@ const Header: React.FC = () => {
         </div>
       </header>
 
-      <Sidebar
-        isOpen={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-      />
-
+      <Sidebar isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
       <div className="h-[121px] md:h-20" />
     </>
   );

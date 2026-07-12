@@ -101,32 +101,6 @@ const MenuContent: React.FC = () => {
         </div>
       </div>
 
-      {/* CTA */}
-      <div className="max-w-5xl mx-auto mb-16">
-        <div className="relative overflow-hidden bg-white border border-slate-100 rounded-3xl p-8 sm:p-12 text-center">
-
-          <h2 className="text-2xl sm:text-3xl font-black mb-3 text-slate-900">
-            {ui.menuPage.ctaTitle}
-          </h2>
-
-          <p className="text-slate-500 font-bold mb-8 max-w-lg mx-auto">
-            {ui.menuPage.ctaDescription}
-          </p>
-
-          <Link href="/custom-order">
-            <button className="px-10 py-4 bg-slate-900 text-white rounded-xl font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 mx-auto">
-              {ui.menuPage.ctaButton}
-              <FaArrowRight size={10} className="text-[#FDB813]" />
-            </button>
-          </Link>
-
-          <div className="absolute top-0 right-0 p-8 opacity-5 hidden sm:block">
-            <FaFingerprint size={80} />
-          </div>
-
-        </div>
-      </div>
-
       {/* PRODUCTS */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8">
 

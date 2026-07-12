@@ -18,6 +18,8 @@ import {
   FaBox,
   FaShieldAlt,
   FaLayerGroup,
+  FaBookOpen,
+  FaInfoCircle,
 } from "react-icons/fa";
 
 import DrawerHeader from "./drawer/DrawerHeader";
@@ -26,8 +28,8 @@ import DealsSection from "./drawer/DealsSection";
 import SocialProofSection from "./drawer/SocialProofSection";
 import SupportSection from "./drawer/SupportSection";
 import FooterTrust from "./drawer/FooterTrust";
-
-import menuData from "@/data/menu.json";
+import { useTenant } from "@/context/TenantContext";
+import { getCategories } from "@/lib/getBusinessData";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -35,6 +37,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  const { storefront } = useTenant();
+
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "unset";
   }, [isOpen]);
@@ -50,8 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const linkStyle =
     "flex items-center gap-3 py-3 px-2 text-slate-700 hover:text-[#FDB813] hover:bg-[#FDB813]/10 rounded-lg transition-all border-b border-slate-50 last:border-0";
 
-  const textStyle =
-    "text-[11px] font-black uppercase tracking-wider";
+  const textStyle = "text-[11px] font-black uppercase tracking-wider";
 
   const categoryIcons: Record<string, React.ReactNode> = {
     wearables: <FaBox size={12} />,
@@ -61,18 +64,41 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     lifestyle: <FaLayerGroup size={12} />,
   };
 
-  const randomizedCategories = useMemo(() => {
-    if (!menuData.categories) return [];
-    return [...menuData.categories]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 6);
-  }, [isOpen]);
+  const getNavIcon = (id: string) => {
+    switch (id) {
+      case "home":       return <FaHome size={14} />;
+      case "products":
+      case "shop":       return <FaShoppingBag size={14} />;
+      case "contact":    return <FaPhoneAlt size={14} />;
+      case "about":      return <FaInfoCircle size={14} />;
+      case "blog":       return <FaBookOpen size={14} />;
+      default:           return <FaCompass size={14} />;
+    }
+  };
 
-  const navLinks = [
-    { name: "Home", href: "/", icon: <FaHome size={14} /> },
-    { name: "Shop All", href: "/menu", icon: <FaShoppingBag size={14} /> },
-    { name: "Contacts", href: "/contact", icon: <FaPhoneAlt size={14} /> },
-  ];
+  // Navigation from tenant context — same source as Header
+  const navLinks = useMemo(() => {
+    if (storefront?.navigation?.length > 0) {
+      return storefront.navigation.map((item: any) => ({
+        name: item.label,
+        href: item.path,
+        icon: getNavIcon(item.id),
+      }));
+    }
+    // Fallback
+    return [
+      { name: "Home", href: "/", icon: <FaHome size={14} /> },
+      { name: "Shop All", href: "/menu", icon: <FaShoppingBag size={14} /> },
+      { name: "About", href: "/about", icon: <FaInfoCircle size={14} /> },
+      { name: "Blog", href: "/blog", icon: <FaBookOpen size={14} /> },
+      { name: "Contact", href: "/contact", icon: <FaPhoneAlt size={14} /> },
+    ];
+  }, [storefront?.navigation]);
+
+  const randomizedCategories = useMemo(() => {
+    const cats = getCategories();
+    return [...cats].sort(() => Math.random() - 0.5).slice(0, 6);
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
@@ -109,16 +135,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <QuickActions />
               </div>
 
-              {/* NAVIGATION */}
+              {/* NAVIGATION — dynamic from tenant */}
               <div className={sectionClasses}>
                 <label className={labelClasses}>
                   <FaCompass className={iconStyle} size={10} /> Navigation
                 </label>
-
                 <div className="flex flex-col">
                   {navLinks.map((link) => (
                     <Link
-                      key={link.name}
+                      key={link.href}
                       href={link.href}
                       onClick={onClose}
                       className={linkStyle}
@@ -135,7 +160,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <label className={labelClasses}>
                   <FaThLarge className={iconStyle} size={10} /> Fresh Categories
                 </label>
-
                 <div className="grid grid-cols-1">
                   {randomizedCategories.map((cat: any) => (
                     <Link
@@ -153,15 +177,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* 🔥 DEALS (BRAND FIXED) */}
+              {/* DEALS */}
               <div className="bg-[#FDB813]/10 border border-[#FDB813]/30 p-5 rounded-xl shadow-md mb-4 relative overflow-hidden hover:shadow-lg transition">
-
                 <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] mb-4 ml-1">
                   <FaTag size={10} />
                   <span className="text-slate-700">Hot</span>
                   <span className="text-[#FDB813]">Deals</span>
                 </label>
-
                 <DealsSection />
               </div>
 

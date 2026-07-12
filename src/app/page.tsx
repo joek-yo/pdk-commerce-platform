@@ -133,28 +133,3 @@ const Pages: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-6 mt-12">
-        <div className="bg-white rounded-3xl p-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-white">
-          <span className="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-900 text-[9px] font-black uppercase tracking-[0.3em] mb-3">
-            {ui.bespokeSourcing?.badge || "BESPOKE SOURCING"}
-          </span>
-
-          <h2 className="text-2xl sm:text-3xl font-black mb-2 text-slate-900 tracking-tighter uppercase">
-            {ui.bespokeSourcing?.title || "Need Something Specific?"}
-          </h2>
-
-          <Link href="/custom-order">
-            <button className="group px-10 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 mx-auto mt-4 hover:bg-[#FDB813] hover:text-black transition-all cursor-pointer">
-              {ui.bespokeSourcing?.buttonText || "Request Custom Item"}
-              <FaArrowRight size={12} className="group-hover:translate-x-1 transition-transform"/>
-            </button>
-          </Link>
-        </div>
-      </div>
-
-      <SocialProof />
-    </main>
-  );
-};
-
-export default Pages;

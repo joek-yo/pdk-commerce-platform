@@ -1,9 +1,10 @@
 // src/lib/api.ts
 // Single entry point for all NestJS API calls.
+// All components and contexts must go through here — no raw fetch elsewhere.
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-// ── Types ──────────────────────────────────────────────────────────────────
+// ── Types (mirror your NestJS schemas exactly) ─────────────────────────────
 
 export interface DeliveryZone {
   name: string;
@@ -87,22 +88,11 @@ export interface ApiCategory {
 
 // ── Internal fetch helper ──────────────────────────────────────────────────
 
-async function apiFetch<T>(
-  path: string,
-  options: { slug?: string; revalidate?: number } = {}
-): Promise<T> {
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
-
-  // Inject tenant slug header for protected routes
-  if (options.slug) {
-    headers["x-tenant-slug"] = options.slug;
-  }
-
+async function apiFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
-    headers,
-    next: { revalidate: options.revalidate ?? 60 },
+    headers: { "Content-Type": "application/json" },
+    // SSR cache: revalidate every 60s so pages stay fresh without full rebuilds
+    next: { revalidate: 60 },
   });
 
   if (!res.ok) {
@@ -114,37 +104,116 @@ async function apiFetch<T>(
 
 // ── Business / Tenant ──────────────────────────────────────────────────────
 
+// Called by middleware.ts and TenantContext to resolve slug → business
 export async function getBusinessBySlug(slug: string): Promise<TenantBusiness> {
   return apiFetch<TenantBusiness>(`/businesses/slug/${slug}`);
 }
 
+// Called by TenantContext for lightweight storefront config only
 export async function getStorefront(businessId: string): Promise<StorefrontConfig> {
   return apiFetch<StorefrontConfig>(`/businesses/${businessId}/storefront`);
 }
 
-// ── Catalog ────────────────────────────────────────────────────────────────
+// ── Products ───────────────────────────────────────────────────────────────
 
-// Get all products for a tenant
-export async function getProducts(slug: string): Promise<ApiProduct[]> {
-  return apiFetch<ApiProduct[]>(`/catalog/products`, { slug });
+// All products for a tenant — replaces getAllProducts() from menu.json
+export async function getProducts(businessId: string): Promise<ApiProduct[]> {
+  return apiFetch<ApiProduct[]>(`/menu/products?businessId=${businessId}`);
 }
 
-// Get categories for a tenant
-export async function getCategories(slug: string): Promise<ApiCategory[]> {
-  const res = await apiFetch<{ success: boolean; categories: ApiCategory[] }>(
-    `/catalog/categories`,
-    { slug }
-  );
-  return res.categories ?? [];
+// Categories for a tenant — replaces getCategories() from menu.json
+export async function getCategories(businessId: string): Promise<ApiCategory[]> {
+  return apiFetch<ApiCategory[]>(`/menu/categories?businessId=${businessId}`);
 }
 
-// Get products by category
-export async function getProductsByCategory(
-  categoryId: string,
+// ── About ──────────────────────────────────────────────────────────────────
+
+export interface TeamMember {
+  name: string;
+  role: string;
+  photo?: string;
+  bio?: string;
+}
+
+export interface BusinessStat {
+  label: string;
+  value: string;
+}
+
+export interface BusinessValue {
+  title: string;
+  description: string;
+}
+
+export interface AboutData {
+  _id: string;
+  businessId: string;
+  headline: string;
+  subheadline: string;
+  coverImage?: string;
+  story: string;
+  mission: string;
+  vision: string;
+  values: BusinessValue[];
+  stats: BusinessStat[];
+  team: TeamMember[];
+  metaTitle?: string;
+  metaDescription?: string;
+  isPublished: boolean;
+}
+
+export async function getAbout(businessId: string): Promise<AboutData> {
+  return apiFetch<AboutData>(`/about/${businessId}`);
+}
+
+// ── Blog ───────────────────────────────────────────────────────────────────
+
+export interface BlogPost {
+  _id: string;
+  businessId: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string;
+  coverImage?: string;
+  author: string;
+  tags: string[];
+  isPublished: boolean;
+  publishedAt?: string;
+  createdAt: string;
+}
+
+export interface BlogPostsResult {
+  posts: BlogPost[];
+  total: number;
+  page: number;
+  pages: number;
+}
+
+export async function getBlogPosts(
+  businessId: string,
+  page = 1,
+  tag?: string
+): Promise<BlogPostsResult> {
+  const params = new URLSearchParams({
+    businessId,
+    page: String(page),
+    ...(tag ? { tag } : {}),
+  });
+  return apiFetch<BlogPostsResult>(`/blog?${params}`);
+}
+
+export async function getBlogPost(
+  businessId: string,
   slug: string
-): Promise<ApiProduct[]> {
-  return apiFetch<ApiProduct[]>(
-    `/catalog/products/category/${categoryId}`,
-    { slug }
-  );
+): Promise<BlogPost> {
+  return apiFetch<BlogPost>(`/blog/${businessId}/${slug}`);
+}
+
+export async function getBlogTags(businessId: string): Promise<string[]> {
+  return apiFetch<string[]>(`/blog/tags?businessId=${businessId}`);
+}
+
+export async function getFeaturedPost(businessId: string): Promise<BlogPost> {
+  return apiFetch<BlogPost>(`/blog/featured?businessId=${businessId}`);
 }

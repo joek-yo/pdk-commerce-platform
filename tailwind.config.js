@@ -8,12 +8,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "#F8F5F0",
-        foreground: "#1C1A18",
-        primary: "#3B2A23",
-        accent: "#C6A75E",
-        muted: "#EAE4DA",
-        border: "#D8D0C5",
+        background: "#0D0D0D",
+        surface: "#131313",
+        surface2: "#161616",
+        foreground: "#EDEDED",
+        subtext: "#9a9a9a",
+        muted: "#6a6a6a",
+        border: "#232323",
+        "border-strong": "#2e2e2e",
+        gold: "#D9A441",
+        danger: "#e08a8a",
+        whatsapp: "#5fbf8f",
       },
       spacing: {
         section: "4rem",

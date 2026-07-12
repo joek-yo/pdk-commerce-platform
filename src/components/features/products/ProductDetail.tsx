@@ -1,11 +1,10 @@
-// File: src/components/features/products/ProductDetail.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
 import {
   FaShoppingCart, FaTruck, FaShieldAlt, FaBolt,
   FaBoxOpen, FaPlus, FaMinus, FaWhatsapp, FaShareAlt,
-  FaArrowLeft
+  FaArrowLeft, FaStar
 } from "react-icons/fa";
 import { getBusinessData } from "@/lib/getBusinessData";
 import { useCart } from "@/context/CartContext";
@@ -27,7 +26,6 @@ const ProductDetail = ({ product }: { product: any }) => {
   const [isSticky, setIsSticky] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(product.variants ? product.variants[0] : null);
 
-  // ── READ quantity directly from cart ──
   const cartItem = cart.find((item) => item.id === product.id);
   const quantity = cartItem ? cartItem.quantity : 0;
   const displayQty = quantity || 1;
@@ -41,7 +39,7 @@ const ProductDetail = ({ product }: { product: any }) => {
 
   const maxStock = 20;
   const stockPercent = product.stock ? Math.min((product.stock / maxStock) * 100, 100) : 100;
-  const stockColor = product.stock <= 3 ? "bg-red-500" : product.stock <= 8 ? "bg-orange-400" : "bg-green-500";
+  const stockColor = product.stock <= 3 ? "bg-red-500" : product.stock <= 8 ? "bg-gold" : "bg-whatsapp";
 
   useEffect(() => {
     setActiveImg(product.image);
@@ -50,7 +48,6 @@ const ProductDetail = ({ product }: { product: any }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [product]);
 
-  // ── QUANTITY HANDLERS ──
   const handleIncrease = () => {
     const maxQty = product.stock || 99;
     if (cartItem) {
@@ -96,7 +93,7 @@ const ProductDetail = ({ product }: { product: any }) => {
       try {
         await navigator.share({ title: product.name, url });
       } catch {
-        // user cancelled — do nothing
+        // user cancelled
       }
     } else {
       await navigator.clipboard.writeText(url);
@@ -106,28 +103,28 @@ const ProductDetail = ({ product }: { product: any }) => {
   };
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen pb-32 pt-4">
+    <div className="bg-background min-h-screen pb-32 pt-4">
       <div className="max-w-6xl mx-auto px-4">
 
         {/* BREADCRUMB + BACK TO SHOP */}
         <div className="flex items-center justify-between mb-6">
-          <nav className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-400">
-            <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
+          <nav className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted">
+            <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
             <span>/</span>
-            <Link href="/menu" className="hover:text-slate-900 transition-colors">Shop</Link>
+            <Link href="/menu" className="hover:text-foreground transition-colors">Shop</Link>
             {product.category && (
               <>
                 <span>/</span>
-                <span className="text-slate-500">{product.category}</span>
+                <span className="text-subtext">{product.category}</span>
               </>
             )}
             <span>/</span>
-            <span className="text-slate-900 truncate max-w-[120px]">{product.name}</span>
+            <span className="text-foreground truncate max-w-[120px]">{product.name}</span>
           </nav>
 
           <button
             onClick={() => router.push("/menu")}
-            className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-all cursor-pointer"
+            className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted hover:text-foreground transition-all cursor-pointer"
           >
             <FaArrowLeft size={8} />
             <span>Back to Shop</span>
@@ -138,7 +135,7 @@ const ProductDetail = ({ product }: { product: any }) => {
 
           {/* ZONE A: GALLERY */}
           <div className="space-y-4">
-            <div className="aspect-square relative rounded-xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+            <div className="aspect-square relative rounded-xl bg-surface2 border border-border overflow-hidden">
               <img
                 src={activeImg}
                 alt={product.name}
@@ -146,18 +143,18 @@ const ProductDetail = ({ product }: { product: any }) => {
               />
 
               {discountPercent > 0 && (
-                <div className="absolute top-4 left-4 bg-red-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md">
+                <div className="absolute top-4 left-4 bg-gold text-black text-[10px] font-black px-2.5 py-1 rounded-md">
                   -{discountPercent}%
                 </div>
               )}
 
               {product.stock <= 5 && (
-                <div className="absolute top-4 right-4 flex items-center gap-2 bg-white/80 backdrop-blur px-3 py-1.5 rounded-full border border-red-100">
+                <div className="absolute top-4 right-4 flex items-center gap-2 bg-surface/90 backdrop-blur px-3 py-1.5 rounded-full border border-red-500/30">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                   </span>
-                  <span className="text-[9px] font-black text-red-600 uppercase tracking-tighter">
+                  <span className="text-[9px] font-black text-red-400 uppercase tracking-tighter">
                     Only {product.stock} Left
                   </span>
                 </div>
@@ -165,7 +162,7 @@ const ProductDetail = ({ product }: { product: any }) => {
 
               <button
                 onClick={handleShare}
-                className="absolute bottom-4 right-4 w-9 h-9 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 border border-slate-100 shadow-sm cursor-pointer transition-all hover:scale-110"
+                className="absolute bottom-4 right-4 w-9 h-9 bg-surface/90 backdrop-blur rounded-full flex items-center justify-center text-subtext hover:text-foreground border border-border shadow-sm cursor-pointer transition-all hover:scale-110"
               >
                 <FaShareAlt size={12} />
               </button>
@@ -176,7 +173,7 @@ const ProductDetail = ({ product }: { product: any }) => {
                 <button
                   key={i}
                   onClick={() => setActiveImg(img)}
-                  className={`w-16 h-16 rounded-lg border-2 transition-all overflow-hidden cursor-pointer ${activeImg === img ? "border-[#FDB813] bg-white shadow-md scale-110" : "border-transparent opacity-50"}`}
+                  className={`w-16 h-16 rounded-lg border-2 transition-all overflow-hidden cursor-pointer ${activeImg === img ? "border-gold bg-surface scale-110" : "border-transparent opacity-50"}`}
                 >
                   <img src={img} alt="angle" className="w-full h-full object-cover" />
                 </button>
@@ -188,52 +185,63 @@ const ProductDetail = ({ product }: { product: any }) => {
           <div className="flex flex-col justify-center space-y-4">
 
             <div className="flex items-center gap-3">
-              <span className="bg-[#FDB813] text-black text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
+              <span className="bg-gold/10 text-gold border border-gold/30 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
                 {product.category || "Premium Gear"}
               </span>
               {product.trending && (
-                <div className="flex items-center gap-1.5 text-orange-600 font-black text-[9px] uppercase tracking-widest">
-                  <span className="w-1.5 h-1.5 rounded-full bg-orange-600 animate-pulse"></span>
+                <div className="flex items-center gap-1.5 text-orange-400 font-black text-[9px] uppercase tracking-widest">
+                  <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"></span>
                   Trending
                 </div>
               )}
             </div>
 
-            <h1 className="text-3xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter leading-[0.9]">
+            <h1 className="text-3xl md:text-5xl font-black text-foreground uppercase tracking-tighter leading-[0.9]">
               {product.name}
             </h1>
 
+            {product.rating && (
+              <div className="flex items-center gap-2 text-xs text-subtext">
+                <span className="flex items-center gap-0.5 text-gold">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar key={i} size={11} className={i < Math.round(product.rating) ? "" : "opacity-25"} />
+                  ))}
+                </span>
+                <span>{product.rating.toFixed(1)} ({product.reviewCount || 0} reviews)</span>
+              </div>
+            )}
+
             <div className="flex items-baseline gap-3 flex-wrap">
-              <span className="text-3xl font-black text-slate-900 tracking-tighter italic">
+              <span className="text-3xl font-black text-foreground tracking-tighter italic">
                 KES {product.price.toLocaleString()}
               </span>
               {hasDiscount && (
-                <span className="text-lg text-slate-300 line-through font-bold">
+                <span className="text-lg text-muted line-through font-bold">
                   KES {product.oldPrice.toLocaleString()}
                 </span>
               )}
               {discountPercent > 0 && (
-                <span className="text-[10px] font-black text-red-500 bg-red-50 px-2 py-0.5 rounded-md">
+                <span className="text-[10px] font-black text-red-400 bg-red-500/10 px-2 py-0.5 rounded-md">
                   You save KES {(product.oldPrice - product.price).toLocaleString()}
                 </span>
               )}
             </div>
 
-            <p className="text-slate-500 font-medium leading-relaxed max-w-md text-sm">
+            <p className="text-subtext font-medium leading-relaxed max-w-md text-sm">
               {product.description}
             </p>
 
             {product.stock !== undefined && (
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-muted">
                     Stock Level
                   </span>
-                  <span className={`text-[9px] font-black uppercase ${product.stock <= 3 ? "text-red-500" : product.stock <= 8 ? "text-orange-500" : "text-green-600"}`}>
+                  <span className={`text-[9px] font-black uppercase ${product.stock <= 3 ? "text-red-400" : product.stock <= 8 ? "text-gold" : "text-whatsapp"}`}>
                     {product.stock <= 3 ? "Critical" : product.stock <= 8 ? "Low Stock" : "In Stock"} · {product.stock} units
                   </span>
                 </div>
-                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-surface2 rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${stockPercent}%` }}
@@ -245,14 +253,14 @@ const ProductDetail = ({ product }: { product: any }) => {
             )}
 
             {product.whatsInTheBox && (
-              <div className="bg-white border border-slate-200 p-4 rounded-xl">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 flex items-center gap-2 mb-3">
-                  <FaBoxOpen className="text-[#FDB813]" /> In the Box
+              <div className="bg-surface border border-border p-4 rounded-xl">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground flex items-center gap-2 mb-3">
+                  <FaBoxOpen className="text-gold" /> In the Box
                 </h4>
                 <div className="grid grid-cols-2 gap-2">
                   {product.whatsInTheBox.map((item: string, idx: number) => (
-                    <div key={idx} className="flex items-center gap-2 text-[11px] font-bold text-slate-600">
-                      <div className="w-1 h-1 rounded-full bg-[#FDB813]" />
+                    <div key={idx} className="flex items-center gap-2 text-[11px] font-bold text-subtext">
+                      <div className="w-1 h-1 rounded-full bg-gold" />
                       {item}
                     </div>
                   ))}
@@ -262,13 +270,13 @@ const ProductDetail = ({ product }: { product: any }) => {
 
             {product.variants && (
               <div className="space-y-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Configuration</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">Configuration</span>
                 <div className="flex flex-wrap gap-2">
                   {product.variants.map((v: string) => (
                     <button
                       key={v}
                       onClick={() => setSelectedVariant(v)}
-                      className={`px-5 py-2.5 rounded-lg border-2 text-[10px] font-black uppercase transition-all cursor-pointer ${selectedVariant === v ? "border-[#FDB813] bg-[#FDB813] text-black shadow-md scale-105" : "border-slate-200 text-slate-400 hover:border-slate-300 bg-white"}`}
+                      className={`px-5 py-2.5 rounded-lg border-2 text-[10px] font-black uppercase transition-all cursor-pointer ${selectedVariant === v ? "border-gold bg-gold text-black scale-105" : "border-border text-muted hover:border-border-strong bg-surface"}`}
                     >
                       {v}
                     </button>
@@ -279,27 +287,27 @@ const ProductDetail = ({ product }: { product: any }) => {
 
             {/* QUANTITY SELECTOR */}
             <div className="space-y-2">
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Quantity</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted ml-1">Quantity</span>
               <div className="flex items-center gap-3">
-                <div className="flex items-center bg-slate-900 rounded-lg p-0.5 shadow-md">
+                <div className="flex items-center bg-surface2 border border-border-strong rounded-lg p-0.5">
                   <button
                     onClick={handleDecrease}
-                    className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white cursor-pointer transition-colors"
+                    className="w-8 h-8 flex items-center justify-center text-subtext hover:text-foreground cursor-pointer transition-colors"
                   >
                     <FaMinus size={9} />
                   </button>
-                  <span className="w-8 text-center font-black text-sm text-white">
+                  <span className="w-8 text-center font-black text-sm text-foreground">
                     {displayQty}
                   </span>
                   <button
                     onClick={handleIncrease}
-                    className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white cursor-pointer transition-colors"
+                    className="w-8 h-8 flex items-center justify-center text-subtext hover:text-foreground cursor-pointer transition-colors"
                   >
                     <FaPlus size={9} />
                   </button>
                 </div>
-                <span className="text-[10px] text-slate-400 font-bold">
-                  Total: <span className="text-slate-900 font-black">KES {(product.price * displayQty).toLocaleString()}</span>
+                <span className="text-[10px] text-muted font-bold">
+                  Total: <span className="text-foreground font-black">KES {(product.price * displayQty).toLocaleString()}</span>
                 </span>
               </div>
             </div>
@@ -308,52 +316,51 @@ const ProductDetail = ({ product }: { product: any }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
                 onClick={handleAddToBag}
-                className="h-14 bg-white border-2 border-slate-900 text-slate-900 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-[#FDB813] hover:border-[#FDB813] hover:text-black transition-all active:scale-95 cursor-pointer shadow-sm"
+                className="h-14 bg-transparent border-2 border-border-strong text-foreground rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:border-gold hover:text-gold transition-all active:scale-95 cursor-pointer"
               >
                 <FaShoppingCart /> {cartItem ? "In Your Bag ✓" : "Add to Bag"}
               </button>
 
               <button
                 onClick={handleBuyNow}
-                className="h-14 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-black transition-all active:scale-95 shadow-lg shadow-slate-900/30 cursor-pointer"
+                className="h-14 bg-gold text-black rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:brightness-110 transition-all active:scale-95 cursor-pointer"
               >
-                <FaBolt className="text-[#FDB813]" /> Buy It Now
+                <FaBolt /> Buy It Now
               </button>
             </div>
 
             {/* WHATSAPP */}
             <button
               onClick={handleWhatsAppInquiry}
-              className="w-full h-11 border-2 border-green-500 text-green-600 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-green-500 hover:text-white transition-all active:scale-95 cursor-pointer text-[10px]"
+              className="w-full h-11 border-2 border-whatsapp text-whatsapp rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-whatsapp hover:text-black transition-all active:scale-95 cursor-pointer text-[10px]"
             >
               <FaWhatsapp size={14} /> Ask About This Item
             </button>
 
             {/* TRUST */}
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200/60">
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-[#FDB813]">
+                <div className="w-9 h-9 rounded-full bg-surface2 flex items-center justify-center text-gold">
                   <FaTruck size={14} />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black uppercase text-slate-900 leading-none mb-1">Swift Ship</span>
-                  <span className="text-[9px] text-slate-400 uppercase tracking-tighter">{business?.location} based</span>
+                  <span className="text-[10px] font-black uppercase text-foreground leading-none mb-1">Swift Ship</span>
+                  <span className="text-[9px] text-muted uppercase tracking-tighter">{business?.location} based</span>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-[#FDB813]">
+                <div className="w-9 h-9 rounded-full bg-surface2 flex items-center justify-center text-gold">
                   <FaShieldAlt size={14} />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black uppercase text-slate-900 leading-none mb-1">Authentic</span>
-                  <span className="text-[9px] text-slate-400 uppercase tracking-tighter">Verified Gear</span>
+                  <span className="text-[10px] font-black uppercase text-foreground leading-none mb-1">Authentic</span>
+                  <span className="text-[9px] text-muted uppercase tracking-tighter">Verified Gear</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* PHASE 2: RELATED PRODUCTS */}
         {product.category && (
           <RelatedProducts
             currentProductId={product.id}
@@ -362,7 +369,6 @@ const ProductDetail = ({ product }: { product: any }) => {
           />
         )}
 
-        {/* PHASE 3: RECENTLY VIEWED */}
         <RecentlyViewed currentProductId={product.id} />
 
       </div>
@@ -374,42 +380,42 @@ const ProductDetail = ({ product }: { product: any }) => {
             initial={{ y: 100 }}
             animate={{ y: 0 }}
             exit={{ y: 100 }}
-            className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-slate-100 p-4 flex items-center justify-between z-[100] md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.08)]"
+            className="fixed bottom-0 left-0 w-full bg-surface/95 backdrop-blur-xl border-t border-border p-4 flex items-center justify-between z-[100] md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.3)]"
           >
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 bg-slate-50 rounded-lg overflow-hidden">
+              <div className="w-11 h-11 bg-surface2 rounded-lg overflow-hidden">
                 <img src={product.image} className="w-full h-full object-cover" alt="thumb" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                <span className="text-[9px] font-black text-muted uppercase tracking-widest">
                   {displayQty} × KES {product.price.toLocaleString()}
                 </span>
-                <span className="font-black text-sm text-slate-900 italic">
+                <span className="font-black text-sm text-foreground italic">
                   KES {(product.price * displayQty).toLocaleString()}
                 </span>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex items-center bg-slate-800 rounded-lg p-0.5">
+              <div className="flex items-center bg-surface2 border border-border-strong rounded-lg p-0.5">
                 <button
                   onClick={handleDecrease}
-                  className="w-7 h-7 flex items-center justify-center text-white/50 hover:text-white cursor-pointer transition-colors"
+                  className="w-7 h-7 flex items-center justify-center text-subtext hover:text-foreground cursor-pointer transition-colors"
                 >
                   <FaMinus size={8} />
                 </button>
-                <span className="w-6 text-center font-black text-xs text-white">
+                <span className="w-6 text-center font-black text-xs text-foreground">
                   {displayQty}
                 </span>
                 <button
                   onClick={handleIncrease}
-                  className="w-7 h-7 flex items-center justify-center text-white/50 hover:text-white cursor-pointer transition-colors"
+                  className="w-7 h-7 flex items-center justify-center text-subtext hover:text-foreground cursor-pointer transition-colors"
                 >
                   <FaPlus size={8} />
                 </button>
               </div>
               <button
                 onClick={handleBuyNow}
-                className="bg-[#FDB813] text-black h-11 px-5 rounded-lg font-black text-[10px] uppercase tracking-widest active:scale-95 cursor-pointer shadow-lg"
+                className="bg-gold text-black h-11 px-5 rounded-lg font-black text-[10px] uppercase tracking-widest active:scale-95 cursor-pointer"
               >
                 Checkout
               </button>
@@ -425,9 +431,9 @@ const ProductDetail = ({ product }: { product: any }) => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl z-[100] border border-white/10 flex items-center gap-3"
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-surface text-foreground px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl z-[100] border border-border-strong flex items-center gap-3"
           >
-            <div className="w-5 h-5 bg-[#FDB813] rounded-full flex items-center justify-center">
+            <div className="w-5 h-5 bg-gold rounded-full flex items-center justify-center">
               <FaShoppingCart size={10} className="text-black" />
             </div>
             Item Added to Bag
@@ -442,10 +448,10 @@ const ProductDetail = ({ product }: { product: any }) => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-white border border-slate-200 text-slate-900 px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl z-[100] flex items-center gap-3"
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-surface border border-border-strong text-foreground px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl z-[100] flex items-center gap-3"
           >
-            <div className="w-5 h-5 bg-slate-900 rounded-full flex items-center justify-center">
-              <FaShareAlt size={9} className="text-white" />
+            <div className="w-5 h-5 bg-gold rounded-full flex items-center justify-center">
+              <FaShareAlt size={9} className="text-black" />
             </div>
             Link Copied!
           </motion.div>
