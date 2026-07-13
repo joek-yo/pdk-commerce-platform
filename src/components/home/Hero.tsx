@@ -15,7 +15,7 @@ const Hero: React.FC = () => {
   const hero = ui?.hero || {};
 
   return (
-    <section className="w-screen h-[85vh] md:h-[75vh] relative flex items-center justify-center overflow-hidden">
+    <section className="w-full h-[85vh] md:h-[75vh] relative flex items-center justify-center overflow-hidden">
 
       {business?.banner && (
         <Image

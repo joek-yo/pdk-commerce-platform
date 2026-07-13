@@ -2,24 +2,24 @@
 
 import React from "react";
 import { FaTimes } from "react-icons/fa";
-import { getBusinessData } from "@/lib/getBusinessData";
+import { useTenant } from "@/context/TenantContext";
 
 interface Props {
   onClose: () => void;
 }
 
 const DrawerHeader: React.FC<Props> = ({ onClose }) => {
-  const business = getBusinessData();
+  const { name, storefront } = useTenant();
 
   return (
     <div className="flex items-center justify-between px-4 py-4 border-b border-border">
       <div>
         <h2 className="font-black text-sm text-foreground">
-          {business?.name || "Prime Deals"}
+          {name || "Prime Deals"}
         </h2>
 
         <p className="text-[10px] text-subtext">
-          {business?.tagline || ""}
+          {storefront?.tagline || ""}
         </p>
       </div>
 
