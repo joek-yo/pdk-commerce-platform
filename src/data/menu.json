@@ -11,7 +11,7 @@
     "banner": "/images/hero-banner.jpg",
     "drawerBanner": "/images/drawer-hero.jpg",
     "socialProof": [
-      { "id": 1, "text": "New arrivals landing weekly \u2014 check back often", "time": "Fresh Stock" },
+      { "id": 1, "text": "New arrivals landing weekly — check back often", "time": "Fresh Stock" },
       { "id": 2, "text": "Trusted by hundreds of happy customers across Nairobi", "time": "Verified Order" },
       { "id": 3, "text": "Fast dispatch on all orders, every single day", "time": "In Stock" },
       { "id": 4, "text": "Join our growing community of smart shoppers in Kenya", "time": "Community Pick" }
@@ -53,7 +53,7 @@
   },
   "ui": {
     "announcement": {
-      "text": "Great Products, Great Prices \u2014 Delivered Across Kenya.",
+      "text": "Great Products, Great Prices — Delivered Across Kenya.",
       "active": true
     },
     "flashSale": {
@@ -73,7 +73,7 @@
     "deals": {
       "freeDeliveryThreshold": 10000,
       "flashSaleActive": true,
-      "flashSaleText": "Flash Sale Active \ud83d\udd25 Up to 20% Off",
+      "flashSaleText": "Flash Sale Active 🔥 Up to 20% Off",
       "deliveryText": "Free Delivery over KES 10,000",
       "urgencyText": "Limited stock available on selected items"
     }
@@ -88,17 +88,45 @@
       "items": [
         { "id": 801, "name": "Sokany SK-4009 4-in-1 Slow Juice Extractor", "price": 9999, "oldPrice": 11499, "discountPercent": 13, "image": "/images/sokany-sk4009-juicer.jpeg", "description": "One Machine, Four Jobs Done Right. An 800W powerhouse that juices, grinds beans, and grinds meat with one motor. One-key rotation with two gears keeps operation simple, and the 304 stainless steel blade is built for durability and precision. Perfect for households that want a juicer, grinder, and mini food prep station without buying three separate machines.", "available": true, "featured": true, "trending": true, "stock": 6 },
         { "id": 802, "name": "Sokany SK-01005 Slow Juicer", "price": 9999, "oldPrice": 11499, "discountPercent": 13, "image": "/images/sokany-sk01005-slow-juicer.jpeg", "description": "Nutrient-Rich Juice, the Slow Way. Designed for health and nutrition with fine grinding capabilities, letting you enjoy fresh juices like watermelon, orange, and dragon fruit. Runs on an 800W motor at a steady 75rpm with a wide feed chute for easy loading, plus overheat protection and automatic shutdown for safety.", "available": true, "featured": true, "trending": false, "stock": 5 },
-        { "id": 803, "name": "Sokany SK-03031 Multi-Purpose Blender (2-in-1)", "price": 3799, "oldPrice": 4299, "discountPercent": 12, "image": "/images/sokany-sk03031-blender.jpeg", "description": "5 Speeds. 2 Jobs. Zero Compromise. An 800W motor with 7025 copper-aluminum alloy construction and temperature control, offering 2-in-1 functionality \u2014 blending cup plus grinder \u2014 in a 1.5L large glass cup with 5 adjustable speed settings. Smoothies one minute, ground coffee the next.", "available": true, "featured": true, "trending": true, "stock": 7 },
+        { "id": 803, "name": "Sokany SK-03031 Multi-Purpose Blender (2-in-1)", "price": 3799, "oldPrice": 4299, "discountPercent": 12, "image": "/images/sokany-sk03031-blender.jpeg", "description": "5 Speeds. 2 Jobs. Zero Compromise. An 800W motor with 7025 copper-aluminum alloy construction and temperature control, offering 2-in-1 functionality — blending cup plus grinder — in a 1.5L large glass cup with 5 adjustable speed settings. Smoothies one minute, ground coffee the next.", "available": true, "featured": true, "trending": true, "stock": 7 },
         { "id": 804, "name": "Sokany SK-03041 Multi-Purpose Blender (2-in-1)", "price": 3299, "oldPrice": 3799, "discountPercent": 13, "image": "/images/sokany-sk03041-blender.jpeg", "description": "Everyday Blending, Built Solid. A dependable jug blender with a 1.6-litre jug and sleek black housing, ideal for smoothies, sauces, and other everyday kitchen jobs, with simple, reliable mechanical controls. The practical daily-use option in the lineup.", "available": true, "featured": false, "trending": false, "stock": 4 },
-        { "id": 805, "name": "Sokany SK-03080 Multi-Purpose Blender", "price": 2599, "oldPrice": 2999, "discountPercent": 13, "image": "/images/sokany-sk03080-blender.jpeg", "description": "Compact Power for Every Kitchen. Part of Sokany's multi-purpose blender family \u2014 stainless steel blades, multi-speed control, built for the everyday mix of smoothies, sauces, and light grinding jobs. The budget-friendly pick for anyone just starting to kit out their kitchen.", "available": true, "featured": false, "trending": true, "stock": 7 },
+        { "id": 805, "name": "Sokany SK-03080 Multi-Purpose Blender", "price": 2599, "oldPrice": 2999, "discountPercent": 13, "image": "/images/sokany-sk03080-blender.jpeg", "description": "Compact Power for Every Kitchen. Part of Sokany's multi-purpose blender family — stainless steel blades, multi-speed control, built for the everyday mix of smoothies, sauces, and light grinding jobs. The budget-friendly pick for anyone just starting to kit out their kitchen.", "available": true, "featured": false, "trending": true, "stock": 7 },
         { "id": 806, "name": "Luma Bella LB-53021 Multipurpose Blender", "price": 2999, "oldPrice": 3499, "discountPercent": 14, "image": "/images/lumabella-lb53021-blender.jpeg", "description": "Sleek Blending, Everyday Price. A 1.5-litre blender with a grinder attachment for versatile kitchen use, in a compact, stylish housing that's easy to store and clean. A great value pick for first-time buyers.", "available": true, "featured": false, "trending": false, "stock": 6 },
-        { "id": 807, "name": "Sokany SK-5111 Electric Stove", "price": 1749, "oldPrice": 1999, "discountPercent": 12, "image": "/images/sokany-sk5111-stove.jpeg", "description": "Portable Power, Any Countertop. A compact single-plate electric hot stove \u2014 stainless-steel styling that's stylish and easy to clean, with adjustable temperature control for everyday cooking. Perfect as a backup burner, for students, or for small kitchens needing extra cooking space.", "available": true, "featured": false, "trending": true, "stock": 5 },
-        { "id": 808, "name": "Sokany SK-07066 Premium Egg Boiler", "price": 1999, "oldPrice": 2199, "discountPercent": 9, "image": "/images/sokany-sk07066-egg-boiler.jpeg", "description": "Perfect Eggs, Every Single Time. A quick, no-fuss egg boiler that takes the guesswork out of breakfast \u2014 consistent results with minimal cleanup, ideal for busy mornings.", "available": true, "featured": true, "trending": false, "stock": 4 }
+        { "id": 807, "name": "Sokany SK-5111 Electric Stove", "price": 1749, "oldPrice": 1999, "discountPercent": 12, "image": "/images/sokany-sk5111-stove.jpeg", "description": "Portable Power, Any Countertop. A compact single-plate electric hot stove — stainless-steel styling that's stylish and easy to clean, with adjustable temperature control for everyday cooking. Perfect as a backup burner, for students, or for small kitchens needing extra cooking space.", "available": true, "featured": false, "trending": true, "stock": 5 },
+        { "id": 808, "name": "Sokany SK-07066 Premium Egg Boiler", "price": 1999, "oldPrice": 2199, "discountPercent": 9, "image": "/images/sokany-sk07066-egg-boiler.jpeg", "description": "Perfect Eggs, Every Single Time. A quick, no-fuss egg boiler that takes the guesswork out of breakfast — consistent results with minimal cleanup, ideal for busy mornings.", "available": true, "featured": true, "trending": false, "stock": 4 },
+        { "id": 809, "name": "An-Nuo Steam Iron (AN-128)", "price": 1299, "oldPrice": 1499, "discountPercent": 13, "image": "/images/annuo-an128-iron.jpeg", "description": "Wrinkles Don't Stand a Chance. A stainless steel soleplate glides smoothly over any fabric, an adjustable temperature control disc keeps delicate materials safe from scorching, and a 360° swivel cord moves with your hand instead of against it. A pilot light shows when it's heating, so you're never guessing.", "available": true, "featured": true, "trending": false, "stock": 6 },
+        { "id": 810, "name": "Double Ended Circulating Fan (S18)", "price": 1199, "oldPrice": 1399, "discountPercent": 14, "image": "/images/s18-circulating-fan.jpeg", "description": "Airflow From Both Ends. A compact circulating fan with a dual/double-ended design that pulls in and pushes out air for stronger overall circulation than a standard single-direction fan — great for hot Nairobi afternoons when you need real airflow, not just noise.", "available": true, "featured": false, "trending": true, "stock": 5 }
+      ]
+    },
+    {
+      "id": "beauty-personal-care",
+      "name": "Beauty & Personal Care",
+      "icon": "sparkles",
+      "image": "/images/waer-wa08204-straightener.jpeg",
+      "hot": true,
+      "items": [
+        { "id": 1001, "name": "WAER Professional Digital Hair Straightener/Curler (WA-08204)", "price": 1349, "oldPrice": 1549, "discountPercent": 13, "image": "/images/waer-wa08204-straightener.jpeg", "description": "One Tool. Every Style. A professional-grade styling tool built to straighten, curl, and wave. Ceramic plates heat evenly and glide through hair without dragging or snagging, meaning less damage and more shine, with quick heat-up and digital control for precise, damage-conscious styling.", "available": true, "featured": true, "trending": true, "stock": 6 },
+        { "id": 1002, "name": "WAER Solid Copper Straightening Comb (WA-6140)", "price": 1999, "oldPrice": 2299, "discountPercent": 13, "image": "/images/waer-wa6140-comb.jpeg", "description": "The Classic That Never Lets You Down. Solid copper construction holds and distributes heat far more evenly than cheap alloy combs, meaning fewer hot spots, fewer snags, and a smoother, longer-lasting press. Fine teeth for close, thorough styling — a stylist staple trusted for decades.", "available": true, "featured": true, "trending": false, "stock": 5 },
+        { "id": 1003, "name": "WAER Professional Digital Hair Curler (WA-08159)", "price": 1499, "oldPrice": 1699, "discountPercent": 12, "image": "/images/waer-wa08159-curler.jpeg", "description": "Bounce. Volume. Curls That Hold. A ceramic barrel heats fast and evenly, protecting hair from the frizz and damage cheap curlers cause, while a digital temperature display lets you dial in exactly the right heat for your hair type. Great for beach waves, tight curls, or loose glam.", "available": true, "featured": false, "trending": true, "stock": 7 }
+      ]
+    },
+    {
+      "id": "electronics-gadgets",
+      "name": "Electronics & Gadgets",
+      "icon": "zap",
+      "image": "/images/rbt-h20-speaker.jpeg",
+      "hot": true,
+      "items": [
+        { "id": 1101, "name": "Newvew Solar Handheld Lamp (NV-H10)", "price": 1699, "oldPrice": 1999, "discountPercent": 15, "image": "/images/newvew-nvh10-lamp.jpeg", "description": "Power Cut? Say Less. Charges off the sun during the day and tops up fast off USB when there's no sun around, so it's never truly dead. A high-output LED throws a strong, focused beam for long distances, plus a side panel light for wide area glow when you need to light up a whole room.", "available": true, "featured": true, "trending": true, "stock": 6 },
+        { "id": 1102, "name": "RBT Wireless Speaker (RBT-H20) — 30W", "price": 2399, "oldPrice": 2799, "discountPercent": 14, "image": "/images/rbt-h20-speaker.jpeg", "description": "Loud. Clear. Goes Wherever You Go. A true 30W RMS output with 57mm drivers fills a room or yard with clean, punchy sound. Bluetooth 5.0 keeps the connection stable up to 10m away, a 4000mAh battery keeps the party going for hours, and IPX6 splash resistance means rain won't kill it.", "available": true, "featured": true, "trending": true, "stock": 5 },
+        { "id": 1103, "name": "LN Wireless Speaker (F19)", "price": 2199, "oldPrice": 2499, "discountPercent": 12, "image": "/images/ln-f19-speaker.jpeg", "description": "Simple, Solid, Dependable Sound. A compact wireless speaker for people who just want clear, reliable sound without the bulk or price tag of the big brands. Bluetooth pairing gets you streaming in seconds, with a rechargeable battery for on-the-go use.", "available": true, "featured": false, "trending": false, "stock": 7 },
+        { "id": 1104, "name": "U-Shape Neck Phone Holder", "price": 1499, "oldPrice": 1699, "discountPercent": 12, "image": "/images/u-shape-neck-holder.jpeg", "description": "Hands-Free, Neck-Friendly, Endlessly Useful. Wraps comfortably around your neck and holds your phone steady at the perfect viewing angle — no more arm cramps during long video calls, cooking tutorials, gym sessions, or binge-watching in bed. Flexible, adjustable, and pocket-portable.", "available": true, "featured": false, "trending": true, "stock": 4 }
       ]
     }
   ],
   "bundles": [
     { "id": 901, "name": "Sokany Breakfast Starter Pack", "price": 3399, "oldPrice": 3748, "image": "/images/breakfast-bundle.jpeg", "description": "Egg Boiler + Electric Stove. Everything you need for quick, easy mornings.", "available": true, "featured": true, "isBundle": true },
-    { "id": 902, "name": "Complete Kitchen Kit", "price": 13499, "oldPrice": 15047, "image": "/images/kitchen-kit-bundle.jpeg", "description": "Slow Juicer + Multi-Purpose Blender + Electric Stove. A full kitchen setup in one pack \u2014 juice, blend, and cook, covered.", "available": true, "featured": true, "isBundle": true }
+    { "id": 902, "name": "Complete Kitchen Kit", "price": 13499, "oldPrice": 15047, "image": "/images/kitchen-kit-bundle.jpeg", "description": "Slow Juicer + Multi-Purpose Blender + Electric Stove. A full kitchen setup in one pack — juice, blend, and cook, covered.", "available": true, "featured": true, "isBundle": true },
+    { "id": 903, "name": "Hair Styling Combo", "price": 3199, "oldPrice": 3348, "image": "/images/hair-styling-combo.jpeg", "description": "Copper Straightening Comb + Digital Straightener/Curler. Press it deep, then style it sharp — everything you need for a complete, salon-style finish at home.", "available": true, "featured": true, "isBundle": true }
   ]
 }
