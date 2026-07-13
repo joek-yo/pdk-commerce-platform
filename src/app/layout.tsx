@@ -49,6 +49,11 @@ const fallbackBusiness: TenantBusiness = {
 };
 
 // ── Dynamic metadata per tenant ────────────────────────────────────────────
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export async function generateMetadata() {
   const headersList = await headers();
   const businessId = headersList.get("x-business-id");
