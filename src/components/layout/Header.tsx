@@ -35,7 +35,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="bg-background text-foreground shadow-xl fixed top-0 left-0 w-full z-50 border-b border-border">
+      <header className="bg-background text-foreground shadow-xl fixed top-0 left-0 w-full z-50 border-b border-border" style={{ position: "fixed", top: 0, left: 0, width: "100%", zIndex: 50, backgroundColor: "#0D0D0D" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* MOBILE */}
