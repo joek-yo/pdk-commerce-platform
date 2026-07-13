@@ -5,6 +5,7 @@ import { CartProvider } from "@/context/CartContext";
 import { TenantProvider } from "@/context/TenantContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import Header from "@/components/layout/Header";
+import GlobalSearch from "@/components/home/GlobalSearch";
 import Footer from "@/components/layout/Footer";
 import MiniCartDrawer from "@/components/features/cart/MiniCartDrawer";
 import CartToast from "@/components/features/cart/CartToast";
@@ -102,6 +103,7 @@ export default async function RootLayout({
         <TenantProvider business={business}>
           <CartProvider>
             <Header />
+            <GlobalSearch />
             <MiniCartDrawer />
             <CartToast />
 

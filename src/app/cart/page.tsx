@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import menuData from "@/data/menu.json";
 import ProductCard from "@/components/home/ProductCard";
-import { 
-  FaTrashAlt, FaPlus, FaMinus, FaChevronRight, FaChevronLeft, 
+import {
+  FaTrashAlt, FaPlus, FaMinus, FaChevronRight, FaChevronLeft,
   FaShoppingCart, FaPenNib, FaLightbulb, FaArrowLeft, FaTruck
 } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -38,7 +38,7 @@ const CartPage: React.FC = () => {
     );
     const shuffled = [...filteredItems].sort(() => 0.5 - Math.random()).slice(0, 8);
     setSuggestedDeals(shuffled);
-  }, [cart.length]); 
+  }, [cart.length]);
 
   const handleProceed = () => {
     if (cart.length === 0 && !customOrder) {
@@ -58,32 +58,32 @@ const CartPage: React.FC = () => {
   };
 
   const sectionClasses =
-    "bg-white border-l-4 border-l-[#FDB813] border-y border-r border-slate-200 p-4 rounded-xl shadow-sm mb-4 relative overflow-hidden";
+    "bg-surface border-l-4 border-l-gold border-y border-r border-border p-4 rounded-xl shadow-sm mb-4 relative overflow-hidden";
 
   const labelClasses =
-    "flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.1em] text-slate-500 mb-2 ml-1";
+    "flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.1em] text-subtext mb-2 ml-1";
 
   const inputStyle =
-    "w-full bg-slate-50 border border-slate-200 p-3 rounded-lg text-slate-900 font-bold text-sm placeholder:text-slate-300 focus:bg-white focus:border-[#FDB813] outline-none transition-all duration-200 cursor-pointer";
+    "w-full bg-surface2 border border-border p-3 rounded-lg text-foreground font-bold text-sm placeholder:text-muted focus:bg-surface focus:border-gold outline-none transition-all duration-200 cursor-pointer";
 
   return (
-    <div className="min-h-screen bg-[#F1F5F9] text-slate-900 pt-12 pb-32 px-4 font-sans">
+    <div className="min-h-screen bg-background text-foreground pt-12 pb-32 px-4 font-sans">
       <div className="max-w-2xl mx-auto">
 
         {/* HEADER */}
         <div className="mb-6 flex justify-between items-end px-1">
           <div>
-            <h1 className="text-3xl font-black tracking-tighter text-slate-900 leading-none">
-              My <span className="text-[#FDB813]">Bag</span>
+            <h1 className="text-3xl font-black tracking-tighter text-foreground leading-none">
+              My <span className="text-gold">Bag</span>
             </h1>
-            <p className="text-slate-400 font-black text-[9px] uppercase tracking-[0.2em] mt-1">
+            <p className="text-subtext font-black text-[9px] uppercase tracking-[0.2em] mt-1">
               {cart.length} items
             </p>
           </div>
 
           <button
             onClick={() => router.push("/menu")}
-            className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-all cursor-pointer"
+            className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-subtext hover:text-foreground transition-all cursor-pointer"
           >
             <FaArrowLeft size={8} />
             <span>Back to Shop</span>
@@ -92,29 +92,29 @@ const CartPage: React.FC = () => {
 
         {/* PROGRESS */}
         {cart.length > 0 && (
-          <div className="bg-white border border-slate-200 p-4 rounded-xl mb-6 shadow-sm">
+          <div className="bg-surface border border-border p-4 rounded-xl mb-6 shadow-sm">
             <div className="flex justify-between items-center mb-2">
               <div className="flex items-center gap-2">
                 <FaTruck
-                  className={remaining <= 0 ? "text-green-500" : "text-[#FDB813]"}
+                  className={remaining <= 0 ? "text-whatsapp" : "text-gold"}
                   size={12}
                 />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">
+                <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
                   {remaining > 0
                     ? `Add KES ${remaining.toLocaleString()} for Free Delivery`
                     : "Free Delivery Unlocked!"}
                 </span>
               </div>
-              <span className="text-[10px] font-black text-slate-400">
+              <span className="text-[10px] font-black text-subtext">
                 {Math.round(progress)}%
               </span>
             </div>
 
-            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-2 w-full bg-surface2 rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
-                className="h-full bg-[#FDB813] cursor-pointer"
+                className="h-full bg-gold cursor-pointer"
               />
             </div>
           </div>
@@ -126,9 +126,9 @@ const CartPage: React.FC = () => {
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="bg-white border border-slate-200 p-3 rounded-xl flex gap-4 shadow-sm relative group cursor-pointer hover:shadow-md transition"
+                className="bg-surface border border-border p-3 rounded-xl flex gap-4 shadow-sm relative group cursor-pointer hover:shadow-md transition"
               >
-                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-slate-50 flex-shrink-0 border border-slate-100 cursor-pointer">
+                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-surface2 flex-shrink-0 border border-border cursor-pointer">
                   <Image
                     src={item.image || "/images/placeholder.jpg"}
                     alt={item.name}
@@ -138,47 +138,47 @@ const CartPage: React.FC = () => {
                 </div>
 
                 <div className="flex-1 flex flex-col justify-center min-w-0">
-                  <h3 className="font-black text-slate-900 text-sm sm:text-base leading-tight truncate mb-1 cursor-pointer">
+                  <h3 className="font-black text-foreground text-sm sm:text-base leading-tight truncate mb-1 cursor-pointer">
                     {item.name}
                   </h3>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold text-slate-400">
+                    <span className="text-[10px] font-bold text-subtext">
                       Unit:
                     </span>
-                    <p className="text-[#FDB813] font-black text-xs">
+                    <p className="text-gold font-black text-xs">
                       KES {item.price.toLocaleString()}
                     </p>
                   </div>
 
-                  <p className="mt-2 text-slate-900 font-black text-lg tracking-tighter">
+                  <p className="mt-2 text-foreground font-black text-lg tracking-tighter">
                     KES {(item.price * item.quantity).toLocaleString()}
                   </p>
                 </div>
 
-                <div className="flex flex-col items-end justify-between border-l border-slate-100 pl-3 py-1">
+                <div className="flex flex-col items-end justify-between border-l border-border pl-3 py-1">
                   <button
                     onClick={() => removeFromCart(item.id)}
-                    className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-red-500 transition-colors cursor-pointer"
+                    className="w-8 h-8 flex items-center justify-center text-muted hover:text-danger transition-colors cursor-pointer"
                   >
                     <FaTrashAlt size={12} />
                   </button>
 
-                  <div className="flex items-center bg-slate-900 rounded-lg p-0.5 shadow-md cursor-pointer">
+                  <div className="flex items-center bg-foreground rounded-lg p-0.5 shadow-md cursor-pointer">
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="w-7 h-7 flex items-center justify-center text-white/40 hover:text-white cursor-pointer"
+                      className="w-7 h-7 flex items-center justify-center text-background/50 hover:text-background cursor-pointer"
                     >
                       <FaMinus size={8} />
                     </button>
 
-                    <span className="w-6 text-center font-black text-[10px] text-white">
+                    <span className="w-6 text-center font-black text-[10px] text-background">
                       {item.quantity}
                     </span>
 
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="w-7 h-7 flex items-center justify-center text-white/40 hover:text-white cursor-pointer"
+                      className="w-7 h-7 flex items-center justify-center text-background/50 hover:text-background cursor-pointer"
                     >
                       <FaPlus size={8} />
                     </button>
@@ -188,9 +188,9 @@ const CartPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="bg-white border border-slate-200 rounded-xl text-center py-12 mb-8 cursor-pointer">
-            <FaShoppingCart className="mx-auto text-slate-200 mb-3" size={32} />
-            <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+          <div className="bg-surface border border-border rounded-xl text-center py-12 mb-8 cursor-pointer">
+            <FaShoppingCart className="mx-auto text-muted mb-3" size={32} />
+            <h2 className="text-[10px] font-black text-subtext uppercase tracking-widest">
               Empty Bag
             </h2>
           </div>
@@ -200,8 +200,8 @@ const CartPage: React.FC = () => {
         {suggestedDeals.length > 0 && (
           <div className="mb-10 relative">
             <div className="flex justify-between items-center mb-4 px-1">
-              <h2 className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-900 flex items-center gap-2">
-                <FaLightbulb className="text-[#FDB813]" />
+              <h2 className="text-[9px] font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-2">
+                <FaLightbulb className="text-gold" />
                 You Might Also Like
               </h2>
             </div>
@@ -209,14 +209,14 @@ const CartPage: React.FC = () => {
             <div className="relative group/nav">
               <button
                 onClick={() => scrollDeals("left")}
-                className="absolute left-[-12px] top-1/2 -translate-y-1/2 z-40 w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-white shadow-xl hover:bg-[#FDB813] hover:text-black active:scale-90 cursor-pointer border-2 border-white"
+                className="absolute left-[-12px] top-1/2 -translate-y-1/2 z-40 w-10 h-10 flex items-center justify-center rounded-full bg-foreground text-background shadow-xl hover:bg-gold active:scale-90 cursor-pointer border-2 border-background"
               >
                 <FaChevronLeft size={12} />
               </button>
 
               <button
                 onClick={() => scrollDeals("right")}
-                className="absolute right-[-12px] top-1/2 -translate-y-1/2 z-40 w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-white shadow-xl hover:bg-[#FDB813] hover:text-black active:scale-90 cursor-pointer border-2 border-white"
+                className="absolute right-[-12px] top-1/2 -translate-y-1/2 z-40 w-10 h-10 flex items-center justify-center rounded-full bg-foreground text-background shadow-xl hover:bg-gold active:scale-90 cursor-pointer border-2 border-background"
               >
                 <FaChevronRight size={12} />
               </button>
@@ -238,35 +238,19 @@ const CartPage: React.FC = () => {
           </div>
         )}
 
-        {/* CUSTOM */}
-        <div className="mb-12">
-          <section className={sectionClasses}>
-            <label className={labelClasses}>
-              <FaPenNib size={9} /> Custom Sourcing
-            </label>
-
-            <textarea
-              value={customOrder}
-              onChange={(e) => setCustomOrder(e.target.value)}
-              className={inputStyle + " min-h-[60px] resize-none"}
-              placeholder="Searching for something specific?"
-            />
-          </section>
-        </div>
-
         {/* CHECKOUT */}
-        <div className="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+        <div className="fixed bottom-0 left-0 w-full bg-surface border-t border-border p-4 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.1)]">
           <div className="max-w-2xl mx-auto flex items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="text-[9px] font-black text-slate-400 uppercase">
+                <span className="text-[9px] font-black text-subtext uppercase">
                   Total Payable
                 </span>
               </div>
 
               <div className="flex items-baseline gap-1">
-                <span className="text-xs font-bold text-slate-400">KES</span>
-                <span className="text-2xl font-black text-slate-900 tracking-tighter tabular-nums">
+                <span className="text-xs font-bold text-subtext">KES</span>
+                <span className="text-2xl font-black text-foreground tracking-tighter tabular-nums">
                   {subtotal.toLocaleString()}
                 </span>
               </div>
@@ -274,7 +258,7 @@ const CartPage: React.FC = () => {
 
             <button
               onClick={handleProceed}
-              className="flex-1 max-w-[240px] bg-[#FDB813] text-black h-14 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-yellow-500 transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95 cursor-pointer"
+              className="flex-1 max-w-[240px] bg-gold text-background h-14 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-gold-strong transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95 cursor-pointer"
             >
               <span>Review & Checkout</span>
               <FaChevronRight size={10} />
@@ -285,7 +269,7 @@ const CartPage: React.FC = () => {
       </div>
 
       {toastMessage && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-slate-900 text-[#FDB813] px-6 py-3 rounded-lg font-black text-[10px] uppercase tracking-widest shadow-xl z-[100] cursor-pointer">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-foreground text-gold px-6 py-3 rounded-lg font-black text-[10px] uppercase tracking-widest shadow-xl z-[100] cursor-pointer">
           {toastMessage}
         </div>
       )}

@@ -43,7 +43,7 @@ const CategoryDiscovery = () => {
   };
 
   return (
-    <section className="bg-transparent">
+    <section className="bg-transparent lg:h-full">
 
       {/* DESKTOP: sticky sidebar list */}
       <div className="hidden lg:block sticky top-24 self-start bg-surface border border-border rounded-2xl overflow-hidden shadow-sm">

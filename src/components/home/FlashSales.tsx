@@ -9,7 +9,7 @@ import Link from "next/link";
 const FlashSales: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const rawProducts = useMemo(() => getFlashSaleProducts(), []);
-  
+
   // FIXED: Cast to 'any' to bypass missing property checks during Vercel build
   const { flashSale, viewAllText } = getUIConfig() as any;
 
@@ -54,19 +54,19 @@ const FlashSales: React.FC = () => {
 
   if (!flashSale?.active || displayProducts.length === 0) return null;
 
-  const timerBlockClass = "bg-slate-900 text-white w-7 h-7 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center font-black text-[10px] sm:text-xs shadow-md border border-white/10";
+  const timerBlockClass = "bg-foreground text-background w-7 h-7 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center font-black text-[10px] sm:text-xs shadow-md border border-border-strong";
 
   return (
     <section className="py-2 sm:py-4 overflow-hidden">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-6 border-b-2 border-slate-900 pb-2 px-1">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-6 border-b-2 border-border-strong pb-2 px-1">
         <div className="min-w-0">
-          <div className="flex items-center gap-2 text-[#FDB813] mb-0.5">
+          <div className="flex items-center gap-2 text-gold mb-0.5">
             <FaBolt className="animate-pulse text-[10px] sm:text-xs"/>
             <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em]">
               {flashSale.badge || "HOT DEAL"}
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tighter uppercase whitespace-nowrap">
+          <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tighter uppercase whitespace-nowrap">
             {flashSale.title || "FLASH SALE"}
           </h2>
         </div>
@@ -74,34 +74,34 @@ const FlashSales: React.FC = () => {
         <div className="flex items-center justify-between md:justify-end gap-4 sm:gap-6 w-full md:w-auto">
           <div className="flex items-center gap-1.5 sm:gap-2">
             <div className={timerBlockClass}>{timeLeft.hours}</div>
-            <span className="font-black text-slate-900 text-[10px]">:</span>
+            <span className="font-black text-foreground text-[10px]">:</span>
             <div className={timerBlockClass}>{timeLeft.minutes}</div>
-            <span className="font-black text-slate-900 text-[10px]">:</span>
+            <span className="font-black text-foreground text-[10px]">:</span>
             <div className={timerBlockClass}>{timeLeft.seconds}</div>
           </div>
-          <Link href="/menu" className="text-[10px] font-black uppercase tracking-widest text-slate-900 flex items-center gap-1.5 hover:opacity-70 transition-opacity">
+          <Link href="/menu" className="text-[10px] font-black uppercase tracking-widest text-foreground flex items-center gap-1.5 hover:opacity-70 transition-opacity">
             {viewAllText || "VIEW ALL"} <FaArrowRight size={10}/>
           </Link>
         </div>
       </div>
 
-      <div className="relative group px-1"> 
+      <div className="relative group px-1">
         {/* Navigation Buttons */}
-        <button 
+        <button
           onClick={() => scroll("left")}
-          className="opacity-0 group-hover:opacity-100 absolute left-2 top-[40%] -translate-y-1/2 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-white shadow-2xl transition-all duration-300 hover:bg-[#FDB813] hover:text-black cursor-pointer pointer-events-none group-hover:pointer-events-auto border-2 border-white/10"
+          className="opacity-0 group-hover:opacity-100 absolute left-2 top-[40%] -translate-y-1/2 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-foreground text-background shadow-2xl transition-all duration-300 hover:bg-gold hover:text-background cursor-pointer pointer-events-none group-hover:pointer-events-auto border-2 border-border-strong"
         >
           <FaChevronLeft size={16} />
         </button>
-        
-        <button 
+
+        <button
           onClick={() => scroll("right")}
-          className="opacity-0 group-hover:opacity-100 absolute right-2 top-[40%] -translate-y-1/2 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-white shadow-2xl transition-all duration-300 hover:bg-[#FDB813] hover:text-black cursor-pointer pointer-events-none group-hover:pointer-events-auto border-2 border-white/10"
+          className="opacity-0 group-hover:opacity-100 absolute right-2 top-[40%] -translate-y-1/2 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-foreground text-background shadow-2xl transition-all duration-300 hover:bg-gold hover:text-background cursor-pointer pointer-events-none group-hover:pointer-events-auto border-2 border-border-strong"
         >
           <FaChevronRight size={16} />
         </button>
 
-        <div 
+        <div
           ref={scrollRef}
           className="flex overflow-x-auto gap-4 pb-4 no-scrollbar scroll-smooth snap-x snap-mandatory"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
@@ -111,13 +111,13 @@ const FlashSales: React.FC = () => {
           `}</style>
 
           {displayProducts.map((product) => (
-            <div 
-              key={product.id} 
+            <div
+              key={product.id}
               className="min-w-[calc(50%-8px)] md:min-w-[calc(25%-12px)] snap-start relative"
             >
-              <ProductCard 
-                {...product} 
-                stock={stockCounts[product.id]} 
+              <ProductCard
+                {...product}
+                stock={stockCounts[product.id]}
               />
             </div>
           ))}

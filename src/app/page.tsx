@@ -72,13 +72,13 @@ const Pages: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 sm:pt-8">
-        <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-13 gap-6 lg:gap-8">
 
-          <aside className="w-full lg:w-1/4 xl:w-1/5">
+          <aside className="w-full lg:col-span-3 lg:max-w-[280px]">
             <CategoryDiscovery />
           </aside>
 
-          <div className="flex-1 space-y-6 sm:space-y-10 overflow-hidden">
+          <div className="lg:col-span-10 space-y-6 sm:space-y-10 overflow-hidden">
 
             <FlashSales />
 

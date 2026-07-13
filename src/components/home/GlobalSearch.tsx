@@ -24,34 +24,28 @@ const GlobalSearch = () => {
   });
 
   return (
-    <motion.div 
+    <motion.div
       variants={{
         visible: { y: 0, opacity: 1 },
         hidden: { y: -100, opacity: 0 }
       }}
       animate={isHidden ? "hidden" : "visible"}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="bg-white/80 backdrop-blur-md border-b border-slate-100 py-3 px-4 sticky top-[60px] z-40 shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
+      className="bg-surface border-t border-gold/40 border-b border-b-border py-3 px-4 sticky top-[64px] md:top-20 z-40 shadow-sm w-full"
     >
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center gap-3">
-          
-          <div className="relative flex-1 group">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#FDB813] transition-colors cursor-pointer">
-              <FaSearch size={15} />
-            </div>
-
-            <input 
-              type="text" 
-              placeholder="Search products, brands and categories..." 
-              className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 text-sm font-bold text-slate-900 placeholder:text-slate-400 placeholder:font-medium focus:outline-none focus:border-[#FDB813] focus:bg-white transition-all duration-200 cursor-pointer"
-            />
-          </div>
-
-          <button className="h-12 bg-[#FDB813] text-black px-8 rounded-xl font-black uppercase text-[10px] tracking-[0.1em] hover:bg-yellow-500 transition-all active:scale-[0.98] shadow-lg shadow-yellow-500/10 cursor-pointer">
-            Search
-          </button>
-        </div>
+      <div className="max-w-2xl mx-auto flex items-center bg-surface border border-border rounded-full h-11 pl-5 overflow-hidden focus-within:border-gold transition-colors">
+        <input
+          type="text"
+          placeholder="Search"
+          className="flex-1 bg-transparent outline-none focus:outline-none text-sm font-medium text-foreground placeholder:text-subtext"
+        />
+        <div className="w-px h-6 bg-border" />
+        <button
+          aria-label="Search"
+          className="h-full px-5 flex items-center justify-center text-subtext hover:text-gold transition-colors cursor-pointer outline-none focus:outline-none focus-visible:text-gold"
+        >
+          <FaSearch size={14} />
+        </button>
       </div>
     </motion.div>
   );

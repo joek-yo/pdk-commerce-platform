@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaBars, FaShoppingCart, FaSearch } from "react-icons/fa";
+import { FaBars, FaShoppingCart } from "react-icons/fa";
 import { Home, ShoppingBag, Phone, Info, BookOpen, Users } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useTenant } from "@/context/TenantContext";
@@ -39,63 +39,43 @@ const Header: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* MOBILE */}
-          <div className="md:hidden space-y-3 py-3">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setMobileMenuOpen(true)}
-                  className="bg-gold p-2 rounded-lg text-background active:scale-90 transition-transform"
-                >
-                  <FaBars size={14} />
-                </button>
-                <Link href="/" className="flex items-center space-x-2">
-                  {logoUrl && (
-                    <Image
-                      src={logoUrl}
-                      alt={name || "Logo"}
-                      width={32}
-                      height={32}
-                      className="rounded-lg"
-                    />
-                  )}
-                  <span className="text-base font-black tracking-tighter uppercase">
-                    {name || "Prime Deals Kenya"}
+          <div className="md:hidden flex justify-between items-center py-3">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                className="bg-gold p-2 rounded-lg text-background active:scale-90 transition-transform"
+              >
+                <FaBars size={14} />
+              </button>
+              <Link href="/" className="flex items-center space-x-2">
+                {logoUrl && (
+                  <Image
+                    src={logoUrl}
+                    alt={name || "Logo"}
+                    width={32}
+                    height={32}
+                    className="rounded-lg"
+                  />
+                )}
+                <span className="text-base font-black tracking-tighter uppercase">
+                  {name || "Prime Deals Kenya"}
+                </span>
+              </Link>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <button
+                onClick={openCart}
+                className="relative bg-surface2 border border-border p-2 rounded-lg active:scale-90 transition-transform"
+              >
+                <FaShoppingCart size={14} className="text-gold" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-foreground text-background text-[9px] font-black px-1.5 py-0.5 rounded-full min-w-[18px]">
+                    {totalItems}
                   </span>
-                </Link>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <ThemeToggle />
-                <button
-                  onClick={openCart}
-                  className="relative bg-surface2 border border-border p-2 rounded-lg active:scale-90 transition-transform"
-                >
-                  <FaShoppingCart size={14} className="text-gold" />
-                  {totalItems > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-foreground text-background text-[9px] font-black px-1.5 py-0.5 rounded-full min-w-[18px]">
-                      {totalItems}
-                    </span>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <div className="px-1">
-              <div className="w-full h-px bg-gradient-to-r from-transparent via-border-strong to-transparent" />
-            </div>
-
-            <div className="w-full">
-              <div className="flex items-center bg-surface2 border border-border rounded-full h-10 pl-4 overflow-hidden">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  className="flex-1 bg-transparent outline-none text-sm font-bold text-foreground placeholder:text-subtext"
-                />
-                <div className="w-px h-full bg-border" />
-                <button className="h-full px-4 bg-surface2 hover:bg-gold-soft transition-all flex items-center justify-center">
-                  <FaSearch size={13} className="text-subtext hover:text-gold" />
-                </button>
-              </div>
+                )}
+              </button>
             </div>
           </div>
 
@@ -119,21 +99,6 @@ const Header: React.FC = () => {
                 {name || "Prime Deals Kenya"}
               </span>
             </Link>
-
-            {/* Search */}
-            <div className="flex-1 max-w-xl">
-              <div className="flex items-center bg-surface2 border border-border rounded-full h-10 pl-4 overflow-hidden hover:border-gold/40 transition-all">
-                <input
-                  type="text"
-                  placeholder="Search products, brands..."
-                  className="flex-1 bg-transparent outline-none text-sm font-bold text-foreground placeholder:text-subtext"
-                />
-                <div className="w-px h-full bg-border" />
-                <button className="h-full px-5 bg-surface2 hover:bg-gold-soft transition-all flex items-center justify-center">
-                  <FaSearch size={13} className="text-subtext hover:text-gold" />
-                </button>
-              </div>
-            </div>
 
             {/* NAV — dynamic from tenant storefront config */}
             <nav className="flex items-center gap-6 shrink-0">
@@ -198,7 +163,7 @@ const Header: React.FC = () => {
       </header>
 
       <Sidebar isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
-      <div className="h-[121px] md:h-20" />
+      <div className="h-[64px] md:h-20" />
     </>
   );
 };
