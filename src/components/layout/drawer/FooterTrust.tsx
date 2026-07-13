@@ -1,10 +1,10 @@
-// src components/layout/drawer/FooterTrust.tsx
+"use client";
 
 import React from "react";
 
 const FooterTrust = () => {
   return (
-    <div className="text-[10px] text-center text-slate-500">
+    <div className="text-[10px] text-center text-subtext">
       M-PESA • Cards • Secure Checkout
     </div>
   );

@@ -6,22 +6,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { getBusinessData, getUIConfig } from "@/lib/getBusinessData";
 import { FaWhatsapp, FaShoppingCart } from "react-icons/fa";
-import Button from "@/components/ui/Button";
 
 const Hero: React.FC = () => {
   const business = getBusinessData();
-  
-  // FIXED: Cast to 'any' to bypass missing property checks during Vercel build
   const ui = getUIConfig() as any;
 
   const phoneNumber = business?.phone?.replace(/[^0-9]/g, "") || "";
   const hero = ui?.hero || {};
 
   return (
-    /* ADJUSTED: Height increased to 85vh on mobile (h-[85vh]) to account for the double-row header */
     <section className="w-screen h-[85vh] md:h-[75vh] relative flex items-center justify-center overflow-hidden">
 
-      {/* BACKGROUND */}
       {business?.banner && (
         <Image
           src={business.banner}
@@ -32,61 +27,45 @@ const Hero: React.FC = () => {
         />
       )}
 
-      {/* OVERLAY - Slightly darker for better text readability on small screens */}
-      <div className="absolute inset-0 bg-black/60 md:bg-black/50" />
+      <div className="absolute inset-0 bg-black/65 md:bg-black/55" />
 
-      {/* CONTENT */}
       <motion.div
-        /* ADJUSTED: Added pb-32 on mobile to push buttons UP away from the overlapping card */
-        className="relative z-10 text-center px-6 text-white pt-24 md:pt-20 pb-32 md:pb-0"
+        className="relative z-10 text-center px-6 text-foreground pt-24 md:pt-20 pb-32 md:pb-0"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9 }}
       >
 
-        {/* TITLE (BUSINESS MESSAGE) */}
-        <h2 className="text-2xl md:text-4xl font-black mb-2 text-[#FDB813] uppercase tracking-wider">
+        <h2 className="text-2xl md:text-4xl font-black mb-2 text-gold uppercase tracking-wider">
           {hero.heading || "Smart Deals, Smart Choices"}
         </h2>
 
-        {/* SUBTITLE (VALUE STATEMENT) */}
-        <h1 className="text-4xl md:text-7xl font-black mb-4 tracking-tighter leading-tight">
+        <h1 className="text-4xl md:text-7xl font-black mb-4 tracking-tighter leading-tight text-foreground">
           {hero.description || "Everything you need in one place"}
         </h1>
 
-        {/* UNIVERSAL VALUE LINE */}
-        <p className="text-sm md:text-2xl mb-10 text-gray-200 font-medium tracking-tight opacity-90">
+        <p className="text-sm md:text-2xl mb-10 text-subtext font-medium tracking-tight">
           Trusted Products • Best Prices • Instant Ordering
         </p>
 
-        {/* CTA BUTTONS */}
-        <div className="flex flex-col md:flex-row justify-center gap-4 max-w-xs mx-auto md:max-w-none">
+        <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-xs sm:max-w-none mx-auto">
 
-          {/* SHOP NOW */}
-          <Link href="/menu">
-            <Button
-              variant="primary"
-              className="px-8 py-4 flex items-center justify-center gap-3 font-black uppercase text-xs tracking-widest shadow-2xl"
-              leftIcon={<FaShoppingCart size={14}/>}
-            >
-              Browse Products
-            </Button>
+          <Link
+            href="/menu"
+            className="flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-black uppercase text-xs tracking-widest bg-gold text-background border border-gold hover:bg-gold-strong hover:border-gold-strong hover:scale-105 hover:shadow-2xl transition-all duration-200 shadow-xl"
+          >
+            <FaShoppingCart size={14} />
+            Browse Products
           </Link>
 
-          {/* WHATSAPP */}
           {phoneNumber && (
-            <a
-              href={`https://wa.me/${phoneNumber}?text=Hello%20I%20would%20like%20to%20order`}
+            <a href={`https://wa.me/${phoneNumber}?text=Hello%20I%20would%20like%20to%20order`}
               target="_blank"
               rel="noopener noreferrer"
+              className="flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-black uppercase text-xs tracking-widest bg-surface/60 backdrop-blur-md text-foreground border border-foreground/20 hover:bg-whatsapp/10 hover:border-whatsapp hover:text-whatsapp hover:scale-105 transition-all duration-200 shadow-xl"
             >
-              <Button
-                variant="whatsapp"
-                className="px-8 py-4 flex items-center justify-center gap-3 font-black uppercase text-xs tracking-widest shadow-2xl"
-                leftIcon={<FaWhatsapp size={16}/>}
-              >
-                Order via WhatsApp
-              </Button>
+              <FaWhatsapp size={16} />
+              Order via WhatsApp
             </a>
           )}
 

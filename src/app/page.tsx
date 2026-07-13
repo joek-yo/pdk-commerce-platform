@@ -40,21 +40,21 @@ const Pages: React.FC = () => {
   .slice(0, 4);
 
   const ViewAllLink = ({ href }: { href: string }) => (
-    <Link href={href} className="text-[10px] font-black uppercase tracking-widest text-slate-900 flex items-center gap-1.5 hover:opacity-70 transition-opacity whitespace-nowrap cursor-pointer">
+    <Link href={href} className="text-[10px] font-black uppercase tracking-widest text-foreground flex items-center gap-1.5 hover:text-gold transition-colors whitespace-nowrap cursor-pointer">
       {ui.viewAllText || "VIEW ALL"} <FaArrowRight size={10}/>
     </Link>
   );
 
   const SectionHeader = ({ title, badge, icon: Icon, href }: any) => (
-    <div className="flex items-center justify-between mb-4 border-b-2 border-slate-900 pb-2">
+    <div className="flex items-center justify-between mb-4 border-b-2 border-border-strong pb-2">
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 text-[#FDB813] mb-0.5">
+        <div className="flex items-center gap-2 text-gold mb-0.5">
           <Icon className="text-[10px] sm:text-xs" />
           <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.2em]">
             {badge}
           </span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tighter uppercase whitespace-nowrap overflow-hidden text-ellipsis">
+        <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tighter uppercase whitespace-nowrap overflow-hidden text-ellipsis">
           {title}
         </h2>
       </div>
@@ -63,32 +63,32 @@ const Pages: React.FC = () => {
   );
 
   return (
-    <main className="bg-[#F1F5F9] pb-6">
+    <main className="bg-background pb-6">
       <AnnouncementBar />
-      
+
       <Hero />
       <div className="mt-[-20px] relative z-10">
         <TrustBar />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 sm:pt-8">
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-          
+        <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-8">
+
           <aside className="w-full lg:w-1/4 xl:w-1/5">
             <CategoryDiscovery />
           </aside>
 
           <div className="flex-1 space-y-6 sm:space-y-10 overflow-hidden">
-            
+
             <FlashSales />
-            
+
             {bestSellers.length > 0 && (
               <section>
-                <SectionHeader 
-                  title={ui.bestSellersTitle || "MOST WANTED"} 
-                  badge="TOP RATED" 
-                  icon={FaFire} 
-                  href="/menu" 
+                <SectionHeader
+                  title={ui.bestSellersTitle || "MOST WANTED"}
+                  badge="TOP RATED"
+                  icon={FaFire}
+                  href="/menu"
                 />
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   {bestSellers.map((product) => (
@@ -99,14 +99,14 @@ const Pages: React.FC = () => {
             )}
 
             {featuredProducts.length > 0 && (
-              <section className="rounded-2xl border border-slate-200">
-                
+              <section className="rounded-2xl border border-border">
+
                 <div className="p-4">
-                  <SectionHeader 
-                    title={ui.featuredTitle || "FEATURED ITEMS"} 
-                    badge="STAFF PICK" 
-                    icon={FaStar} 
-                    href="/menu?filter=featured" 
+                  <SectionHeader
+                    title={ui.featuredTitle || "FEATURED ITEMS"}
+                    badge="STAFF PICK"
+                    icon={FaStar}
+                    href="/menu?filter=featured"
                   />
                 </div>
 
@@ -119,11 +119,11 @@ const Pages: React.FC = () => {
 
             {featuredBundles.length > 0 && (
               <section>
-                <SectionHeader 
-                  title={ui.bundlesTitle || "VALUE PACKS"} 
-                  badge="BEST SAVINGS" 
-                  icon={FaGem} 
-                  href="/menu?category=bundle" 
+                <SectionHeader
+                  title={ui.bundlesTitle || "VALUE PACKS"}
+                  badge="BEST SAVINGS"
+                  icon={FaGem}
+                  href="/menu?category=bundle"
                 />
                 <FeaturedBundles bundles={featuredBundles} />
               </section>
@@ -133,3 +133,8 @@ const Pages: React.FC = () => {
         </div>
       </div>
 
+    </main>
+  );
+};
+
+export default Pages;

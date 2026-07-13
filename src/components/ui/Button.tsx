@@ -29,19 +29,18 @@ type ButtonProps = {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 
-  /** For icon-only buttons (navbar, cart, hamburger, etc) */
   iconOnly?: boolean;
   "aria-label"?: string;
 };
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "bg-[#FDB813] text-black hover:bg-[#C2922F]",
-  secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
-  ghost: "bg-transparent text-gray-800 hover:bg-gray-100",
-  danger: "bg-red-500 text-white hover:bg-red-600",
-  success: "bg-green-900 text-white hover:bg-green-800",
-  whatsapp: "bg-green-600 text-white hover:bg-green-700",
-  outline: "border border-gray-300 text-gray-800 hover:bg-gray-50",
+  primary: "bg-gold text-background hover:bg-gold-strong",
+  secondary: "bg-surface2 text-foreground hover:bg-border",
+  ghost: "bg-transparent text-foreground hover:bg-surface2",
+  danger: "bg-danger text-background hover:opacity-90",
+  success: "bg-whatsapp text-background hover:opacity-90",
+  whatsapp: "bg-whatsapp text-background hover:opacity-90",
+  outline: "border border-border-strong text-foreground hover:bg-surface2",
 };
 
 const sizes: Record<ButtonSize, string> = {
@@ -76,26 +75,18 @@ export default function Button({
         inline-flex items-center justify-center gap-2
         font-semibold rounded-lg
         transition-all duration-200
-        
-        /* ADDED CURSOR POINTER HERE */
         ${!(disabled || loading) ? "cursor-pointer" : "cursor-not-allowed opacity-50"}
-
         ${variants[variant]}
         ${sizes[size]}
-
         ${fullWidth ? "w-full" : ""}
-
         ${iconOnly ? "p-3 aspect-square" : ""}
-
         ${className}
       `}
     >
-      {/* LEFT ICON */}
       {leftIcon && !loading && (
         <span className="flex items-center">{leftIcon}</span>
       )}
 
-      {/* LOADING STATE */}
       {loading ? (
         <span className="flex items-center gap-2">
           <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -104,7 +95,6 @@ export default function Button({
         !iconOnly && children
       )}
 
-      {/* RIGHT ICON */}
       {rightIcon && !loading && (
         <span className="flex items-center">{rightIcon}</span>
       )}

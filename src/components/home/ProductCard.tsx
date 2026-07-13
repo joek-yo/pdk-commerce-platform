@@ -85,21 +85,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div
-      className={`group bg-surface rounded-lg border border-border flex flex-col overflow-hidden hover:border-border-strong transition-all duration-300 ${
+      className={`group bg-surface rounded-lg border border-border flex flex-col overflow-hidden transition-all duration-300 active:scale-[0.98] md:hover:border-gold/50 md:hover:shadow-lg ${
         isBundle ? "min-h-[300px] sm:min-h-[340px]" : ""
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link href={`/product/${id}`} className="flex flex-col flex-1 cursor-pointer">
-        {/* IMAGE CONTAINER */}
         <div
           className={`relative bg-surface2 overflow-hidden ${
             isBundle ? "h-36 sm:h-44" : "aspect-square"
           }`}
         >
           {stock && stock <= 5 ? (
-            <span className={`${badgeBase} bg-red-600 text-white`}>
+            <span className={`${badgeBase} bg-danger text-background`}>
               Only {stock}
             </span>
           ) : featured ? (
@@ -107,11 +106,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
               Featured
             </span>
           ) : trending ? (
-            <span className={`${badgeBase} bg-gold text-black`}>
+            <span className={`${badgeBase} bg-gold text-background`}>
               Hot
             </span>
           ) : discountPercent ? (
-            <span className={`${badgeBase} bg-red-600 text-white`}>
+            <span className={`${badgeBase} bg-danger text-background`}>
               -{discountPercent}%
             </span>
           ) : !available ? (
@@ -124,28 +123,26 @@ const ProductCard: React.FC<ProductCardProps> = ({
             src={isHovered && hoverImage ? hoverImage : image || "/placeholder.jpg"}
             alt={name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className="object-cover md:group-hover:scale-105 transition-transform duration-500"
           />
         </div>
 
-        {/* CONTENT SECTION */}
-        <div className="p-2 flex flex-col flex-1">
-          <h3 className="text-[11px] sm:text-xs font-black uppercase text-foreground line-clamp-1 leading-tight">
+        <div className="p-2.5 sm:p-2 flex flex-col flex-1">
+          <h3 className="text-xs sm:text-xs font-black uppercase text-foreground line-clamp-1 leading-tight">
             {name}
           </h3>
 
-          <p className="text-[9px] text-subtext font-bold mt-0.5 line-clamp-1">
+          <p className="text-[10px] text-subtext font-bold mt-0.5 line-clamp-1">
             {description}
           </p>
 
-          {/* PRICE SECTION */}
-          <div className="mt-1.5 flex items-center gap-1.5">
-            <span className="text-xs sm:text-sm font-black text-foreground">
+          <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+            <span className="text-sm font-black text-foreground">
               KES {price.toLocaleString()}
             </span>
 
             {oldPrice && oldPrice > price && (
-              <span className="text-[9px] sm:text-[10px] text-muted line-through font-bold">
+              <span className="text-[10px] text-muted line-through font-bold">
                 KES {oldPrice.toLocaleString()}
               </span>
             )}
@@ -153,8 +150,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </Link>
 
-      {/* CTA */}
-      <div className="p-2 pt-0">
+      <div className="p-2.5 sm:p-2 pt-0">
         <div className="mt-auto pt-2">
           <AnimatePresence mode="wait">
             {cartItem ? (
@@ -163,24 +159,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-full h-7 bg-background border border-border-strong rounded-md flex items-center justify-between"
+                className="w-full h-9 sm:h-7 bg-background border border-gold rounded-md flex items-center justify-between"
               >
                 <button
                   onClick={handleDecrease}
-                  className="text-gold h-full px-3 flex items-center justify-center cursor-pointer"
+                  className="text-gold h-full px-4 sm:px-3 flex items-center justify-center cursor-pointer active:scale-90 transition-transform"
                 >
-                  <FaMinus size={8} />
+                  <FaMinus size={9} />
                 </button>
 
-                <span className="text-foreground font-black text-[10px]">
+                <span className="text-foreground font-black text-xs sm:text-[10px]">
                   {quantity}
                 </span>
 
                 <button
                   onClick={handleAddToCart}
-                  className="text-gold h-full px-3 flex items-center justify-center cursor-pointer"
+                  className="text-gold h-full px-4 sm:px-3 flex items-center justify-center cursor-pointer active:scale-90 transition-transform"
                 >
-                  <FaPlus size={8} />
+                  <FaPlus size={9} />
                 </button>
               </motion.div>
             ) : (
@@ -192,12 +188,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className={`
-                  w-full h-7 rounded-md flex items-center justify-center gap-1.5
-                  text-[9px] font-black uppercase tracking-wider border
-                  transition-all duration-300 cursor-pointer
+                  w-full h-9 sm:h-7 rounded-md flex items-center justify-center gap-1.5
+                  text-[10px] sm:text-[9px] font-black uppercase tracking-wider border
+                  transition-all duration-200 cursor-pointer
                   ${
                     available
-                      ? "border-border-strong text-foreground hover:bg-gold hover:border-gold hover:text-black"
+                      ? "border-border-strong text-foreground active:scale-95 md:hover:bg-gold md:hover:border-gold md:hover:text-background"
                       : "border-border text-muted"
                   }
                 `}

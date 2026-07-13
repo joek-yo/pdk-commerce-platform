@@ -1,4 +1,4 @@
-// src/components/layout/drawer/CategorySection.tsx
+"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -15,18 +15,16 @@ const CategorySection = () => {
 
   return (
     <div>
-      <h3 className="text-xs font-black mb-2">Shop by Category</h3>
-
+      <h3 className="text-xs font-black mb-2 text-foreground">Shop by Category</h3>
       {categories.map((cat: Category) => (
         <Link
           key={cat.id}
           href={`/menu?category=${cat.id}`}
-          className="flex justify-between py-2 text-sm hover:text-[#FDB813] transition-colors"
+          className="flex justify-between py-2 text-sm text-subtext hover:text-gold transition-colors"
         >
           <span>{cat.name}</span>
-
           {cat.hot && (
-            <span className="text-[9px] bg-red-500 text-white px-1 rounded">
+            <span className="text-[9px] bg-danger text-background px-1 rounded font-bold">
               HOT
             </span>
           )}

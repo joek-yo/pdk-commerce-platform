@@ -8,6 +8,7 @@ import { Home, ShoppingBag, Phone, Info, BookOpen, Users } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useTenant } from "@/context/TenantContext";
 import Sidebar from "./Sidebar";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const Header: React.FC = () => {
   const { name, logoUrl, storefront } = useTenant();
@@ -34,7 +35,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="bg-[#0D0D0D] text-white shadow-xl fixed top-0 left-0 w-full z-50 border-b border-white/5">
+      <header className="bg-background text-foreground shadow-xl fixed top-0 left-0 w-full z-50 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* MOBILE */}
@@ -43,7 +44,7 @@ const Header: React.FC = () => {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setMobileMenuOpen(true)}
-                  className="bg-[#FDB813] p-2 rounded-lg text-black active:scale-90 transition-transform"
+                  className="bg-gold p-2 rounded-lg text-background active:scale-90 transition-transform"
                 >
                   <FaBars size={14} />
                 </button>
@@ -63,33 +64,36 @@ const Header: React.FC = () => {
                 </Link>
               </div>
 
-              <button
-                onClick={openCart}
-                className="relative bg-white/5 border border-white/10 p-2 rounded-lg active:scale-90 transition-transform"
-              >
-                <FaShoppingCart size={14} className="text-[#FDB813]" />
-                {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-black px-1.5 py-0.5 rounded-full min-w-[18px]">
-                    {totalItems}
-                  </span>
-                )}
-              </button>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <button
+                  onClick={openCart}
+                  className="relative bg-surface2 border border-border p-2 rounded-lg active:scale-90 transition-transform"
+                >
+                  <FaShoppingCart size={14} className="text-gold" />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-foreground text-background text-[9px] font-black px-1.5 py-0.5 rounded-full min-w-[18px]">
+                      {totalItems}
+                    </span>
+                  )}
+                </button>
+              </div>
             </div>
 
             <div className="px-1">
-              <div className="w-full h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-border-strong to-transparent" />
             </div>
 
             <div className="w-full">
-              <div className="flex items-center bg-white/5 border border-white/10 rounded-full h-10 pl-4 overflow-hidden">
+              <div className="flex items-center bg-surface2 border border-border rounded-full h-10 pl-4 overflow-hidden">
                 <input
                   type="text"
                   placeholder="Search products..."
-                  className="flex-1 bg-transparent outline-none text-sm font-bold text-white placeholder:text-white/40"
+                  className="flex-1 bg-transparent outline-none text-sm font-bold text-foreground placeholder:text-subtext"
                 />
-                <div className="w-px h-full bg-white/10" />
-                <button className="h-full px-4 bg-white/10 hover:bg-[#FDB813]/20 transition-all flex items-center justify-center">
-                  <FaSearch size={13} className="text-white/70 hover:text-[#FDB813]" />
+                <div className="w-px h-full bg-border" />
+                <button className="h-full px-4 bg-surface2 hover:bg-gold-soft transition-all flex items-center justify-center">
+                  <FaSearch size={13} className="text-subtext hover:text-gold" />
                 </button>
               </div>
             </div>
@@ -101,7 +105,7 @@ const Header: React.FC = () => {
             {/* LOGO */}
             <Link href="/" className="flex items-center space-x-3 shrink-0">
               {logoUrl && (
-                <div className="p-1 bg-white/5 rounded-xl border border-white/10">
+                <div className="p-1 bg-surface2 rounded-xl border border-border">
                   <Image
                     src={logoUrl}
                     alt="Logo"
@@ -118,15 +122,15 @@ const Header: React.FC = () => {
 
             {/* Search */}
             <div className="flex-1 max-w-xl">
-              <div className="flex items-center bg-white/5 border border-white/10 rounded-full h-10 pl-4 overflow-hidden hover:border-[#FDB813]/40 transition-all">
+              <div className="flex items-center bg-surface2 border border-border rounded-full h-10 pl-4 overflow-hidden hover:border-gold/40 transition-all">
                 <input
                   type="text"
                   placeholder="Search products, brands..."
-                  className="flex-1 bg-transparent outline-none text-sm font-bold text-white placeholder:text-white/40"
+                  className="flex-1 bg-transparent outline-none text-sm font-bold text-foreground placeholder:text-subtext"
                 />
-                <div className="w-px h-full bg-white/10" />
-                <button className="h-full px-5 bg-white/10 hover:bg-[#FDB813]/20 transition-all flex items-center justify-center">
-                  <FaSearch size={13} className="text-white/70 hover:text-[#FDB813]" />
+                <div className="w-px h-full bg-border" />
+                <button className="h-full px-5 bg-surface2 hover:bg-gold-soft transition-all flex items-center justify-center">
+                  <FaSearch size={13} className="text-subtext hover:text-gold" />
                 </button>
               </div>
             </div>
@@ -140,7 +144,7 @@ const Header: React.FC = () => {
                     <Link
                       key={item.id}
                       href={item.path}
-                      className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group"
+                      className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors group"
                     >
                       <IconComponent size={18} className="group-hover:scale-110 transition-transform" />
                       {item.label}
@@ -148,44 +152,46 @@ const Header: React.FC = () => {
                   );
                 })
               ) : (
-                // Fallback nav when no storefront config yet
                 <>
-                  <Link href="/" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group">
+                  <Link href="/" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors group">
                     <Home size={18} className="group-hover:scale-110 transition-transform" /> Home
                   </Link>
-                  <Link href="/menu" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group">
+                  <Link href="/menu" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors group">
                     <ShoppingBag size={18} className="group-hover:scale-110 transition-transform" /> Shop
                   </Link>
-                  <Link href="/about" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group">
+                  <Link href="/about" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors group">
                     <Users size={18} className="group-hover:scale-110 transition-transform" /> About
                   </Link>
-                  <Link href="/blog" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group">
+                  <Link href="/blog" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors group">
                     <BookOpen size={18} className="group-hover:scale-110 transition-transform" /> Blog
                   </Link>
-                  <Link href="/contact" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-[#FDB813] transition-colors group">
+                  <Link href="/contact" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors group">
                     <Phone size={18} className="group-hover:scale-110 transition-transform" /> Contact
                   </Link>
                 </>
               )}
             </nav>
 
-            {/* CART */}
-            <button
-              onClick={openCart}
-              className="group flex items-center gap-3 bg-white/5 border border-white/10 px-5 py-2.5 rounded-2xl hover:bg-white hover:text-black transition-all shrink-0"
-            >
-              <div className="relative">
-                <FaShoppingCart className="text-[#FDB813] group-hover:text-black" />
-                {totalItems > 0 && (
-                  <span className="absolute -top-3 -right-3 bg-[#FDB813] text-black text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#0D0D0D]">
-                    {totalItems}
-                  </span>
-                )}
-              </div>
-              <span className="text-[10px] font-black uppercase tracking-widest">
-                Bag ({totalItems})
-              </span>
-            </button>
+            {/* THEME TOGGLE + CART */}
+            <div className="flex items-center gap-3 shrink-0">
+              <ThemeToggle />
+              <button
+                onClick={openCart}
+                className="group flex items-center gap-3 bg-surface2 border border-border px-5 py-2.5 rounded-2xl hover:bg-gold hover:text-background transition-all"
+              >
+                <div className="relative">
+                  <FaShoppingCart className="text-gold group-hover:text-background" />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-3 -right-3 bg-gold text-background text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-background">
+                      {totalItems}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest">
+                  Bag ({totalItems})
+                </span>
+              </button>
+            </div>
 
           </div>
         </div>

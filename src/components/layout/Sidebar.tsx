@@ -44,15 +44,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   }, [isOpen]);
 
   const sectionClasses =
-    "bg-white border-l-4 border-l-[#FDB813] border border-slate-100 p-5 rounded-xl shadow-md mb-4 relative overflow-hidden hover:shadow-lg transition";
+    "bg-surface border-l-4 border-l-gold border-y border-r border-border p-5 rounded-xl shadow-sm mb-4 relative overflow-hidden hover:border-border-strong transition";
 
   const labelClasses =
-    "flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 mb-4 ml-1";
+    "flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-subtext mb-4 ml-1";
 
-  const iconStyle = "text-[#FDB813]";
+  const iconStyle = "text-gold";
 
   const linkStyle =
-    "flex items-center gap-3 py-3 px-2 text-slate-700 hover:text-[#FDB813] hover:bg-[#FDB813]/10 rounded-lg transition-all border-b border-slate-50 last:border-0";
+    "flex items-center gap-3 py-3 px-2 text-foreground hover:text-gold hover:bg-gold-soft rounded-lg transition-all border-b border-border last:border-0";
 
   const textStyle = "text-[11px] font-black uppercase tracking-wider";
 
@@ -76,7 +76,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  // Navigation from tenant context — same source as Header
   const navLinks = useMemo(() => {
     if (storefront?.navigation?.length > 0) {
       return storefront.navigation.map((item: any) => ({
@@ -85,7 +84,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         icon: getNavIcon(item.id),
       }));
     }
-    // Fallback
     return [
       { name: "Home", href: "/", icon: <FaHome size={14} /> },
       { name: "Shop All", href: "/menu", icon: <FaShoppingBag size={14} /> },
@@ -105,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       {isOpen && (
         <>
           <motion.div
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[90]"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[90]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -113,14 +111,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           />
 
           <motion.div
-            className="fixed top-0 left-0 h-full w-[85%] max-w-sm bg-[#F8FAFC] z-[100] shadow-2xl flex flex-col border-r border-slate-200"
+            className="fixed top-0 left-0 h-full w-[85%] max-w-sm bg-background z-[100] shadow-2xl flex flex-col border-r border-border"
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ duration: 0.3, ease: "circOut" }}
           >
             {/* HEADER */}
-            <div className="bg-white border-b border-slate-200">
+            <div className="bg-surface border-b border-border">
               <DrawerHeader onClose={onClose} />
             </div>
 
@@ -148,7 +146,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                       onClick={onClose}
                       className={linkStyle}
                     >
-                      <span className="text-[#FDB813]/70">{link.icon}</span>
+                      <span className="text-gold/70">{link.icon}</span>
                       <span className={textStyle}>{link.name}</span>
                     </Link>
                   ))}
@@ -168,7 +166,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                       onClick={onClose}
                       className={linkStyle}
                     >
-                      <span className="text-[#FDB813]/70">
+                      <span className="text-gold/70">
                         {categoryIcons[cat.id] || <FaLayerGroup size={12} />}
                       </span>
                       <span className={textStyle}>{cat.name}</span>
@@ -178,11 +176,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               </div>
 
               {/* DEALS */}
-              <div className="bg-[#FDB813]/10 border border-[#FDB813]/30 p-5 rounded-xl shadow-md mb-4 relative overflow-hidden hover:shadow-lg transition">
+              <div className="bg-gold-soft border border-gold/30 p-5 rounded-xl shadow-sm mb-4 relative overflow-hidden hover:border-gold/50 transition">
                 <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] mb-4 ml-1">
-                  <FaTag size={10} />
-                  <span className="text-slate-700">Hot</span>
-                  <span className="text-[#FDB813]">Deals</span>
+                  <FaTag size={10} className="text-gold" />
+                  <span className="text-foreground">Hot</span>
+                  <span className="text-gold">Deals</span>
                 </label>
                 <DealsSection />
               </div>
@@ -206,10 +204,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
 
             {/* FOOTER */}
-            <div className="border-t border-slate-100 p-5 bg-white">
+            <div className="border-t border-border p-5 bg-surface">
               <div className="flex items-center gap-2 mb-4 opacity-60">
-                <FaShieldAlt className="text-[#FDB813]" size={12} />
-                <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">
+                <FaShieldAlt className="text-gold" size={12} />
+                <span className="text-[9px] font-black uppercase tracking-widest text-subtext">
                   Verified Secure
                 </span>
               </div>

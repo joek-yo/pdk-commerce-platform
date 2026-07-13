@@ -3,6 +3,7 @@ import "./globals.css";
 import { headers } from "next/headers";
 import { CartProvider } from "@/context/CartContext";
 import { TenantProvider } from "@/context/TenantContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MiniCartDrawer from "@/components/features/cart/MiniCartDrawer";
@@ -97,6 +98,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="bg-background text-foreground min-h-screen flex flex-col antialiased font-sans">
+        <ThemeProvider>
         <TenantProvider business={business}>
           <CartProvider>
             <Header />
@@ -104,7 +106,7 @@ export default async function RootLayout({
             <CartToast />
 
             <main className="flex-grow relative">
-              <div className="absolute top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-white to-transparent pointer-events-none -z-10" />
+              <div className="absolute top-0 left-0 right-0 h-[50vh] bg-gradient-to-b from-gold-soft to-transparent pointer-events-none -z-10" />
               <div className="relative z-10">
                 {children}
               </div>
@@ -113,6 +115,7 @@ export default async function RootLayout({
             <Footer />
           </CartProvider>
         </TenantProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
