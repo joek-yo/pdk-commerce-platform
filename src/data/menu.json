@@ -1,7 +1,7 @@
 {
   "business": {
     "name": "Prime Deals Kenya",
-    "tagline": "Smart Deals. Smart Choices.",
+    "tagline": "Quality Products. Honest Prices.",
     "phone": "+254729724433",
     "email": "info@primedeals.co.ke",
     "location": "Nairobi, Kenya",
@@ -11,10 +11,10 @@
     "banner": "/images/hero-banner.jpg",
     "drawerBanner": "/images/drawer-hero.jpg",
     "socialProof": [
-      { "id": 1, "text": "Highly Requested: 50,000mAh Powerbanks are currently trending in Kangemi", "time": "Daily Essential" },
-      { "id": 2, "text": "Ultra Series 9 Smartwatches remain a top pick for Westlands deliveries", "time": "Verified Order" },
-      { "id": 3, "text": "Restocked: Creator Kits are back in the inventory for immediate dispatch", "time": "In Stock" },
-      { "id": 4, "text": "Join 500+ tech lovers in Nairobi sourcing their gadgets through Prime Deals", "time": "Community Pick" }
+      { "id": 1, "text": "New arrivals landing weekly \u2014 check back often", "time": "Fresh Stock" },
+      { "id": 2, "text": "Trusted by hundreds of happy customers across Nairobi", "time": "Verified Order" },
+      { "id": 3, "text": "Fast dispatch on all orders, every single day", "time": "In Stock" },
+      { "id": 4, "text": "Join our growing community of smart shoppers in Kenya", "time": "Community Pick" }
     ]
   },
   "deliverySettings": {
@@ -53,7 +53,7 @@
   },
   "ui": {
     "announcement": {
-      "text": "The Latest in Global Tech, Curated for the Kenyan Lifestyle.",
+      "text": "Great Products, Great Prices \u2014 Delivered Across Kenya.",
       "active": true
     },
     "flashSale": {
@@ -65,375 +65,40 @@
     "featuredTitle": "Featured Items",
     "bundlesTitle": "Value Packs",
     "hero": {
-      "heading": "Premium Tech, Local Prices",
-      "description": "The best of Nairobi's electronics, all in one place.",
+      "heading": "Everyday Essentials, Local Prices",
+      "description": "Quality products for your home and lifestyle, all in one place.",
       "ctaPrimary": "Explore Deals",
       "ctaSecondary": "WhatsApp Us"
     },
     "deals": {
       "freeDeliveryThreshold": 10000,
       "flashSaleActive": true,
-      "flashSaleText": "Flash Sale Active 🔥 Up to 20% Off",
+      "flashSaleText": "Flash Sale Active \ud83d\udd25 Up to 20% Off",
       "deliveryText": "Free Delivery over KES 10,000",
       "urgencyText": "Limited stock available on selected items"
     }
   },
   "categories": [
     {
-      "id": "wearables",
-      "name": "Wearable Tech",
-      "icon": "watch",
-      "image": "/images/smartwatch-ultra.jpg",
-      "hot": false,
-      "items": [
-        { 
-          "id": 101, 
-          "name": "Ultra Series 9 Smartwatch", 
-          "price": 4500, 
-          "oldPrice": 5295, 
-          "discountPercent": 15, 
-          "image": "/images/smartwatch-ultra.jpg", 
-          "description": "AMOLED Display, Bluetooth calling, and health tracking.", 
-          "available": true, 
-          "featured": true, 
-          "trending": false, 
-          "stock": 12 
-        },
-        { 
-          "id": 102, 
-          "name": "Pro Buds Wireless Earbuds", 
-          "price": 2800, 
-          "oldPrice": 3110, 
-          "discountPercent": 10, 
-          "image": "/images/earbuds-pro.jpg", 
-          "description": "Active Noise Cancellation with 24-hour battery life.", 
-          "available": true, 
-          "featured": true, 
-          "trending": true, 
-          "stock": 2 
-        },
-        { 
-          "id": 103, 
-          "name": "Magnetic Charging Dock", 
-          "price": 1200, 
-          "oldPrice": 1550, 
-          "image": "/images/charger.jpg", 
-          "description": "Fast wireless charging for watches and phones.", 
-          "available": true, 
-          "featured": false, 
-          "trending": false, 
-          "stock": 15 
-        },
-        { 
-          "id": 104, 
-          "name": "Smart Fitness Tracker Band", 
-          "price": 1800, 
-          "oldPrice": 1895, 
-          "discountPercent": 5, 
-          "image": "/images/fitness-band.jpg", 
-          "description": "Step counter, heart rate monitor, and sleep tracker.", 
-          "available": true, 
-          "featured": true, 
-          "trending": true, 
-          "stock": 3 
-        }
-      ]
-    },
-    {
-      "id": "creator",
-      "name": "Creator Studio",
-      "icon": "video",
-      "image": "/images/ringlight.jpg",
+      "id": "home-kitchen",
+      "name": "Home & Kitchen",
+      "icon": "chef-hat",
+      "image": "/images/sokany-sk4009-juicer.jpg",
       "hot": true,
       "items": [
-        { 
-          "id": 201, 
-          "name": "Professional 12\" Ring Light", 
-          "price": 3500, 
-          "oldPrice": 4375, 
-          "discountPercent": 20, 
-          "image": "/images/ringlight.jpg", 
-          "description": "Adjustable tripod with 3 color modes for content creators.", 
-          "available": true, 
-          "featured": true, 
-          "trending": false, 
-          "stock": 8 
-        },
-        { 
-          "id": 202, 
-          "name": "RGB LED Strip Lights (5M)", 
-          "price": 1200, 
-          "oldPrice": 1650, 
-          "image": "/images/led-strips.jpg", 
-          "description": "Bluetooth controlled room ambiance with music sync.", 
-          "available": true, 
-          "featured": true, 
-          "trending": true, 
-          "stock": 4 
-        },
-        { 
-          "id": 203, 
-          "name": "Bluetooth Lavalier Mic", 
-          "price": 2500, 
-          "oldPrice": 2630, 
-          "discountPercent": 5, 
-          "image": "/images/mic.jpg", 
-          "description": "Clear wireless audio for content creators and vloggers.", 
-          "available": true, 
-          "featured": true, 
-          "trending": false, 
-          "stock": 20 
-        },
-        { 
-          "id": 204, 
-          "name": "Green Screen Backdrop", 
-          "price": 4200, 
-          "oldPrice": 5100, 
-          "image": "/images/greenscreen.jpg", 
-          "description": "Wrinkle-resistant polyester for professional video effects.", 
-          "available": true, 
-          "featured": false, 
-          "trending": false, 
-          "stock": 5 
-        }
-      ]
-    },
-    {
-      "id": "computing",
-      "name": "Computing Essentials",
-      "icon": "laptop",
-      "image": "/images/keyboard.jpg",
-      "hot": false,
-      "items": [
-        { 
-          "id": 401, 
-          "name": "Backlit Mechanical Keyboard", 
-          "price": 5500, 
-          "oldPrice": 6110, 
-          "discountPercent": 10, 
-          "image": "/images/keyboard.jpg", 
-          "description": "Clicky mechanical switches with customizable RGB lighting.", 
-          "available": true, 
-          "featured": false, 
-          "trending": false, 
-          "stock": 10 
-        },
-        { 
-          "id": 402, 
-          "name": "Ergonomic Wireless Mouse", 
-          "price": 1800, 
-          "oldPrice": 2250, 
-          "image": "/images/mouse.jpg", 
-          "description": "Silent clicks and 1600 DPI for smooth navigation.", 
-          "available": true, 
-          "featured": false, 
-          "trending": false, 
-          "stock": 14 
-        },
-        { 
-          "id": 403, 
-          "name": "USB-C 7-in-1 Hub", 
-          "price": 3200, 
-          "oldPrice": 3900, 
-          "image": "/images/hub.jpg", 
-          "description": "HDMI, USB 3.0, and SD card slots for your laptop.", 
-          "available": true, 
-          "featured": true, 
-          "trending": true, 
-          "stock": 1 
-        },
-        { 
-          "id": 404, 
-          "name": "Laptop Cooling Pad", 
-          "price": 2400, 
-          "oldPrice": 3000, 
-          "image": "/images/coolingpad.jpg", 
-          "description": "Dual fans with blue LED light to keep your laptop cool.", 
-          "available": true, 
-          "featured": false, 
-          "trending": false, 
-          "stock": 6 
-        }
-      ]
-    },
-    {
-      "id": "home-security",
-      "name": "Smart Home & Security",
-      "icon": "shield",
-      "image": "/images/camera.jpg",
-      "hot": true,
-      "items": [
-        { 
-          "id": 601, 
-          "name": "Wifi Smart Camera 360°", 
-          "price": 4800, 
-          "oldPrice": 5450, 
-          "discountPercent": 12, 
-          "image": "/images/camera.jpg", 
-          "description": "Night vision and motion detection with phone alerts.", 
-          "available": true, 
-          "featured": true, 
-          "trending": false, 
-          "stock": 4 
-        },
-        { 
-          "id": 602, 
-          "name": "Smart Fingerprint Padlock", 
-          "price": 2400, 
-          "oldPrice": 2900, 
-          "image": "/images/lock.jpg", 
-          "description": "Keyless entry for bags and gym lockers.", 
-          "available": true, 
-          "featured": false, 
-          "trending": false, 
-          "stock": 9 
-        },
-        { 
-          "id": 603, 
-          "name": "Smart Wifi Light Bulb", 
-          "price": 1500, 
-          "oldPrice": 1850, 
-          "image": "/images/bulb.jpg", 
-          "description": "Voice controlled RGB lighting for your smart home.", 
-          "available": true, 
-          "featured": false, 
-          "trending": true, 
-          "stock": 2 
-        }
-      ]
-    },
-    {
-      "id": "lifestyle",
-      "name": "Lifestyle & Utility",
-      "icon": "shopping-bag",
-      "image": "/images/powerbank.jpg",
-      "hot": false,
-      "items": [
-        { 
-          "id": 301, 
-          "name": "6-Blade Portable Blender", 
-          "price": 2200, 
-          "oldPrice": 2315, 
-          "discountPercent": 5, 
-          "image": "/images/blender.jpg", 
-          "description": "USB rechargeable, perfect for smoothies on the go.", 
-          "available": true, 
-          "featured": false, 
-          "trending": false, 
-          "stock": 11 
-        },
-        { 
-          "id": 701, 
-          "name": "Digital Tyre Inflator", 
-          "price": 3800, 
-          "oldPrice": 4200, 
-          "image": "/images/inflator.jpg", 
-          "description": "Portable air pump for cars, bikes, and balls.", 
-          "available": true, 
-          "featured": false, 
-          "trending": true, 
-          "stock": 3 
-        },
-        { 
-          "id": 702, 
-          "name": "50,000mAh Fast Powerbank", 
-          "price": 5500, 
-          "oldPrice": 5980, 
-          "discountPercent": 8, 
-          "image": "/images/powerbank.jpg", 
-          "description": "High capacity with dual fast-charging ports.", 
-          "available": true, 
-          "featured": false, 
-          "trending": false, 
-          "stock": 18 
-        },
-        { 
-          "id": 703, 
-          "name": "Electric Lint Remover", 
-          "price": 1400, 
-          "oldPrice": 1800, 
-          "image": "/images/lintremover.jpg", 
-          "description": "Revitalize your clothes by removing fuzz and lint.", 
-          "available": true, 
-          "featured": false, 
-          "trending": true, 
-          "stock": 2 
-        }
+        { "id": 801, "name": "Sokany SK-4009 4-in-1 Slow Juice Extractor", "price": 9999, "oldPrice": 11499, "discountPercent": 13, "image": "/images/sokany-sk4009-juicer.jpeg", "description": "One Machine, Four Jobs Done Right. An 800W powerhouse that juices, grinds beans, and grinds meat with one motor. One-key rotation with two gears keeps operation simple, and the 304 stainless steel blade is built for durability and precision. Perfect for households that want a juicer, grinder, and mini food prep station without buying three separate machines.", "available": true, "featured": true, "trending": true, "stock": 6 },
+        { "id": 802, "name": "Sokany SK-01005 Slow Juicer", "price": 9999, "oldPrice": 11499, "discountPercent": 13, "image": "/images/sokany-sk01005-slow-juicer.jpeg", "description": "Nutrient-Rich Juice, the Slow Way. Designed for health and nutrition with fine grinding capabilities, letting you enjoy fresh juices like watermelon, orange, and dragon fruit. Runs on an 800W motor at a steady 75rpm with a wide feed chute for easy loading, plus overheat protection and automatic shutdown for safety.", "available": true, "featured": true, "trending": false, "stock": 5 },
+        { "id": 803, "name": "Sokany SK-03031 Multi-Purpose Blender (2-in-1)", "price": 3799, "oldPrice": 4299, "discountPercent": 12, "image": "/images/sokany-sk03031-blender.jpeg", "description": "5 Speeds. 2 Jobs. Zero Compromise. An 800W motor with 7025 copper-aluminum alloy construction and temperature control, offering 2-in-1 functionality \u2014 blending cup plus grinder \u2014 in a 1.5L large glass cup with 5 adjustable speed settings. Smoothies one minute, ground coffee the next.", "available": true, "featured": true, "trending": true, "stock": 7 },
+        { "id": 804, "name": "Sokany SK-03041 Multi-Purpose Blender (2-in-1)", "price": 3299, "oldPrice": 3799, "discountPercent": 13, "image": "/images/sokany-sk03041-blender.jpeg", "description": "Everyday Blending, Built Solid. A dependable jug blender with a 1.6-litre jug and sleek black housing, ideal for smoothies, sauces, and other everyday kitchen jobs, with simple, reliable mechanical controls. The practical daily-use option in the lineup.", "available": true, "featured": false, "trending": false, "stock": 4 },
+        { "id": 805, "name": "Sokany SK-03080 Multi-Purpose Blender", "price": 2599, "oldPrice": 2999, "discountPercent": 13, "image": "/images/sokany-sk03080-blender.jpeg", "description": "Compact Power for Every Kitchen. Part of Sokany's multi-purpose blender family \u2014 stainless steel blades, multi-speed control, built for the everyday mix of smoothies, sauces, and light grinding jobs. The budget-friendly pick for anyone just starting to kit out their kitchen.", "available": true, "featured": false, "trending": true, "stock": 7 },
+        { "id": 806, "name": "Luma Bella LB-53021 Multipurpose Blender", "price": 2999, "oldPrice": 3499, "discountPercent": 14, "image": "/images/lumabella-lb53021-blender.jpeg", "description": "Sleek Blending, Everyday Price. A 1.5-litre blender with a grinder attachment for versatile kitchen use, in a compact, stylish housing that's easy to store and clean. A great value pick for first-time buyers.", "available": true, "featured": false, "trending": false, "stock": 6 },
+        { "id": 807, "name": "Sokany SK-5111 Electric Stove", "price": 1749, "oldPrice": 1999, "discountPercent": 12, "image": "/images/sokany-sk5111-stove.jpeg", "description": "Portable Power, Any Countertop. A compact single-plate electric hot stove \u2014 stainless-steel styling that's stylish and easy to clean, with adjustable temperature control for everyday cooking. Perfect as a backup burner, for students, or for small kitchens needing extra cooking space.", "available": true, "featured": false, "trending": true, "stock": 5 },
+        { "id": 808, "name": "Sokany SK-07066 Premium Egg Boiler", "price": 1999, "oldPrice": 2199, "discountPercent": 9, "image": "/images/sokany-sk07066-egg-boiler.jpeg", "description": "Perfect Eggs, Every Single Time. A quick, no-fuss egg boiler that takes the guesswork out of breakfast \u2014 consistent results with minimal cleanup, ideal for busy mornings.", "available": true, "featured": true, "trending": false, "stock": 4 }
       ]
     }
   ],
   "bundles": [
-    { 
-      "id": 501, 
-      "name": "The Ultimate Creator Kit", 
-      "price": 5500, 
-      "oldPrice": 7200, 
-      "image": "/images/creator-bundle.jpg", 
-      "description": "Ring Light + Mic + LED Strips. The complete setup.", 
-      "available": true, 
-      "featured": true, 
-      "isBundle": true 
-    },
-    { 
-      "id": 502, 
-      "name": "Remote Work Pack", 
-      "price": 9500, 
-      "oldPrice": 11500, 
-      "image": "/images/work-bundle.jpg", 
-      "description": "Keyboard + Mouse + USB Hub combo for home office.", 
-      "available": true, 
-      "featured": true, 
-      "isBundle": true 
-    },
-    { 
-      "id": 503, 
-      "name": "Smart Security Duo", 
-      "price": 6500, 
-      "oldPrice": 8500, 
-      "image": "/images/security-bundle.jpg", 
-      "description": "Wifi Camera + Fingerprint Padlock for total peace of mind.", 
-      "available": true, 
-      "featured": true, 
-      "isBundle": true 
-    },
-    { 
-      "id": 504, 
-      "name": "Traveler's Essential Kit", 
-      "price": 8200, 
-      "oldPrice": 9800, 
-      "image": "/images/travel-bundle.jpg", 
-      "description": "50,000mAh Powerbank + Portable Blender + Lint Remover.", 
-      "available": true, 
-      "featured": true, 
-      "isBundle": true 
-    },
-    { 
-      "id": 505, 
-      "name": "Vlogger Pro Max Bundle", 
-      "price": 11000, 
-      "oldPrice": 14500, 
-      "image": "/images/vlog-bundle.jpg", 
-      "description": "Ring Light + Lavalier Mic + Green Screen Backdrop.", 
-      "available": true, 
-      "featured": true, 
-      "isBundle": true 
-    },
-    { 
-      "id": 506, 
-      "name": "Ultimate Home Smart Lighting", 
-      "price": 3800, 
-      "oldPrice": 4800, 
-      "image": "/images/light-bundle.jpg", 
-      "description": "LED Strip Lights + 2x Smart Wifi Light Bulbs.", 
-      "available": true, 
-      "featured": true, 
-      "isBundle": true 
-    }
-  ],
-  "bespokeSourcing": {
-    "badge": "Bespoke Sourcing",
-    "title": "Need Something Specific?",
-    "description": "Can't find a particular gadget or looking to source in bulk? We handle the logistics and delivery for custom tech requests.",
-    "buttonText": "Request Custom Item"
-  }
+    { "id": 901, "name": "Sokany Breakfast Starter Pack", "price": 3399, "oldPrice": 3748, "image": "/images/breakfast-bundle.jpeg", "description": "Egg Boiler + Electric Stove. Everything you need for quick, easy mornings.", "available": true, "featured": true, "isBundle": true },
+    { "id": 902, "name": "Complete Kitchen Kit", "price": 13499, "oldPrice": 15047, "image": "/images/kitchen-kit-bundle.jpeg", "description": "Slow Juicer + Multi-Purpose Blender + Electric Stove. A full kitchen setup in one pack \u2014 juice, blend, and cook, covered.", "available": true, "featured": true, "isBundle": true }
+  ]
 }

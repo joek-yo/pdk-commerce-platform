@@ -39,7 +39,7 @@ const Header: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* MOBILE */}
-          <div className="md:hidden flex justify-between items-center py-3">
+          <div className="md:hidden flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setMobileMenuOpen(true)}
