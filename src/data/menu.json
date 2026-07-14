@@ -296,6 +296,71 @@
           "featured": false,
           "trending": true,
           "stock": 5
+        },
+        {
+          "id": 811,
+          "name": "Sokany Electric Kettle (SK-SH-1088)",
+          "price": 2100,
+          "oldPrice": 2399,
+          "discountPercent": 12,
+          "image": "/images/sokany-sksh1088-kettle.jpeg",
+          "description": "Boiled Before You Sit Down. 1500W rapid boil, 2.5L capacity, mirror-finish red stainless steel that looks too good to hide. Tea, coffee, noodles, baby bottles — sorted fast, clean steel taste, zero waiting.",
+          "available": true,
+          "featured": true,
+          "trending": true,
+          "stock": 6
+        },
+        {
+          "id": 812,
+          "name": "Alizz Professional Kettle (A85A)",
+          "price": 1600,
+          "oldPrice": 1849,
+          "discountPercent": 13,
+          "image": "/images/alizz-a85a-kettle.jpeg",
+          "description": "Grab It From Any Angle. 360° cordless swivel base, 2L capacity, brushed stainless steel with an LED power light. BPA-free interior, fast boil — coffee, tea, instant meals sorted without fighting a cord.",
+          "available": true,
+          "featured": false,
+          "trending": true,
+          "stock": 5
+        },
+        {
+          "id": 813,
+          "name": "Sokany Handheld Steamer (SK-12024)",
+          "price": 1950,
+          "oldPrice": 2249,
+          "discountPercent": 13,
+          "image": "/images/sokany-sk12024-steamer.jpeg",
+          "description": "No Ironing Board, No Problem. 1400W handheld steamer with ceramic soleplate, glides smooth on silk to wool. Folds compact for travel, refreshes and de-wrinkles in minutes — meeting-ready before your coffee's done.",
+          "available": true,
+          "featured": true,
+          "trending": false,
+          "stock": 5
+        },
+        {
+          "id": 814,
+          "name": "Sokany Steam Iron (EI-8888)",
+          "price": 3000,
+          "oldPrice": 3449,
+          "discountPercent": 13,
+          "image": "/images/sokany-ei8888-iron.jpeg",
+          "description": "The One That Doesn't Slow Down. 2400W with burst-of-steam for deep wrinkles, self-clean function, vertical steam for curtains and hanging clothes. Ceramic soleplate glides on anything — denim to silk, no scratching, no snagging.",
+          "available": true,
+          "featured": false,
+          "trending": false,
+          "stock": 4
+        },
+        {
+          "id": 815,
+          "name": "Sokany Steam Iron (SK-11005)",
+          "price": 2000,
+          "oldPrice": 2299,
+          "discountPercent": 13,
+          "image": "/images/sokany-sk11005-iron.jpeg",
+          "description": "PerfectCare, Every Press. 1000W with a 100ml tank, spray button for stubborn creases, precision tip for buttons and collars. Translucent blue and matte black — built to make ironing quick, not a chore.",
+          "available": true,
+          "featured": false,
+          "trending": true,
+          "stock": 6
         }
       ]
     },
@@ -405,6 +470,32 @@
           "featured": false,
           "trending": true,
           "stock": 4
+        },
+        {
+          "id": 1105,
+          "name": "Q10 CYXG Wireless Earbuds",
+          "price": 1300,
+          "oldPrice": 1499,
+          "discountPercent": 13,
+          "image": "/images/q10-cyxg-earbuds.jpeg",
+          "description": "Music On, World Off. True wireless noise cancelling earbuds with clear calls, remote camera trigger, and notification alerts. Compact charging case fits any pocket — commute, gym, or grind, sound stays sharp.",
+          "available": true,
+          "featured": true,
+          "trending": true,
+          "stock": 7
+        },
+        {
+          "id": 1106,
+          "name": "WUF-W35 Premium Portable Speaker (Camo Edition)",
+          "price": 1350,
+          "oldPrice": 1549,
+          "discountPercent": 13,
+          "image": "/images/wuf-w35-speaker.jpeg",
+          "description": "Sound That Travels. Rugged camo-print speaker with LED light rings and a built-in carry strap. Crisp highs, deep bass, seamless Bluetooth streaming — outdoor-ready, party-ready, anywhere-ready.",
+          "available": true,
+          "featured": false,
+          "trending": true,
+          "stock": 5
         }
       ]
     }
