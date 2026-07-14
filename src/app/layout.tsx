@@ -102,7 +102,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="bg-background text-foreground min-h-screen flex flex-col antialiased font-sans">
         <ThemeProvider>
         <TenantProvider business={business}>
