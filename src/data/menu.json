@@ -164,7 +164,7 @@
       "id": "home-kitchen",
       "name": "Home & Kitchen",
       "icon": "chef-hat",
-      "image": "/images/sokany-sk4009-juicer.jpg",
+      "image": "/images/sokany-sk01005-slow-juicer.jpeg",
       "hot": true,
       "items": [
         {
@@ -361,6 +361,32 @@
           "featured": false,
           "trending": true,
           "stock": 6
+        },
+        {
+          "id": 816,
+          "name": "Ton Barrel 800mL Portable Juice Cup",
+          "price": 1999,
+          "oldPrice": 2299,
+          "discountPercent": 13,
+          "image": "/images/ton-barrel-juice-cup.jpeg",
+          "description": "Fuel, Not Just Drink. 800mL portable juice cup built for busy schedules — blend it, seal it, take it anywhere. Office, gym, or on the move, you control what goes in.",
+          "available": true,
+          "featured": true,
+          "trending": true,
+          "stock": 6
+        },
+        {
+          "id": 817,
+          "name": "Portable Juicer",
+          "price": 1299,
+          "oldPrice": 1499,
+          "discountPercent": 13,
+          "image": "/images/portable-juicer.jpeg",
+          "description": "Freshness, Wherever Life Takes You. Compact portable juicer for fresh fruit blends on your schedule. Simple to use, easy to clean, built for the daily grind.",
+          "available": true,
+          "featured": false,
+          "trending": true,
+          "stock": 7
         }
       ]
     },
@@ -409,6 +435,19 @@
           "featured": false,
           "trending": true,
           "stock": 7
+        },
+        {
+          "id": 1004,
+          "name": "SHINON SH-9197 Hair Dryer",
+          "price": 1999,
+          "oldPrice": 2299,
+          "discountPercent": 13,
+          "image": "/images/shinon-sh9197-dryer.jpeg",
+          "description": "Professional Power, Salon Finish. 3000W hair dryer for rapid, salon-quality drying — strong consistent airflow, superior heat control, smooth results every time.",
+          "available": true,
+          "featured": true,
+          "trending": true,
+          "stock": 6
         }
       ]
     },
@@ -496,6 +535,58 @@
           "featured": false,
           "trending": true,
           "stock": 5
+        },
+        {
+          "id": 1107,
+          "name": "PLOKAMA LIVE-M5 Pro",
+          "price": 1499,
+          "oldPrice": 1699,
+          "discountPercent": 12,
+          "image": "/images/plokama-livem5-tripod.jpeg",
+          "description": "Professional Quality, Anywhere You Are. All-in-one content creator tool — switches between handle, tripod, and selfie stick, with built-in lighting and a hands-free remote shutter.",
+          "available": true,
+          "featured": true,
+          "trending": true,
+          "stock": 6
+        },
+        {
+          "id": 1108,
+          "name": "BT 2301 Wireless Charging Speaker",
+          "price": 1999,
+          "oldPrice": 2299,
+          "discountPercent": 13,
+          "image": "/images/bt2301-speaker.jpeg",
+          "description": "Your Desktop, Decluttered. Wireless charging pad, Bluetooth speaker, FM radio, and RGB mood lighting in one device — bedside or office, one plug does it all.",
+          "available": true,
+          "featured": false,
+          "trending": true,
+          "stock": 5
+        },
+        {
+          "id": 1109,
+          "name": "Laptop Stand V5.1",
+          "price": 2499,
+          "oldPrice": 2849,
+          "discountPercent": 12,
+          "image": "/images/laptop-stand-v51.jpeg",
+          "description": "Upgrade Your Workspace, Protect Your Tech. Full-angle adjustable laptop stand with hollow cooling design — perfect posture, no overheating, fits laptops up to 15.9 inches.",
+          "available": true,
+          "featured": false,
+          "trending": false,
+          "stock": 5
+        },
+        {
+          "id": 1110,
+          "name": "K31 Pro Wireless Mic",
+          "price": 2499,
+          "oldPrice": 2849,
+          "discountPercent": 12,
+          "image": "/images/k31-pro-mic.jpeg",
+          "description": "Professional Audio, Wire-Free Freedom. Compact clip-on wireless mic with broadcast-quality sound and plug-and-play setup — move, perform, present, no cables holding you back.",
+          "available": true,
+          "featured": true,
+          "trending": false,
+          "stock": 4
         }
       ]
     }
