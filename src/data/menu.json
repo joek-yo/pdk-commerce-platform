@@ -123,6 +123,23 @@
         { "id": 1109, "name": "Laptop Stand V5.1", "price": 2499, "oldPrice": 2849, "discountPercent": 12, "image": "/images/laptop-stand-v51.jpeg", "description": "Upgrade Your Workspace, Protect Your Tech. Full-angle adjustable laptop stand with hollow cooling design — perfect posture, no overheating, fits laptops up to 15.9 inches.", "available": true, "featured": false, "trending": false, "stock": 5 },
         { "id": 1110, "name": "K31 Pro Wireless Collar Mics (Dual Set)", "price": 2499, "oldPrice": 2849, "discountPercent": 12, "image": "/images/k31-pro-mic.jpeg", "description": "Capture Your Story, Wirelessly. K31 Pro dual wireless collar mics with charging case — clip on, connect, capture broadcast-quality audio for interviews, vlogs, or two-person content. No cables, no hassle.", "available": true, "featured": true, "trending": false, "stock": 4 }
       ]
+    },
+    {
+      "id": "audio-headphones",
+      "name": "Audio & Headphones",
+      "icon": "headphones",
+      "image": "/images/oraimo-i12-headphones.jpeg",
+      "hot": true,
+      "items": [
+        { "id": 1201, "name": "oraimo Pure Bass Wireless (I12)", "price": 1100, "oldPrice": 1299, "discountPercent": 15, "image": "/images/oraimo-i12-headphones.jpeg", "description": "Pure Bass Unleashed. Deep, resonant bass and crisp highs in a plush over-ear design built for all-day comfort — block out the world, feel every beat.", "available": true, "featured": true, "trending": true, "stock": 6 },
+        { "id": 1202, "name": "Samsung Pure Bass Wireless (i12)", "price": 1100, "oldPrice": 1299, "discountPercent": 15, "image": "/images/samsung-i12-headphones.jpeg", "description": "Clean, balanced acoustic sound with rich low-end performance. Ergonomic design for long-wearing comfort, plus intuitive touch controls to manage tracks and calls on the go.", "available": true, "featured": false, "trending": true, "stock": 5 },
+        { "id": 1203, "name": "P9 Wireless Headphones", "price": 1300, "oldPrice": 1499, "discountPercent": 13, "image": "/images/p9-wireless-headphones.jpeg", "description": "Bold style, immersive sound, everyday comfort. Balanced audio output for music, movies, and calls, with wireless convenience and lightweight ergonomics built for extended wear.", "available": true, "featured": true, "trending": false, "stock": 7 },
+        { "id": 1204, "name": "JBL Tune 510BT", "price": 1500, "oldPrice": 1749, "discountPercent": 14, "image": "/images/jbl-tune510bt-headphones.jpeg", "description": "Silence the noise, amplify the bass. Active Noise Cancelling paired with legendary JBL Pure Bass sound and up to 72 hours of battery life — wireless freedom, distraction-free focus, all day long.", "available": true, "featured": true, "trending": true, "stock": 5 },
+        { "id": 1205, "name": "JBL Pure Bass Wireless", "price": 2200, "oldPrice": 2499, "discountPercent": 12, "image": "/images/jbl-purebass-wireless-headphones.jpeg", "description": "Pure Bass. Total Control. Wireless Freedom. Legendary JBL Pure Bass sound in a lightweight, foldable wireless design — deep, punchy bass that moves with you all day.", "available": true, "featured": false, "trending": true, "stock": 4 },
+        { "id": 1206, "name": "V-Men Wireless (V-BT39)", "price": 1300, "oldPrice": 1499, "discountPercent": 13, "image": "/images/vmen-vbt39-earphones.jpeg", "description": "Sound that keeps up with you. Crisp Hi-Fi audio paired with a powerful 400mAh battery built for the long haul, plus seamless Bluetooth pairing across every device.", "available": true, "featured": false, "trending": false, "stock": 6 },
+        { "id": 1207, "name": "Tecno FreePods Studio (ZON-666H)", "price": 1300, "oldPrice": 1499, "discountPercent": 13, "image": "/images/tecno-freepods-studio-headphones.jpeg", "description": "Studio sound. All-day power. Rich, detailed audio reproduction with 24-hour playtime, ergonomic padding for fatigue-free wear, and effortless Bluetooth connectivity.", "available": true, "featured": true, "trending": true, "stock": 7 },
+        { "id": 1208, "name": "Sony WH-1000XM5", "price": 1900, "oldPrice": 2199, "discountPercent": 14, "image": "/images/sony-wh1000xm5-headphones.jpeg", "description": "Shut out the world, hear everything else clearly. Industry-leading noise cancellation, rich high-res sound, and ultra-soft earcups built for all-day wear.", "available": true, "featured": true, "trending": true, "stock": 4 }
+      ]
     }
   ],
   "bundles": [
